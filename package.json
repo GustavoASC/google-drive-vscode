@@ -1,7 +1,11 @@
 {
 	"name": "google-drive-vscode",
 	"displayName": "Google Drive",
-	"description": "Easily manage Google Drive files and folders in VSCode",
+	"description": "Google Drive support for VSCode",
+	"author": {
+		"name": "Gustavo Cassel",
+		"email": "guscassel@gmail.com"
+	},
 	"publisher": "Gustavo Cassel",
 	"version": "0.0.1",
 	"icon": "img/icon.png",
@@ -12,14 +16,19 @@
 		"Other"
 	],
 	"activationEvents": [
+		"onCommand:google.drive.auth",
 		"onCommand:google.drive.fetchFiles"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
+				"command": "google.drive.auth",
+				"title": "Google Drive: Authenticate"
+			},
+			{
 				"command": "google.drive.fetchFiles",
-				"title": "Hello Google Drive"
+				"title": "Google Drive: Fetch files"
 			}
 		],
 		"viewsContainers": {
@@ -49,16 +58,26 @@
 		"test": "node ./out/test/runTest.js"
 	},
 	"devDependencies": {
+		"@types/gapi": "0.0.39",
+		"@types/gapi.client": "1.0.0",
+		"@types/gapi.auth2": "0.0.52",
+		"@types/gapi.client.drive": "^3.0.8",
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^7.0.1",
 		"@types/node": "^12.11.7",
-		"eslint": "^6.8.0",
-		"vscode": "1.1.36",
-		"@typescript-eslint/parser": "^2.18.0",
 		"@typescript-eslint/eslint-plugin": "^2.18.0",
+		"@typescript-eslint/parser": "^2.18.0",
+		"eslint": "^6.8.0",
 		"glob": "^7.1.6",
 		"mocha": "^7.0.1",
 		"typescript": "^3.7.5",
+		"vscode": "1.1.36",
 		"vscode-test": "^1.3.0"
+	},
+	"dependencies": {
+		"coffee-register": "^2.2.0",
+		"dotenv": "^8.2.0",
+		"gapi": "0.0.3",
+		"googleapis": "^39.2.0"
 	}
 }

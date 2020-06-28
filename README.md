@@ -1,18 +1,20 @@
-# google-drive-vscode README
+# Google Drive for VSCode
 
-This is the README for your extension "google-drive-vscode". After writing up a brief description, we recommend including the following sections.
+Upload, download and manage Google Drive files directly from VSCode. 
 
 ## Features
+   - **Drag-and-drop** support
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+   - **Zip** files with timestamp
 
-For example if there is an image subfolder under your extension project workspace:
+   - **Share** files accross multiple computers
 
-\!\[feature X\]\(images/feature-x.png\)
+   - **Download** files to your workspace
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
 
 ## Requirements
+
+The folder *Drive extension for VSCode* is created on your Google Drive and all operations are done inside it.
 
 If you have any requirements or dependencies, add a section describing those and how to install and configure them.
 
