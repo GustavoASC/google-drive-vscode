@@ -17,7 +17,8 @@
 	],
 	"activationEvents": [
 		"onCommand:google.drive.auth",
-		"onCommand:google.drive.fetchFiles"
+		"onCommand:google.drive.fetchFiles",
+		"onView:driveView"
 	],
 	"main": "./out/extension.js",
 	"contributes": {

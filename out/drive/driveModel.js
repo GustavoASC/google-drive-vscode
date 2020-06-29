@@ -4,21 +4,19 @@ exports.DriveModel = void 0;
 const driveTypes_1 = require("./driveTypes");
 const { google } = require('googleapis');
 class DriveModel {
-    constructor(authenticator) {
-        this.authenticator = authenticator;
+    constructor() {
         this.allFiles = new Map();
         this.typeConverter = new DriveTypeConverter();
     }
-    listFiles() {
+    listFiles(auth) {
         return new Promise((resolve, reject) => {
-            const auth = this.authenticator.getAuthenticationInfo();
             const drive = google.drive({ version: 'v3', auth });
             const listParams = {
                 pageSize: 20,
                 q: "'root' in parents and trashed = false",
                 orderBy: 'folder,name',
-                // fields: 'nextPageToken, files(id, name, iconLink)'
-                fields: '*'
+                fields: 'nextPageToken, files(id, name, iconLink)'
+                // fields: '*'
             };
             const callback = (err, res) => {
                 if (err)

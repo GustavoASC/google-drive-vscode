@@ -1,5 +1,4 @@
 import { DriveFile, FileType } from "./driveTypes";
-import { DriveAuthenticator } from "../auth/driveAuthenticator";
 
 const { google } = require('googleapis');
 
@@ -8,19 +7,15 @@ export class DriveModel {
     private allFiles: Map<string, DriveFile> = new Map();
     private typeConverter: DriveTypeConverter = new DriveTypeConverter();
 
-    constructor(private authenticator: DriveAuthenticator) {
-    }
-
-    listFiles(): Promise<DriveFile[]> {
+    listFiles(auth: any): Promise<DriveFile[]> {
         return new Promise((resolve, reject) => {
-            const auth = this.authenticator.getAuthenticationInfo();
             const drive = google.drive({ version: 'v3', auth });
             const listParams = {
                 pageSize: 20,
                 q: "'root' in parents and trashed = false",
                 orderBy: 'folder,name',
-                // fields: 'nextPageToken, files(id, name, iconLink)'
-                fields: '*'
+                fields: 'nextPageToken, files(id, name, iconLink)'
+                // fields: '*'
             };
             const callback = (err: any, res: any) => {
                 if (err) return reject(err);

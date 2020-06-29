@@ -1,7 +1,8 @@
 import { TreeDataProvider, TreeItem, EventEmitter, Event, ProviderResult, window, Range, Uri } from "vscode";
 import { DriveController } from "./driveController";
 import { DriveFile } from "./driveTypes";
-import { URL } from "url";
+
+const SIGN_IN_ID = 'Click-to-sign-in-ID';
 
 export class DriveView implements TreeDataProvider<string> {
 
@@ -17,33 +18,48 @@ export class DriveView implements TreeDataProvider<string> {
         this._onDidChangeTreeData.fire();
     }
 
-    showUnexpectedErrorMessage(operation: string): void {
-        window.showWarningMessage(`'${operation}' operation canceled by unexpected error`);
+    showUnexpectedErrorMessage(message: string): void {
+        window.showWarningMessage(message);
     }
 
-    private buildLabel(f: DriveFile): string {
-        const label = `${f.name}`;
-        return label;
+    private buildSignInItem(): TreeItem | Thenable<TreeItem> {
+        return {
+            label: 'Sign in to Google Drive...',
+            command: { command: 'google.drive.fetchFiles', title: 'Sign in' }
+        };
     }
 
-    //------- interface methods
-
-    getTreeItem(id: string): TreeItem | Thenable<TreeItem> {
-        const currentFile = this.controller.getDriveFile(id);
-        const iconPath = {
-            light: Uri.parse(currentFile!.iconLink),
-            dark: Uri.parse(currentFile!.iconLink),
-          };
+    private buildItemFromDriveFile(currentFile: DriveFile): TreeItem | Thenable<TreeItem> {
+        const iconUri = Uri.parse(currentFile.iconLink);
+        const iconPath = { light: iconUri, dark: iconUri };
         return {
             iconPath: iconPath,
-            label: this.buildLabel(currentFile!)
+            label: currentFile.name
         };
+    }
+
+    //------- Interface methods
+
+    getTreeItem(id: string): TreeItem | Thenable<TreeItem> {
+        if (id === SIGN_IN_ID) {
+            return this.buildSignInItem();
+        }
+        const currentFile = this.controller.getDriveFile(id);
+        if (currentFile) {
+            return this.buildItemFromDriveFile(currentFile);
+        }
+        return {};
     }
 
     getChildren(): ProviderResult<string[]> {
         return new Promise((resolve, _reject) => {
             const idArray = this.controller.getAllDriveFileIds();
-            resolve(idArray);
+            if (idArray.length == 0) {
+                resolve([SIGN_IN_ID]);
+            } else {
+                resolve(idArray);
+            }
         });
     }
 }
+

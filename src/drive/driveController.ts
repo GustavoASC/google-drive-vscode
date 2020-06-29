@@ -1,17 +1,14 @@
 import { DriveView } from "./driveView";
 import { DriveModel } from "./driveModel";
 import { DriveFile } from "./driveTypes";
-import { DriveAuthenticator } from "../auth/driveAuthenticator";
 
 export class DriveController {
 
-	private model: DriveModel = new DriveModel(this.authenticator);
+	private model: DriveModel = new DriveModel();
 	private view: DriveView = new DriveView(this);
 
-	constructor(private authenticator: DriveAuthenticator) { }
-
-	listFiles(): void {
-		this.model.listFiles()
+	listFiles(auth: any): void {
+		this.model.listFiles(auth)
 			.then(_files => this.view.refresh())
 			.catch(err => this.view.showUnexpectedErrorMessage(err));
 	}

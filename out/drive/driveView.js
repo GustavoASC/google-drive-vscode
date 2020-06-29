@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DriveView = void 0;
 const vscode_1 = require("vscode");
+const SIGN_IN_ID = 'Click-to-sign-in-ID';
 class DriveView {
     constructor(controller) {
         this.controller = controller;
@@ -13,29 +14,43 @@ class DriveView {
     refresh() {
         this._onDidChangeTreeData.fire();
     }
-    showUnexpectedErrorMessage(operation) {
-        vscode_1.window.showWarningMessage(`'${operation}' operation canceled by unexpected error`);
+    showUnexpectedErrorMessage(message) {
+        vscode_1.window.showWarningMessage(message);
     }
-    buildLabel(f) {
-        const label = `${f.name}`;
-        return label;
-    }
-    //------- interface methods
-    getTreeItem(id) {
-        const currentFile = this.controller.getDriveFile(id);
-        const iconPath = {
-            light: vscode_1.Uri.parse(currentFile.iconLink),
-            dark: vscode_1.Uri.parse(currentFile.iconLink),
+    buildSignInItem() {
+        return {
+            label: 'Sign in to Google Drive...',
+            command: { command: 'google.drive.fetchFiles', title: 'Sign in' }
         };
+    }
+    buildItemFromDriveFile(currentFile) {
+        const iconUri = vscode_1.Uri.parse(currentFile.iconLink);
+        const iconPath = { light: iconUri, dark: iconUri };
         return {
             iconPath: iconPath,
-            label: this.buildLabel(currentFile)
+            label: currentFile.name
         };
+    }
+    //------- Interface methods
+    getTreeItem(id) {
+        if (id === SIGN_IN_ID) {
+            return this.buildSignInItem();
+        }
+        const currentFile = this.controller.getDriveFile(id);
+        if (currentFile) {
+            return this.buildItemFromDriveFile(currentFile);
+        }
+        return {};
     }
     getChildren() {
         return new Promise((resolve, _reject) => {
             const idArray = this.controller.getAllDriveFileIds();
-            resolve(idArray);
+            if (idArray.length == 0) {
+                resolve([SIGN_IN_ID]);
+            }
+            else {
+                resolve(idArray);
+            }
         });
     }
 }
