@@ -23,7 +23,12 @@ class DriveView {
     //------- interface methods
     getTreeItem(id) {
         const currentFile = this.controller.getDriveFile(id);
+        const iconPath = {
+            light: vscode_1.Uri.parse(currentFile.iconLink),
+            dark: vscode_1.Uri.parse(currentFile.iconLink),
+        };
         return {
+            iconPath: iconPath,
             label: this.buildLabel(currentFile)
         };
     }

@@ -1,11 +1,39 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DriveModel = void 0;
+const driveTypes_1 = require("./driveTypes");
+const { google } = require('googleapis');
 class DriveModel {
-    constructor() {
+    constructor(authenticator) {
+        this.authenticator = authenticator;
         this.allFiles = new Map();
-        this.allFiles.set(1, { type: FileType.FILE, name: "Meu arquivo" });
-        this.allFiles.set(2, { type: FileType.FILE, name: "Outro arquivo" });
+        this.typeConverter = new DriveTypeConverter();
+    }
+    listFiles() {
+        return new Promise((resolve, reject) => {
+            const auth = this.authenticator.getAuthenticationInfo();
+            const drive = google.drive({ version: 'v3', auth });
+            const listParams = {
+                pageSize: 20,
+                q: "'root' in parents and trashed = false",
+                orderBy: 'folder,name',
+                // fields: 'nextPageToken, files(id, name, iconLink)'
+                fields: '*'
+            };
+            const callback = (err, res) => {
+                if (err)
+                    return reject(err);
+                const apiFiles = res.data.files;
+                const convertedFiles = this.typeConverter.convertApiToTypescript(apiFiles);
+                this.updateCurrentInfo(convertedFiles);
+                resolve(convertedFiles);
+            };
+            drive.files.list(listParams, callback);
+        });
+    }
+    updateCurrentInfo(files) {
+        this.allFiles.clear();
+        files.forEach((file) => this.allFiles.set(file.id, file));
     }
     getAllDriveFileIds() {
         const idArray = [];
@@ -26,9 +54,18 @@ class DriveModel {
     }
 }
 exports.DriveModel = DriveModel;
-var FileType;
-(function (FileType) {
-    FileType[FileType["FILE"] = 0] = "FILE";
-    FileType[FileType["DIRECTORY"] = 1] = "DIRECTORY";
-})(FileType || (FileType = {}));
+class DriveTypeConverter {
+    convertApiToTypescript(apiFiles) {
+        const finalFiles = [];
+        apiFiles.map((file) => {
+            finalFiles.push({
+                id: file.id,
+                name: file.name,
+                iconLink: file.iconLink,
+                type: driveTypes_1.FileType.FILE
+            });
+        });
+        return finalFiles;
+    }
+}
 //# sourceMappingURL=driveModel.js.map

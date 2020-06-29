@@ -59,9 +59,10 @@
 	},
 	"devDependencies": {
 		"@types/gapi": "0.0.39",
-		"@types/gapi.client": "1.0.0",
+		"@types/gapi.client": "1.0.3",
+		"@types/gapi.client.oauth2": "2.0.1",
 		"@types/gapi.auth2": "0.0.52",
-		"@types/gapi.client.drive": "^3.0.8",
+		"@types/gapi.client.drive": "3.0.8",
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^7.0.1",
 		"@types/node": "^12.11.7",

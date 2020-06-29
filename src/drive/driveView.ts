@@ -1,12 +1,13 @@
-import { TreeDataProvider, TreeItem, EventEmitter, Event, ProviderResult, window, Range } from "vscode";
-import { DriveController } from "./driveManagement";
-import { DriveFile } from "./driveModel";
+import { TreeDataProvider, TreeItem, EventEmitter, Event, ProviderResult, window, Range, Uri } from "vscode";
+import { DriveController } from "./driveController";
+import { DriveFile } from "./driveTypes";
+import { URL } from "url";
 
-export class DriveView implements TreeDataProvider<number> {
+export class DriveView implements TreeDataProvider<string> {
 
     /** Helper objects to refresh UI when a new monitor is added */
-    private _onDidChangeTreeData: EventEmitter<number | undefined> = new EventEmitter<number | undefined>();
-    readonly onDidChangeTreeData: Event<number | undefined> = this._onDidChangeTreeData.event;
+    private _onDidChangeTreeData: EventEmitter<string | undefined> = new EventEmitter<string | undefined>();
+    readonly onDidChangeTreeData: Event<string | undefined> = this._onDidChangeTreeData.event;
 
     constructor(private controller: DriveController) {
         window.registerTreeDataProvider('driveView', this);
@@ -27,14 +28,19 @@ export class DriveView implements TreeDataProvider<number> {
 
     //------- interface methods
 
-    getTreeItem(id: number): TreeItem | Thenable<TreeItem> {
+    getTreeItem(id: string): TreeItem | Thenable<TreeItem> {
         const currentFile = this.controller.getDriveFile(id);
+        const iconPath = {
+            light: Uri.parse(currentFile!.iconLink),
+            dark: Uri.parse(currentFile!.iconLink),
+          };
         return {
+            iconPath: iconPath,
             label: this.buildLabel(currentFile!)
         };
     }
 
-    getChildren(): ProviderResult<number[]> {
+    getChildren(): ProviderResult<string[]> {
         return new Promise((resolve, _reject) => {
             const idArray = this.controller.getAllDriveFileIds();
             resolve(idArray);
