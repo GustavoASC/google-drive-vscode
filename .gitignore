@@ -3,3 +3,4 @@ out/
 .env
 credentials.json
 token.json
+package-lock.json
