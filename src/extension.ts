@@ -10,7 +10,7 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 
 	require('dotenv').config();
 
-	const authenticator = new DriveAuthenticator();
+	// const authenticator = new DriveAuthenticator();
 	const controller = new DriveController();
 
 
@@ -20,13 +20,11 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 
 	myStatusBarItem.show();
 
-	subscriptions.push(vscode.commands.registerCommand('google.drive.auth', () => {
-		authenticator.authenticate();
-	}));
+	// subscriptions.push(vscode.commands.registerCommand('google.drive.auth', () => {
+	// 	authenticator.authenticate();
+	// }));
 	subscriptions.push(vscode.commands.registerCommand('google.drive.fetchFiles', () => {
-		authenticator.authenticate()
-			.then((auth) => controller.listFiles(auth))
-			.catch(err => vscode.window.showWarningMessage(err));
+		controller.listFiles('root');
 	}));
 
 }

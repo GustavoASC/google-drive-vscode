@@ -5,24 +5,12 @@ import { DriveFile } from "./driveTypes";
 export class DriveController {
 
 	private model: DriveModel = new DriveModel();
-	private view: DriveView = new DriveView(this);
+	private view: DriveView = new DriveView(this.model);
 
-	listFiles(auth: any): void {
-		this.model.listFiles(auth)
+	listFiles(parentFolderId: string): void {
+		this.model.listFiles(parentFolderId)
 			.then(_files => this.view.refresh())
 			.catch(err => this.view.showUnexpectedErrorMessage(err));
-	}
-
-	getAllDriveFileIds(): string[] {
-		return this.model.getAllDriveFileIds();
-	}
-
-	getAllDriveFiles(): DriveFile[] {
-		return this.model.getAllDriveFiles();
-	}
-
-	getDriveFile(id: string): DriveFile | undefined {
-		return this.model.getDriveFile(id);
 	}
 
 }
