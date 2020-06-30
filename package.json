@@ -16,17 +16,12 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:google.drive.auth",
 		"onCommand:google.drive.fetchFiles",
 		"onView:driveView"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
-			{
-				"command": "google.drive.auth",
-				"title": "Google Drive: Authenticate"
-			},
 			{
 				"command": "google.drive.fetchFiles",
 				"title": "Google Drive: Fetch files"
@@ -59,11 +54,6 @@
 		"test": "node ./out/test/runTest.js"
 	},
 	"devDependencies": {
-		"@types/gapi": "0.0.39",
-		"@types/gapi.client": "1.0.3",
-		"@types/gapi.client.oauth2": "2.0.1",
-		"@types/gapi.auth2": "0.0.52",
-		"@types/gapi.client.drive": "3.0.8",
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^7.0.1",
 		"@types/node": "^12.11.7",
@@ -78,7 +68,6 @@
 	},
 	"dependencies": {
 		"coffee-register": "^2.2.0",
-		"dotenv": "^8.2.0",
 		"gapi": "0.0.3",
 		"googleapis": "^39.2.0"
 	}

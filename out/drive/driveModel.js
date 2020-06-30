@@ -1,44 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DriveModel = void 0;
-const driveTypeConverter_1 = require("./driveTypeConverter");
-const driveAuthenticator_1 = require("../auth/driveAuthenticator");
-const { google } = require('googleapis');
+const googleDriveFileProvider_1 = require("./googleDriveFileProvider");
 class DriveModel {
     constructor() {
-        this.authenticator = new driveAuthenticator_1.DriveAuthenticator();
+        this.fileProvider = new googleDriveFileProvider_1.GoogleDriveFileProvider();
         this.allFiles = new Map();
     }
     listFiles(parentFolderId) {
         return new Promise((resolve, reject) => {
-            this.authenticator.authenticate()
-                .then((auth) => resolve(this._listFiles(parentFolderId, auth)))
+            this.fileProvider.provideFiles(parentFolderId)
+                .then(files => {
+                this.updateCurrentInfo(files);
+                resolve(files);
+            })
                 .catch(err => reject(err));
         });
     }
-    _listFiles(parentFolderId, auth) {
-        return new Promise((resolve, reject) => {
-            const drive = google.drive({ version: 'v3', auth });
-            const listParams = {
-                pageSize: 20,
-                q: `'${parentFolderId}' in parents and trashed = false`,
-                orderBy: 'folder,name',
-                fields: 'nextPageToken, files(id, name, iconLink, mimeType)'
-                // fields: '*'
-            };
-            const callback = (err, res) => {
-                if (err)
-                    return reject(err);
-                const apiFiles = res.data.files;
-                const convertedFiles = driveTypeConverter_1.DriveTypeConverter.fromApiToTypescript(apiFiles);
-                this.updateCurrentInfo(convertedFiles);
-                resolve(convertedFiles);
-            };
-            drive.files.list(listParams, callback);
-        });
-    }
     updateCurrentInfo(files) {
-        // this.allFiles.clear();
         files.forEach((file) => this.allFiles.set(file.id, file));
     }
     getAllDriveFileIds() {
