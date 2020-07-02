@@ -1,5 +1,4 @@
-import { TreeItemCollapsibleState, TreeDataProvider, TreeItem, EventEmitter, Event, ProviderResult, window, Range, Uri } from "vscode";
-import { DriveController } from "./driveController";
+import { TreeItemCollapsibleState, TreeDataProvider, TreeItem, EventEmitter, Event, ProviderResult, window, Range, Uri, ProgressLocation } from "vscode";
 import { DriveFile, FileType } from "./driveTypes";
 import { DriveModel } from "./driveModel";
 
@@ -19,7 +18,11 @@ export class DriveView implements TreeDataProvider<string> {
         this._onDidChangeTreeData.fire();
     }
 
-    showUnexpectedErrorMessage(message: string): void {
+    showInformationMessage(message: string): void {
+        window.showInformationMessage(message);
+    }
+
+    showWarningMessage(message: string): void {
         window.showWarningMessage(message);
     }
 

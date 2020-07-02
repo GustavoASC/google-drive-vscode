@@ -1,5 +1,5 @@
 import { DriveFile } from "./driveTypes";
-import { resolve } from "dns";
+import * as path from "path";
 import { GoogleDriveFileProvider } from "./googleDriveFileProvider";
 
 export class DriveModel {
@@ -15,6 +15,25 @@ export class DriveModel {
                     resolve(files);
                 })
                 .catch(err => reject(err));
+        });
+    }
+
+    createFolder(parentFolderId: string, folderName: string): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.fileProvider.createFolder(parentFolderId, folderName)
+                .then(() => resolve())
+                .catch((err) => reject(err));
+        });
+    }
+
+    uploadFile(fullFileName: string): Promise<string> {
+        return new Promise((resolve, reject) => {
+            this.fileProvider.uploadFile(fullFileName)
+                .then(() =>  {
+                    const basename = path.basename(fullFileName);
+                    resolve(basename);
+                })
+                .catch((err) => reject(err));
         });
     }
 
@@ -42,5 +61,7 @@ export class DriveModel {
 export interface IFileProvider {
 
     provideFiles(parentFolderId: string): Promise<DriveFile[]>;
+    createFolder(parentFolderId: string, folderName: string): Promise<void>;
+    uploadFile(fullFilePath: string): Promise<void>;
 
 }

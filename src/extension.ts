@@ -12,7 +12,21 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 	subscriptions.push(vscode.commands.registerCommand('google.drive.fetchFiles', () => {
 		controller.listFiles('root');
 	}));
-	
+	subscriptions.push(vscode.commands.registerCommand('google.drive.uploadCurrentFile', () => {
+		const fileName = vscode.window.activeTextEditor?.document.fileName;
+		if (fileName) {
+			controller.uploadFile(fileName);
+		} else {
+			vscode.window.showWarningMessage("There is no file open to upload to Drive.")
+		}
+	}));
+	subscriptions.push(vscode.commands.registerCommand('google.drive.createFolder', async (parentId: string) => {
+		const folderName = await vscode.window.showInputBox({ placeHolder: 'Please type the folder name' });
+		if (folderName) {
+			controller.createFolder(parentId, folderName);
+		}
+	}));
+
 	subscriptions.push(buildStatusBar());
 }
 
