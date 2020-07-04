@@ -42,7 +42,7 @@ export class GoogleDriveFileProvider implements IFileProvider {
         });
     }
 
-    uploadFile(fullFileName: string): Promise<void> {
+    uploadFile(parentFolderId: string, fullFileName: string): Promise<void> {
         return new Promise((resolve, reject) => {
             this.authenticator.authenticate()
                 .then((auth) => {
@@ -51,12 +51,12 @@ export class GoogleDriveFileProvider implements IFileProvider {
 
                     this._createExtensionFolderIfNeeded(drive);
 
-                    // const parentId = 'root';
                     const basename = path.basename(fullFileName);
                     const mimeType = mime.lookup(fullFileName) || 'text/plain';
 
                     const fileMetadata = {
-                        'name': basename
+                        'name': basename,
+                        'parents': [parentFolderId]
                     };
                     const media = {
                         mimeType: mimeType,

@@ -18,6 +18,7 @@
 	"activationEvents": [
 		"onCommand:google.drive.fetchFiles",
 		"onCommand:google.drive.uploadCurrentFile",
+		"onCommand:google.drive.uploadSelectedFile",
 		"onView:driveView"
 	],
 	"main": "./out/extension.js",
@@ -25,15 +26,19 @@
 		"commands": [
 			{
 				"command": "google.drive.fetchFiles",
-				"title": "Google Drive: Fetch files"
+				"title": "Google Drive: Fetch files from Drive"
 			},
 			{
 				"command": "google.drive.uploadCurrentFile",
-				"title": "Google Drive: Upload current open file"
+				"title": "Google Drive: Upload current file to Drive"
+			},
+			{
+				"command": "google.drive.uploadSelectedFile",
+				"title": "Google Drive: Upload selected file to Drive"
 			},
 			{
 				"command": "google.drive.createFolder",
-				"title": "Google Drive: Create folder"
+				"title": "Google Drive: Create folder on Drive"
 			}
 		],
 		"viewsContainers": {
@@ -59,6 +64,12 @@
 					"command": "google.drive.createFolder",
 					"when": "view == driveView",
 					"group": "navigation"
+				}
+			],
+			"explorer/context": [
+				{
+					"command": "google.drive.uploadSelectedFile",
+					"group": "drive"
 				}
 			]
 		}

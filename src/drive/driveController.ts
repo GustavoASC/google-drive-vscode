@@ -18,13 +18,16 @@ export class DriveController {
 			.catch(err => this.view.showWarningMessage(err));
 	}
 
-	uploadFile(fullFileName: string): void {
-		this.view.showInformationMessage(`Uploading file to Google Drive...`);
-		this.model.uploadFile(fullFileName)
-			.then((basename) => {
-				this.view.showInformationMessage(`File ${basename} successfully uploaded to Google Drive.`);
-				this.view.refresh();
-			}).catch(err => this.view.showWarningMessage(err));
+	async uploadFile(fullFileName: string): Promise<void> {
+		const parentID = await this.view.askForDestinationFolder();
+		if (parentID) {
+			this.view.showInformationMessage('Uploading file to Google Drive. Please wait...');
+			this.model.uploadFile(parentID, fullFileName)
+				.then((basename) => {
+					this.view.showInformationMessage(`File ${basename} successfully uploaded.`);
+					this.view.refresh();
+				}).catch(err => this.view.showWarningMessage(err));
+		}
 	}
 
 }

@@ -13,29 +13,46 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 		controller.listFiles('root');
 	}));
 	subscriptions.push(vscode.commands.registerCommand('google.drive.uploadCurrentFile', () => {
-		const fileName = vscode.window.activeTextEditor?.document.fileName;
-		if (fileName) {
-			controller.uploadFile(fileName);
-		} else {
-			vscode.window.showWarningMessage("There is no file open to upload to Drive.")
-		}
+		uploadCurrentFile(controller);
 	}));
 	subscriptions.push(vscode.commands.registerCommand('google.drive.createFolder', async (parentId: string) => {
-		const folderName = await vscode.window.showInputBox({ placeHolder: 'Please type the folder name' });
-		if (folderName) {
-			controller.createFolder(parentId, folderName);
-		}
+		createFolder(parentId, controller);
+	}));
+	subscriptions.push(vscode.commands.registerCommand('google.drive.uploadSelectedFile', (selectedFileId: any) => {
+		uploadSelectedFile(selectedFileId, controller);
 	}));
 
-	subscriptions.push(buildStatusBar());
+
+	// subscriptions.push(buildStatusBar());
 }
 
-function buildStatusBar(): vscode.StatusBarItem {
-	const myStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
-	myStatusBarItem.text = '$(sign-in) Google Drive: Click to sign-in';
-	myStatusBarItem.show();
-	return myStatusBarItem;
+// function buildStatusBar(): vscode.StatusBarItem {
+// 	const myStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
+// 	myStatusBarItem.text = '$(sign-in) Google Drive: Click to sign-in';
+// 	myStatusBarItem.show();
+// 	return myStatusBarItem;
+// }
+
+async function createFolder(parentId: string, controller: DriveController): Promise<void> {
+	const folderName = await vscode.window.showInputBox({ placeHolder: 'Please type the folder name' });
+	if (folderName) {
+		controller.createFolder(parentId, folderName);
+	}
 }
+
+function uploadCurrentFile(controller: DriveController): void {
+	const fileName = vscode.window.activeTextEditor?.document.fileName;
+	if (fileName) {
+		controller.uploadFile(fileName);
+	} else {
+		vscode.window.showWarningMessage("There is no file open to upload to Drive.")
+	}
+}
+
+function uploadSelectedFile(selectedFileId: any, controller: DriveController): void {
+	controller.uploadFile(selectedFileId.path);
+}
+
 
 // this method is called when your extension is deactivated
 export function deactivate() { }
