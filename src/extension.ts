@@ -10,7 +10,7 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 	const controller = new DriveController();
 
 	subscriptions.push(vscode.commands.registerCommand('google.drive.fetchFiles', () => {
-		controller.listFiles('root');
+		listFiles(controller);
 	}));
 	subscriptions.push(vscode.commands.registerCommand('google.drive.uploadCurrentFile', () => {
 		uploadCurrentFile(controller);
@@ -21,6 +21,10 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 	subscriptions.push(vscode.commands.registerCommand('google.drive.uploadSelectedFile', (selectedFileId: any) => {
 		uploadSelectedFile(selectedFileId, controller);
 	}));
+}
+
+function listFiles(controller: DriveController): void {
+	controller.listFiles('root');
 }
 
 async function createFolder(parentId: string, controller: DriveController): Promise<void> {

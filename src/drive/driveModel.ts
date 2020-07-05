@@ -7,6 +7,10 @@ export class DriveModel {
     private fileProvider: IFileProvider = new GoogleDriveFileProvider();
     private cachedFiles: Map<string, DriveFile> = new Map();
 
+    isConnectedToRemoteDrive(): boolean {
+        return this.fileProvider.isConnectedToRemoteDrive();
+    }
+
     listOnlyFolders(parentFolderId: string): Promise<DriveFile[]> {
         return new Promise((resolve, reject) => {
             this.listFiles(parentFolderId)
@@ -51,12 +55,6 @@ export class DriveModel {
         files.forEach((file) => this.cachedFiles.set(file.id, file));
     }
 
-    getAllDriveFileIds(): string[] {
-        const idArray: string[] = [];
-        this.cachedFiles.forEach((_file, id) => idArray.push(id));
-        return idArray;
-    }
-
     getAllDriveFiles(): DriveFile[] {
         const filesArray: DriveFile[] = [];
         this.cachedFiles.forEach((file, _id) => filesArray.push(file));
@@ -70,6 +68,7 @@ export class DriveModel {
 
 export interface IFileProvider {
 
+    isConnectedToRemoteDrive(): boolean;
     provideFiles(parentFolderId: string): Promise<DriveFile[]>;
     createFolder(parentFolderId: string, folderName: string): Promise<void>;
     uploadFile(parentFolderId: string, fullFilePath: string): Promise<void>;

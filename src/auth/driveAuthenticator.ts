@@ -29,7 +29,7 @@ export class DriveAuthenticator {
     });
   }
 
-  private isAuthenticated(): boolean {
+  isAuthenticated(): boolean {
     return this.oAuth2Client != undefined;
   }
 

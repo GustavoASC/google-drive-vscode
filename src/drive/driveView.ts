@@ -1,5 +1,5 @@
-import { TreeItemCollapsibleState, TreeDataProvider, TreeItem, EventEmitter, Event, ProviderResult, window, Range, Uri, ProgressLocation, QuickPickItem } from "vscode";
-import { DriveFile, FileType } from "./driveTypes";
+import { TreeItemCollapsibleState, TreeDataProvider, TreeItem, EventEmitter, Event, window, Uri, QuickPickItem, ProgressLocation, ProviderResult } from "vscode";
+import { FileType, DriveFile } from "./driveTypes";
 import { DriveModel } from "./driveModel";
 
 const SIGN_IN_ID = 'Click-to-sign-in-ID';
@@ -21,6 +21,18 @@ export class DriveView implements TreeDataProvider<string> {
 
     refresh(): void {
         this._onDidChangeTreeData.fire();
+    }
+
+    showProgressMessage(message: string, task: Thenable<any>): void {
+        window.withProgress({
+            location: ProgressLocation.Notification,
+            title: message,
+        }, (_progress, _token) => {
+            const p = new Promise(resolve => {
+                task.then(() => resolve());
+            });
+            return p;
+        });
     }
 
     showInformationMessage(message: string): void {
@@ -71,15 +83,15 @@ export class DriveView implements TreeDataProvider<string> {
 
     getChildren(id: string): ProviderResult<string[]> {
         return new Promise((resolve, reject) => {
-            const currentFile = id ? this.model.getDriveFile(id) : undefined;
-            if (currentFile && currentFile.type == FileType.DIRECTORY) {
-                this.model.listFiles(currentFile.id)
+            if (this.model.isConnectedToRemoteDrive()) {
+                // When this method is loaded from the first time we
+                // assume 'root' to retrieve files and folders
+                let currentFileId = id ? id : 'root';
+                this.model.listFiles(currentFileId)
                     .then(files => resolve(this.extractFileIds(files)))
                     .catch(err => reject(err));
             } else {
-                const idArray = this.model.getAllDriveFileIds();
-                const finalArray = idArray.length == 0 ? [SIGN_IN_ID] : idArray;
-                resolve(finalArray)
+                resolve([SIGN_IN_ID]);
             }
         });
     }
@@ -88,6 +100,7 @@ export class DriveView implements TreeDataProvider<string> {
 
 const FOLDER_DESCRIPTION_TEXT = 'Folder ID: ';
 const FOLDER_SYMBOL_TEXT = '$(file-directory) ';
+const UPLOAD_TEXT = 'Upload to current folder: ';
 
 class FolderSelector {
 
@@ -111,7 +124,7 @@ class FolderSelector {
         // Keeps asking user to select folder
         while (!hasSelected && !hasCancelled) {
             const selectedItem = await window.showQuickPick(items, {
-                placeHolder: 'Destination folder',
+                placeHolder: 'Destination folder on Google Drive',
                 ignoreFocusOut: true
             });
             if (selectedItem) {
@@ -138,7 +151,7 @@ class FolderSelector {
                 } else {
                     // Checks whether user chose the current folder or wants to
                     // go back to previous folder level
-                    if (label.includes('Select current')) {
+                    if (label.includes(UPLOAD_TEXT)) {
                         hasSelected = true;
                     } else {
                         // User wants to go back to previous folder
@@ -166,7 +179,7 @@ class FolderSelector {
     }
 
     private createItemToSelectCurrent(name: string): QuickPickItem {
-        const selectCurrentItem: QuickPickItem = { label: `$(check) Select current: ${name}` };
+        const selectCurrentItem: QuickPickItem = { label: `$(check) ${UPLOAD_TEXT}'${name}'` };
         return selectCurrentItem;
     }
 

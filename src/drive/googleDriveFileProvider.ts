@@ -11,6 +11,10 @@ export class GoogleDriveFileProvider implements IFileProvider {
 
     private authenticator = new DriveAuthenticator();
 
+    isConnectedToRemoteDrive(): boolean {
+        return this.authenticator.isAuthenticated();
+    }
+
     provideFiles(parentFolderId: string): Promise<DriveFile[]> {
         return new Promise((resolve, reject) => {
             this.authenticator.authenticate()
