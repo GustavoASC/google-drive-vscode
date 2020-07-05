@@ -21,17 +21,7 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 	subscriptions.push(vscode.commands.registerCommand('google.drive.uploadSelectedFile', (selectedFileId: any) => {
 		uploadSelectedFile(selectedFileId, controller);
 	}));
-
-
-	// subscriptions.push(buildStatusBar());
 }
-
-// function buildStatusBar(): vscode.StatusBarItem {
-// 	const myStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
-// 	myStatusBarItem.text = '$(sign-in) Google Drive: Click to sign-in';
-// 	myStatusBarItem.show();
-// 	return myStatusBarItem;
-// }
 
 async function createFolder(parentId: string, controller: DriveController): Promise<void> {
 	const folderName = await vscode.window.showInputBox({ placeHolder: 'Please type the folder name' });
