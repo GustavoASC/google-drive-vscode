@@ -3,6 +3,7 @@ import { DriveFile, FileType } from "./driveTypes";
 import { DriveModel } from "./driveModel";
 
 const SIGN_IN_ID = 'Click-to-sign-in-ID';
+
 export class DriveView implements TreeDataProvider<string> {
 
     /** Helper objects to refresh UI when a new monitor is added */
@@ -87,6 +88,7 @@ export class DriveView implements TreeDataProvider<string> {
 
 const FOLDER_DESCRIPTION_TEXT = 'Folder ID: ';
 const FOLDER_SYMBOL_TEXT = '$(file-directory) ';
+
 class FolderSelector {
 
     constructor(private model: DriveModel) {
@@ -98,14 +100,9 @@ class FolderSelector {
         // selected folders)
         const selectionStack: SelectionInfo[] = [];
 
-        // Information about the previous folder level
-        let previousFolderId = '';
-        let previousFolderName = '';
-
-        // Data from root folder on Drive
-        let currentFolderId = 'root';
-        let currentFolderName = 'root';
-        let items = await this.createPickItems(currentFolderId, currentFolderName, previousFolderId);
+        // Fetch data from root folder on Google Drive
+        let currentSelection: SelectionInfo = { folderId: 'root', folderName: 'root' };
+        let items = await this.createPickItems(currentSelection, false);
 
         // Controls whether user has selected the folder or canceled folder selection
         let hasSelected = false;
@@ -118,58 +115,58 @@ class FolderSelector {
                 ignoreFocusOut: true
             });
             if (selectedItem) {
+
                 const label = selectedItem.label;
                 const description = selectedItem.description;
+
+                // Only folders contain description, so we know we
+                // need to retrieve the subfolders of the selected folder
                 if (description) {
 
                     // Saves data from current folder to restore in case of
                     // user wants to go back to previous folder level
-                    previousFolderId = currentFolderId;
-                    previousFolderName = currentFolderName;
+                    selectionStack.push(currentSelection);
 
                     // Extracts information about the selected item
-                    const selectionInfo: SelectionInfo = {
+                    currentSelection = {
                         folderId: description!.substring(FOLDER_DESCRIPTION_TEXT.length),
-                        folerName: label.substring(FOLDER_SYMBOL_TEXT.length)
+                        folderName: label.substring(FOLDER_SYMBOL_TEXT.length)
                     }
 
-                    items = await this.createPickItems(selectionInfo.folderId, selectionInfo.folerName, previousFolderId);
+                    items = await this.createPickItems(currentSelection, true);
 
-                    
                 } else {
                     // Checks whether user chose the current folder or wants to
                     // go back to previous folder level
-                    if (label.startsWith('Select current')) {
+                    if (label.includes('Select current')) {
                         hasSelected = true;
                     } else {
-
+                        // User wants to go back to previous folder
+                        currentSelection = selectionStack.pop()!;
+                        const allowGoBack = selectionStack.length > 0;
+                        items = await this.createPickItems(currentSelection, allowGoBack);
                     }
                 }
             } else {
                 hasCancelled = true;
             }
         }
-        return currentFolderId;
+        return hasCancelled ? '' : currentSelection.folderId;
     }
 
-    private async createPickItems(folderId: string, folderName: string, previousFolderId: string): Promise<QuickPickItem[]> {
+    private async createPickItems(currentSelection: SelectionInfo, allowGoBack: boolean): Promise<QuickPickItem[]> {
         const allItems: QuickPickItem[] = [];
-
-        allItems.push(this.createItemToSelectCurrent(folderName));
-
-        if (previousFolderId) {
+        allItems.push(this.createItemToSelectCurrent(currentSelection.folderName));
+        if (allowGoBack) {
             allItems.push(this.createItemToGoBack());
         }
-
-        const foldersItems = await this.createFoldersItems(folderId);
+        const foldersItems = await this.createFoldersItems(currentSelection.folderId);
         allItems.push(...foldersItems);
-
-
         return allItems;
     }
 
     private createItemToSelectCurrent(name: string): QuickPickItem {
-        const selectCurrentItem: QuickPickItem = { label: `Select current (${name})` };
+        const selectCurrentItem: QuickPickItem = { label: `$(check) Select current: ${name}` };
         return selectCurrentItem;
     }
 
@@ -193,5 +190,5 @@ class FolderSelector {
 
 interface SelectionInfo {
     folderId: string,
-    folerName: string,
+    folderName: string,
 }
