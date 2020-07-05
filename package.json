@@ -17,8 +17,9 @@
 	],
 	"activationEvents": [
 		"onCommand:google.drive.fetchFiles",
-		"onCommand:google.drive.uploadCurrentFile",
+		"onCommand:google.drive.uploadOpenFile",
 		"onCommand:google.drive.uploadSelectedFile",
+		"onCommand:google.drive.createFolder",
 		"onView:driveView"
 	],
 	"main": "./out/extension.js",
@@ -26,11 +27,12 @@
 		"commands": [
 			{
 				"command": "google.drive.fetchFiles",
-				"title": "Google Drive: Fetch files from Drive"
+				"title": "Google Drive: Fetch files from Drive",
+				"icon": "$(search-refresh)"
 			},
 			{
-				"command": "google.drive.uploadCurrentFile",
-				"title": "Google Drive: Upload current file to Drive"
+				"command": "google.drive.uploadOpenFile",
+				"title": "Google Drive: Upload currently open file to Drive"
 			},
 			{
 				"command": "google.drive.uploadSelectedFile",
@@ -38,7 +40,8 @@
 			},
 			{
 				"command": "google.drive.createFolder",
-				"title": "Google Drive: Create folder on Drive"
+				"title": "Google Drive: Create folder on Drive",
+				"icon": "$(new-folder)"
 			}
 		],
 		"viewsContainers": {
@@ -59,11 +62,23 @@
 			]
 		},
 		"menus": {
-			"view/item/context": [
+			"view/title": [
 				{
 					"command": "google.drive.createFolder",
 					"when": "view == driveView",
 					"group": "navigation"
+				},
+				{
+					"command": "google.drive.fetchFiles",
+					"when": "view == driveView",
+					"group": "navigation"					
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "google.drive.createFolder",
+					"when": "view == driveView",
+					"group": "inline"
 				}
 			],
 			"explorer/context": [

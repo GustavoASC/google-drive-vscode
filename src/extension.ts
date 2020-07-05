@@ -2,18 +2,21 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { DriveController } from './drive/driveController';
+import { DriveModel } from './drive/driveModel';
+import { GoogleDriveFileProvider } from './drive/googleDriveFileProvider';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate({ subscriptions }: vscode.ExtensionContext) {
 
-	const controller = new DriveController();
+	const model = new DriveModel(new GoogleDriveFileProvider())
+	const controller = new DriveController(model);
 
 	subscriptions.push(vscode.commands.registerCommand('google.drive.fetchFiles', () => {
 		listFiles(controller);
 	}));
-	subscriptions.push(vscode.commands.registerCommand('google.drive.uploadCurrentFile', () => {
-		uploadCurrentFile(controller);
+	subscriptions.push(vscode.commands.registerCommand('google.drive.uploadOpenFile', () => {
+		uploadOpenFile(controller);
 	}));
 	subscriptions.push(vscode.commands.registerCommand('google.drive.createFolder', async (parentId: string) => {
 		createFolder(parentId, controller);
@@ -28,13 +31,10 @@ function listFiles(controller: DriveController): void {
 }
 
 async function createFolder(parentId: string, controller: DriveController): Promise<void> {
-	const folderName = await vscode.window.showInputBox({ placeHolder: 'Please type the folder name' });
-	if (folderName) {
-		controller.createFolder(parentId, folderName);
-	}
+	controller.createFolder(parentId);
 }
 
-function uploadCurrentFile(controller: DriveController): void {
+function uploadOpenFile(controller: DriveController): void {
 	const fileName = vscode.window.activeTextEditor?.document.fileName;
 	if (fileName) {
 		controller.uploadFile(fileName);

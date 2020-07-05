@@ -19,16 +19,11 @@ export class GoogleDriveFileProvider implements IFileProvider {
         return new Promise((resolve, reject) => {
             this.authenticator.authenticate()
                 .then((auth) => {
-
                     const drive = google.drive({ version: 'v3', auth });
-
-                    this._createExtensionFolderIfNeeded(drive);
-
                     const listParams = {
                         q: `'${parentFolderId}' in parents and trashed = false`,
                         orderBy: 'folder,name',
                         fields: 'nextPageToken, files(id, name, iconLink, mimeType)'
-                        // fields: '*'
                     };
                     const callback = (err: any, res: any) => {
                         if (err) {
@@ -39,8 +34,6 @@ export class GoogleDriveFileProvider implements IFileProvider {
                         resolve(convertedFiles);
                     };
                     drive.files.list(listParams, callback);
-
-
                 })
                 .catch(err => reject(err));
         });
@@ -50,14 +43,9 @@ export class GoogleDriveFileProvider implements IFileProvider {
         return new Promise((resolve, reject) => {
             this.authenticator.authenticate()
                 .then((auth) => {
-
                     const drive = google.drive({ version: 'v3', auth });
-
-                    this._createExtensionFolderIfNeeded(drive);
-
                     const basename = path.basename(fullFileName);
                     const mimeType = mime.lookup(fullFileName) || 'text/plain';
-
                     const fileMetadata = {
                         'name': basename,
                         'parents': [parentFolderId]
@@ -87,11 +75,7 @@ export class GoogleDriveFileProvider implements IFileProvider {
         return new Promise((resolve, reject) => {
             this.authenticator.authenticate()
                 .then((auth) => {
-
                     const drive = google.drive({ version: 'v3', auth });
-
-                    this._createExtensionFolderIfNeeded(drive);
-
                     const fileMetadata = {
                         'name': folderName,
                         'mimeType': 'application/vnd.google-apps.folder',
@@ -109,28 +93,6 @@ export class GoogleDriveFileProvider implements IFileProvider {
                         }
                     }).catch(() => reject());
                 }).catch(err => reject(err));
-        });
-    }
-
-    private _createExtensionFolderIfNeeded(drive: any): Promise<void> {
-        return new Promise((_resolve, _reject) => {
-            // const parentId = 'root';
-            // const fileMetadata = {
-            //     'name': 'VSCode extension for Google Drive',
-            //     'mimeType': 'application/vnd.google-apps.folder',
-            //     'parents': [parentId]
-            // };
-            // drive.files.create({
-            //     resource: fileMetadata,
-            // }).then((response: any) => {
-            //     switch (response.status) {
-            //         case 200:
-            //             const file = response.result;
-            //             return resolve();
-            //         default:
-            //             return reject();
-            //     }
-            // }).catch(() => reject());
         });
     }
 

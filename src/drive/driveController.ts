@@ -3,8 +3,9 @@ import { DriveModel } from "./driveModel";
 
 export class DriveController {
 
-	private model: DriveModel = new DriveModel();
 	private view: DriveView = new DriveView(this.model);
+
+	constructor(private model: DriveModel) { }
 
 	listFiles(parentFolderId: string): void {
 		this.model.listFiles(parentFolderId)
@@ -12,10 +13,13 @@ export class DriveController {
 			.catch(err => this.view.showWarningMessage(err));
 	}
 
-	createFolder(parentFolderId: string, folderName: string): void {
-		this.model.createFolder(parentFolderId, folderName)
-			.then(_files => this.view.refresh())
-			.catch(err => this.view.showWarningMessage(err));
+	async createFolder(parentFolderId: string): Promise<void> {
+		const folderName = await this.view.showInputBox('Please type the folder name');
+		if (folderName) {
+			this.model.createFolder(parentFolderId, folderName)
+				.then(_files => this.view.refresh())
+				.catch(err => this.view.showWarningMessage(err));
+		}
 	}
 
 	async uploadFile(fullFileName: string): Promise<void> {
@@ -33,6 +37,8 @@ export class DriveController {
 					});
 			})
 			this.view.showProgressMessage('Uploading file to Google Drive. Please wait...', uploadPromise);
+		} else {
+			this.view.showWarningMessage('Upload process canceled by user.');
 		}
 	}
 

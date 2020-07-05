@@ -27,12 +27,16 @@ export class DriveView implements TreeDataProvider<string> {
         window.withProgress({
             location: ProgressLocation.Notification,
             title: message,
-        }, (_progress, _token) => {
+        }, () => {
             const p = new Promise(resolve => {
                 task.then(() => resolve());
             });
             return p;
         });
+    }
+
+    async showInputBox(message: string): Promise<string | undefined> {
+        return window.showInputBox({ placeHolder: message });
     }
 
     showInformationMessage(message: string): void {
@@ -62,7 +66,9 @@ export class DriveView implements TreeDataProvider<string> {
     }
 
     private detectCollapsibleState(currentFile: DriveFile): TreeItemCollapsibleState {
-        const collapsible = currentFile.type == FileType.DIRECTORY ? TreeItemCollapsibleState.Collapsed : TreeItemCollapsibleState.None;
+        const collapsible = currentFile.type == FileType.DIRECTORY ?
+            TreeItemCollapsibleState.Collapsed :
+            TreeItemCollapsibleState.None;
         return collapsible;
     }
 
@@ -83,16 +89,16 @@ export class DriveView implements TreeDataProvider<string> {
 
     getChildren(id: string): ProviderResult<string[]> {
         return new Promise((resolve, reject) => {
-            if (this.model.isConnectedToRemoteDrive()) {
-                // When this method is loaded from the first time we
-                // assume 'root' to retrieve files and folders
-                let currentFileId = id ? id : 'root';
-                this.model.listFiles(currentFileId)
-                    .then(files => resolve(this.extractFileIds(files)))
-                    .catch(err => reject(err));
-            } else {
-                resolve([SIGN_IN_ID]);
-            }
+            // if (this.model.isConnectedToRemoteDrive()) {
+            // When this method is loaded from the first time we
+            // assume 'root' to retrieve files and folders
+            let currentFileId = id ? id : 'root';
+            this.model.listFiles(currentFileId)
+                .then(files => resolve(this.extractFileIds(files)))
+                .catch(err => reject(err));
+            // } else {
+            //     resolve([SIGN_IN_ID]);
+            // }
         });
     }
 }
@@ -179,7 +185,7 @@ class FolderSelector {
     }
 
     private createItemToSelectCurrent(name: string): QuickPickItem {
-        const selectCurrentItem: QuickPickItem = { label: `$(check) ${UPLOAD_TEXT}'${name}'` };
+        const selectCurrentItem: QuickPickItem = { label: `$(cloud-upload) ${UPLOAD_TEXT}'${name}'` };
         return selectCurrentItem;
     }
 

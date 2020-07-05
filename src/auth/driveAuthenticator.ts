@@ -35,15 +35,12 @@ export class DriveAuthenticator {
 
   private authorize(credentials: any): Promise<void> {
     return new Promise((resolve, _reject) => {
-
       const { client_secret, client_id, redirect_uris } = credentials.installed;
-
       this.oAuth2Client = new google.auth.OAuth2(
         client_id,
         client_secret,
         redirect_uris[0]
       );
-
       // Check if we have previously stored a token.
       fs.readFile(TOKEN_PATH, (err: any, token: Buffer) => {
         if (err) {
@@ -60,29 +57,21 @@ export class DriveAuthenticator {
 
   private async getAccessToken(): Promise<void> {
     return new Promise(async (resolve, reject) => {
-
       const authUrl = this.oAuth2Client.generateAuthUrl({ access_type: 'offline', scope: SCOPES });
-
       window.showInformationMessage('Authorize this app by visiting the external URL and paste in the auth token');
       await env.openExternal(Uri.parse(authUrl));
-
       var code = await window.showInputBox({
         ignoreFocusOut: true,
         prompt: 'Paste here the auth token'
-
       });
-
       this.oAuth2Client.getToken(code, (err: any, token: any) => {
         if (err) return reject(err);
         this.oAuth2Client.setCredentials(token);
         // Store the token to disk for later program executions
         fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err: any) => {
           if (err) return reject(err);
-
           window.showInformationMessage('Authorization completed! Now you can access your drive files through VSCode.');
-
           resolve();
-
         });
       });
     });

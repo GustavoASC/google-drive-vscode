@@ -4,8 +4,11 @@ import { GoogleDriveFileProvider } from "./googleDriveFileProvider";
 
 export class DriveModel {
 
-    private fileProvider: IFileProvider = new GoogleDriveFileProvider();
     private cachedFiles: Map<string, DriveFile> = new Map();
+
+    constructor(private fileProvider: IFileProvider) {
+
+    }
 
     isConnectedToRemoteDrive(): boolean {
         return this.fileProvider.isConnectedToRemoteDrive();
