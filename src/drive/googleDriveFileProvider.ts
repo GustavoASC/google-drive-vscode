@@ -7,6 +7,8 @@ import * as path from "path";
 const { google } = require('googleapis');
 import { IFileProvider } from "./driveModel";
 
+const HTTP_RESPONSE_OK = 200;
+
 export class GoogleDriveFileProvider implements IFileProvider {
 
     private authenticator = new DriveAuthenticator();
@@ -85,8 +87,7 @@ export class GoogleDriveFileProvider implements IFileProvider {
                         resource: fileMetadata,
                     }).then((response: any) => {
                         switch (response.status) {
-                            case 200:
-                                const file = response.result;
+                            case HTTP_RESPONSE_OK:
                                 return resolve();
                             default:
                                 return reject();

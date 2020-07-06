@@ -23,10 +23,10 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 		uploadOpenFile(controller);
 	}));
 	subscriptions.push(vscode.commands.registerCommand('google.drive.createFolder', async (parentId: string) => {
-		createFolder(parentId, controller);
+		return createFolder(parentId, controller);
 	}));
 	subscriptions.push(vscode.commands.registerCommand('google.drive.uploadSelectedFile', (selectedFileId: any) => {
-		uploadSelectedFile(selectedFileId, controller);
+		return uploadSelectedFile(selectedFileId, controller);
 	}));
 }
 
@@ -47,20 +47,24 @@ function listFiles(controller: DriveController): void {
 }
 
 async function createFolder(parentId: string, controller: DriveController): Promise<void> {
-	controller.createFolder(parentId);
+	return controller.createFolder(parentId);
 }
 
-function uploadOpenFile(controller: DriveController): void {
+function uploadOpenFile(controller: DriveController): Thenable<any> {
 	const fileName = vscode.window.activeTextEditor?.document.fileName;
 	if (fileName) {
-		controller.uploadFile(fileName);
+		return controller.uploadFile(fileName);
 	} else {
-		vscode.window.showWarningMessage("There is no file open to upload to Drive.")
+		return vscode.window.showWarningMessage("There is no file open to upload to Drive.");
 	}
 }
 
-function uploadSelectedFile(selectedFileId: any, controller: DriveController): void {
-	controller.uploadFile(selectedFileId.path);
+function uploadSelectedFile(selectedFileId: any, controller: DriveController): Thenable<any> {
+	if (selectedFileId && selectedFileId.path) {
+		return controller.uploadFile(selectedFileId.path);
+	} else {
+		return vscode.window.showInformationMessage('Please select a file on Explorer view, which will be uploaded to Google Drive.');
+	}
 }
 
 

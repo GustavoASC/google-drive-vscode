@@ -13,6 +13,7 @@ const SCOPES = ['https://www.googleapis.com/auth/drive.file'];
 export class DriveAuthenticator {
 
   private oAuth2Client: any;
+  private token: any;
   private credentialsManager = new CredentialsManager();
 
   storeApiCredentials(apiCredentialsJsonFile: string): Promise<void> {
@@ -20,7 +21,12 @@ export class DriveAuthenticator {
       fs.readFile(apiCredentialsJsonFile, (err: NodeJS.ErrnoException | null, content: Buffer) => {
         if (err) reject(err);
         this.credentialsManager.storePassword(content.toString(), CREDENTIALS_JSON_SERVICE)
-          .then(() => resolve())
+          .then(() => {
+            // Removes old token related to possible previous credential
+            this.credentialsManager.removePassword(TOKENS_JSON_SERVICE)
+              .then(() => resolve())
+              .catch(err => reject());
+          })
           .catch(err => reject(err));
       });
     });
@@ -35,12 +41,12 @@ export class DriveAuthenticator {
           this.authorize(JSON.parse(originalJson.toString()))
             .then(() => resolve(this.oAuth2Client))
             .catch(err => reject(err));
-        })
+        }).catch(err => reject(err));
     });
   }
 
   isAuthenticated(): boolean {
-    return this.oAuth2Client != undefined;
+    return this.oAuth2Client != undefined && this.token != undefined;
   }
 
   private authorize(credentials: any): Promise<void> {
@@ -71,21 +77,25 @@ export class DriveAuthenticator {
       const authUrl = this.oAuth2Client.generateAuthUrl({ access_type: 'offline', scope: SCOPES });
       window.showInformationMessage('Authorize this app by visiting the external URL and paste in the auth token');
       await env.openExternal(Uri.parse(authUrl));
-      var code = await window.showInputBox({
+      const code = await window.showInputBox({
         ignoreFocusOut: true,
         prompt: 'Paste here the auth token'
       });
-      this.oAuth2Client.getToken(code, (err: any, token: any) => {
-        if (err)
-          return reject(err);
-        const stringified = JSON.stringify(token);
-        this.credentialsManager.storePassword(stringified, TOKENS_JSON_SERVICE)
-          .then(() => {
-            this.oAuth2Client.setCredentials(token);
-            window.showInformationMessage('Authorization completed! Now you can access your drive files through VSCode.');
-            resolve();
-          }).catch(err => reject(err));
-      });
+      if (code) {
+        this.oAuth2Client.getToken(code, (err: any, token: any) => {
+          if (err) return reject(err);
+          this.token = token;
+          const stringified = JSON.stringify(this.token);
+          this.credentialsManager.storePassword(stringified, TOKENS_JSON_SERVICE)
+            .then(() => {
+              this.oAuth2Client.setCredentials(this.token);
+              window.showInformationMessage('Authorization completed! Now you can access your drive files through VSCode.');
+              resolve();
+            }).catch(err => reject(err));
+        });
+      } else {
+        reject();
+      }
     });
   }
 }

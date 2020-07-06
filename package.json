@@ -46,7 +46,8 @@
 			{
 				"command": "google.drive.createFolder",
 				"title": "Google Drive: Create folder on Drive",
-				"icon": "$(new-folder)"
+				"icon": "$(new-folder)",
+				"enablement": "viewItem != file"
 			}
 		],
 		"viewsContainers": {
@@ -96,20 +97,18 @@
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
-		"lint": "eslint src --ext ts",
+		"compile": "npm run tslint && tsc -p ./",
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile && npm run lint",
-		"test": "node ./out/test/runTest.js"
+		"test": "node ./out/test/runTest.js",
+		"tslint": "tslint --project tsconfig.json --config tslint.json"
 	},
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^7.0.1",
 		"@types/node": "^12.11.7",
-		"@typescript-eslint/eslint-plugin": "^2.18.0",
-		"@typescript-eslint/parser": "^2.18.0",
 		"@types/mime-types": "^2.1.0",
-		"eslint": "^6.8.0",
+		"tslint": "^5.14.0",
 		"glob": "^7.1.6",
 		"mocha": "^7.0.1",
 		"typescript": "^3.7.5",

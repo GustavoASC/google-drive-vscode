@@ -58,10 +58,12 @@ export class DriveView implements TreeDataProvider<string> {
         const iconUri = Uri.parse(currentFile.iconLink);
         const iconPath = { light: iconUri, dark: iconUri };
         const collapsible = this.detectCollapsibleState(currentFile);
+        const contextValue = this.detectContextValue(currentFile);
         return {
             iconPath: iconPath,
             label: currentFile.name,
-            collapsibleState: collapsible
+            collapsibleState: collapsible,
+            contextValue: contextValue
         };
     }
 
@@ -70,6 +72,11 @@ export class DriveView implements TreeDataProvider<string> {
             TreeItemCollapsibleState.Collapsed :
             TreeItemCollapsibleState.None;
         return collapsible;
+    }
+
+    private detectContextValue(currentFile: DriveFile): string {
+        const contextValue = currentFile.type == FileType.DIRECTORY ? 'folder' : 'file';
+        return contextValue;
     }
 
     private extractFileIds(files: DriveFile[]): string[] {
@@ -89,16 +96,10 @@ export class DriveView implements TreeDataProvider<string> {
 
     getChildren(id: string): ProviderResult<string[]> {
         return new Promise((resolve, reject) => {
-            // if (this.model.isConnectedToRemoteDrive()) {
-            // When this method is loaded from the first time we
-            // assume 'root' to retrieve files and folders
-            let currentFileId = id ? id : 'root';
+            const currentFileId = id ? id : 'root';
             this.model.listFiles(currentFileId)
                 .then(files => resolve(this.extractFileIds(files)))
                 .catch(err => reject(err));
-            // } else {
-            //     resolve([SIGN_IN_ID]);
-            // }
         });
     }
 }

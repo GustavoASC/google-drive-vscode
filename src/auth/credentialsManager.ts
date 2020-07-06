@@ -28,4 +28,18 @@ export class CredentialsManager {
         });
     }
 
+    removePassword(serviceName: string): Promise<void> {
+        return new Promise((resolve, reject) => {
+            const username = os.userInfo().username;
+            keytar.deletePassword(serviceName, username)
+                .then(pass => {
+                    if (pass) {
+                        resolve();
+                    } else {
+                        reject();
+                    }
+                }).catch(err => reject(err));
+        });
+    }
+
 }

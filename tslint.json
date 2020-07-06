@@ -1,0 +1,28 @@
+{
+    "defaultSeverity": "error",
+    "plugins": [],
+    "jsRules": {},
+    "rules": {
+        "no-floating-promises": {
+            "severity": "error",
+            "options": [
+                "Promise",
+                "Q.Promise"
+            ]
+        },
+        "deprecation": {
+            "severity": "warning"
+        },
+        "no-duplicate-imports": {
+            "severity": "warning"
+        },
+        "no-duplicate-switch-case": true,
+        "no-magic-numbers": {
+            "severity": "warning"
+        },
+        "prefer-const": {
+            "severity": "warning"
+        }
+    },
+    "rulesDirectory": []
+}

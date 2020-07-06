@@ -20,7 +20,7 @@ export class DriveModel {
                     const onlyFolders = allFilesFromParent.filter(f => f.type == FileType.DIRECTORY);
                     resolve(onlyFolders);
                 }).catch(err => reject(err));
-        })
+        });
     }
 
     listFiles(parentFolderId: string): Promise<DriveFile[]> {
