@@ -16,9 +16,18 @@ export class DriveController {
 	async createFolder(parentFolderId: string): Promise<void> {
 		const folderName = await this.view.showInputBox('Please type the folder name');
 		if (folderName) {
-			this.model.createFolder(parentFolderId, folderName)
-				.then(_files => this.view.refresh())
-				.catch(err => this.view.showWarningMessage(err));
+			const createFolderPromise: Promise<void> = new Promise((resolve, reject) => {
+				this.model.createFolder(parentFolderId, folderName)
+					.then(_files => {
+						this.view.showInformationMessage(`Folder '${folderName}' successfully created on Drive.`);
+						this.view.refresh();
+						resolve();
+					})
+					.catch(err => this.view.showWarningMessage(err))
+			});
+			this.view.showProgressMessage(`Creating folder '${folderName}' to Google Drive. Please wait...`, createFolderPromise);
+		} else {
+			this.view.showWarningMessage(`'Create folder' process canceled by user.`);
 		}
 	}
 
@@ -28,7 +37,7 @@ export class DriveController {
 			const uploadPromise: Promise<void> = new Promise((resolve, reject) => {
 				this.model.uploadFile(parentID, fullFileName)
 					.then((basename) => {
-						this.view.showInformationMessage(`File '${basename}' successfully uploaded.`);
+						this.view.showInformationMessage(`File '${basename}' successfully uploaded to Drive.`);
 						this.view.refresh();
 						resolve();
 					}).catch(err => {
@@ -38,7 +47,7 @@ export class DriveController {
 			})
 			this.view.showProgressMessage('Uploading file to Google Drive. Please wait...', uploadPromise);
 		} else {
-			this.view.showWarningMessage('Upload process canceled by user.');
+			this.view.showWarningMessage(`'Upload file' process canceled by user.`);
 		}
 	}
 
