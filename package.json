@@ -71,7 +71,7 @@
 				{
 					"command": "google.drive.fetchFiles",
 					"when": "view == driveView",
-					"group": "navigation"					
+					"group": "navigation"
 				}
 			],
 			"view/item/context": [
@@ -112,10 +112,7 @@
 		"vscode-test": "^1.3.0"
 	},
 	"dependencies": {
-		"coffee-register": "^2.2.0",
-		"gapi": "0.0.3",
 		"googleapis": "^39.2.0",
-		"mime": "^2.4.6",
 		"mime-types": "^2.1.27"
 	}
 }

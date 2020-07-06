@@ -1,6 +1,5 @@
 import { DriveFile, FileType } from "./driveTypes";
 import * as path from "path";
-import { GoogleDriveFileProvider } from "./googleDriveFileProvider";
 
 export class DriveModel {
 
