@@ -16,6 +16,7 @@
 		"Other"
 	],
 	"activationEvents": [
+		"onCommand:google.drive.configureCredentials",
 		"onCommand:google.drive.fetchFiles",
 		"onCommand:google.drive.uploadOpenFile",
 		"onCommand:google.drive.uploadSelectedFile",
@@ -25,6 +26,10 @@
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
+			{
+				"command": "google.drive.configureCredentials",
+				"title": "Google Drive: Configure credentials"
+			},
 			{
 				"command": "google.drive.fetchFiles",
 				"title": "Google Drive: Fetch files from Drive",
@@ -112,7 +117,8 @@
 		"vscode-test": "^1.3.0"
 	},
 	"dependencies": {
-		"googleapis": "^39.2.0",
-		"mime-types": "^2.1.27"
+		"googleapis": "52.1.0",
+		"keytar": "6.0.1",
+		"mime-types": "2.1.27"
 	}
 }

@@ -1,31 +1,41 @@
 import { env, Uri, window } from "vscode";
+import { CredentialsManager } from "./credentialsManager";
 import * as fs from "fs";
-import { rejects } from "assert";
 
 const { google } = require('googleapis');
 
+const CREDENTIALS_JSON_SERVICE = 'Google Drive for VSCode - Credentials';
+const TOKENS_JSON_SERVICE = 'Google Drive for VSCode - Token';
+
 // If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/drive.file'];
-// The file token.json stores the user's access and refresh tokens, and is
-// created automatically when the authorization flow completes for the first
-// time.
-const TOKEN_PATH = __dirname + '/../../token.json';
 
 export class DriveAuthenticator {
 
   private oAuth2Client: any;
+  private credentialsManager = new CredentialsManager();
+
+  storeApiCredentials(apiCredentialsJsonFile: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      fs.readFile(apiCredentialsJsonFile, (err: NodeJS.ErrnoException | null, content: Buffer) => {
+        if (err) reject(err);
+        this.credentialsManager.storePassword(content.toString(), CREDENTIALS_JSON_SERVICE)
+          .then(() => resolve())
+          .catch(err => reject(err));
+      });
+    });
+  }
 
   authenticate(): Promise<void> {
     return new Promise((resolve, reject) => {
-      if (this.isAuthenticated()) return resolve(this.oAuth2Client);
-      // Load client secrets from a local file.
-      fs.readFile(__dirname + '/../../credentials.json', (err: NodeJS.ErrnoException | null, content: Buffer) => {
-        if (err) return reject(err);
-        // Authorize a client with credentials, then call the Google Drive API.
-        this.authorize(JSON.parse(content.toString()))
-          .then(() => resolve(this.oAuth2Client))
-          .catch(err => reject(err));
-      });
+      if (this.isAuthenticated())
+        return resolve(this.oAuth2Client);
+      this.credentialsManager.retrievePassword(CREDENTIALS_JSON_SERVICE)
+        .then(originalJson => {
+          this.authorize(JSON.parse(originalJson.toString()))
+            .then(() => resolve(this.oAuth2Client))
+            .catch(err => reject(err));
+        })
     });
   }
 
@@ -34,24 +44,25 @@ export class DriveAuthenticator {
   }
 
   private authorize(credentials: any): Promise<void> {
-    return new Promise((resolve, _reject) => {
+    return new Promise((resolve, reject) => {
       const { client_secret, client_id, redirect_uris } = credentials.installed;
       this.oAuth2Client = new google.auth.OAuth2(
         client_id,
         client_secret,
         redirect_uris[0]
       );
-      // Check if we have previously stored a token.
-      fs.readFile(TOKEN_PATH, (err: any, token: Buffer) => {
-        if (err) {
+      this.credentialsManager.retrievePassword(TOKENS_JSON_SERVICE)
+        .then(token => {
+          const tokenJson = JSON.parse(token.toString());
+          this.oAuth2Client.setCredentials(tokenJson);
+          resolve();
+        }).catch(() => {
+          // We don't have the auth token yet, so open external browser
+          // to ask user the needed access
           this.getAccessToken()
             .then(() => resolve())
-            .catch((err) => rejects(err));
-        } else {
-          this.oAuth2Client.setCredentials(JSON.parse(token.toString()));
-          resolve();
-        }
-      });
+            .catch((err) => reject(err));
+        });
     });
   }
 
@@ -65,16 +76,16 @@ export class DriveAuthenticator {
         prompt: 'Paste here the auth token'
       });
       this.oAuth2Client.getToken(code, (err: any, token: any) => {
-        if (err) return reject(err);
-        this.oAuth2Client.setCredentials(token);
-        // Store the token to disk for later program executions
-        fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err: any) => {
-          if (err) return reject(err);
-          window.showInformationMessage('Authorization completed! Now you can access your drive files through VSCode.');
-          resolve();
-        });
+        if (err)
+          return reject(err);
+        const stringified = JSON.stringify(token);
+        this.credentialsManager.storePassword(stringified, TOKENS_JSON_SERVICE)
+          .then(() => {
+            this.oAuth2Client.setCredentials(token);
+            window.showInformationMessage('Authorization completed! Now you can access your drive files through VSCode.');
+            resolve();
+          }).catch(err => reject(err));
       });
     });
   }
-
 }
