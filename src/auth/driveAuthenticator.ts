@@ -45,7 +45,7 @@ export class DriveAuthenticator {
     });
   }
 
-  isAuthenticated(): boolean {
+  private isAuthenticated(): boolean {
     return this.oAuth2Client != undefined && this.token != undefined;
   }
 

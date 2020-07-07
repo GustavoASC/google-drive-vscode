@@ -13,10 +13,6 @@ export class GoogleDriveFileProvider implements IFileProvider {
 
     private authenticator = new DriveAuthenticator();
 
-    isConnectedToRemoteDrive(): boolean {
-        return this.authenticator.isAuthenticated();
-    }
-
     provideFiles(parentFolderId: string): Promise<DriveFile[]> {
         return new Promise((resolve, reject) => {
             this.authenticator.authenticate()
@@ -57,19 +53,14 @@ export class GoogleDriveFileProvider implements IFileProvider {
                         body: fs.createReadStream(fullFileName)
                     };
                     const callback = ((err: any, _file: any) => {
-                        if (err) {
-                            return reject(err);
-                        } else {
-                            return resolve();
-                        }
+                        err ? reject(err) : resolve();
                     });
                     drive.files.create({
                         resource: fileMetadata,
                         media: media,
                         fields: 'id'
                     }, callback);
-                })
-                .catch(err => reject(err));
+                }).catch(err => reject(err));
         });
     }
 
@@ -83,17 +74,32 @@ export class GoogleDriveFileProvider implements IFileProvider {
                         'mimeType': 'application/vnd.google-apps.folder',
                         'parents': [parentFolderId]
                     };
-                    drive.files.create({
-                        resource: fileMetadata,
-                    }).then((response: any) => {
-                        switch (response.status) {
-                            case HTTP_RESPONSE_OK:
-                                return resolve();
-                            default:
-                                return reject();
-                        }
-                    }).catch(() => reject());
+                    drive.files.create({ resource: fileMetadata })
+                        .then((response: any) => response.status == HTTP_RESPONSE_OK ? resolve() : reject())
+                        .catch(() => reject());
                 }).catch(err => reject(err));
+        });
+    }
+
+    retrieveFileContent(fileId: string, createStreamFunction: () => NodeJS.WritableStream): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.authenticator.authenticate()
+                .then((auth) => {
+                    const drive = google.drive({ version: 'v3', auth });
+                    drive.files.get({
+                        'fileId': fileId,
+                        'alt': 'media'
+                    }, {
+                        responseType: 'stream'
+                    }, function (err: any, response: any) {
+                        if (err) return reject(err);
+                        response.data.on('error', (err: any) => {
+                            reject(err);
+                        }).on('end', () => {
+                            resolve();
+                        }).pipe(createStreamFunction());
+                    });
+                }).catch(err => reject(err));;
         });
     }
 

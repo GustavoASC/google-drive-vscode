@@ -32,7 +32,7 @@ export class DriveController {
 	}
 
 	async uploadFile(fullFileName: string): Promise<void> {
-		const parentID = await this.view.askForDestinationFolder();
+		const parentID = await this.view.askForRemoteDestinationFolder();
 		if (parentID) {
 			const uploadPromise: Promise<void> = new Promise((resolve, reject) => {
 				this.model.uploadFile(parentID, fullFileName)
@@ -49,6 +49,12 @@ export class DriveController {
 		} else {
 			this.view.showWarningMessage(`'Upload file' process canceled by user.`);
 		}
+	}
+
+	downloadFile(fileId: string): void {
+		this.view.askForLocalDestinationFolder()
+			.then(file => this.model.downloadFile(fileId, file))
+			.catch(() => this.view.showWarningMessage(`'Download file' process canceled by user.`));
 	}
 
 }

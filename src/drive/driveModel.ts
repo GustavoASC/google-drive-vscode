@@ -1,16 +1,12 @@
 import { DriveFile, FileType } from "./driveTypes";
 import * as path from "path";
+import * as fs from "fs";
 
 export class DriveModel {
 
     private cachedFiles: Map<string, DriveFile> = new Map();
 
     constructor(private fileProvider: IFileProvider) {
-
-    }
-
-    isConnectedToRemoteDrive(): boolean {
-        return this.fileProvider.isConnectedToRemoteDrive();
     }
 
     listOnlyFolders(parentFolderId: string): Promise<DriveFile[]> {
@@ -53,6 +49,17 @@ export class DriveModel {
         });
     }
 
+    downloadFile(fileId: string, destionationPath: string): Promise<void> {
+        return new Promise((resolve, reject) => {
+            const createStreamFunction = () => {
+                return fs.createWriteStream(destionationPath);
+            }
+            this.fileProvider.retrieveFileContent(fileId, createStreamFunction)
+                .then(() => resolve())
+                .catch(err => reject(err));
+        })
+    }
+
     private updateCurrentInfo(files: DriveFile[]) {
         files.forEach((file) => this.cachedFiles.set(file.id, file));
     }
@@ -70,9 +77,9 @@ export class DriveModel {
 
 export interface IFileProvider {
 
-    isConnectedToRemoteDrive(): boolean;
     provideFiles(parentFolderId: string): Promise<DriveFile[]>;
     createFolder(parentFolderId: string, folderName: string): Promise<void>;
     uploadFile(parentFolderId: string, fullFilePath: string): Promise<void>;
+    retrieveFileContent(fileId: string, createStreamFunction: () => NodeJS.WritableStream): Promise<void>;
 
 }

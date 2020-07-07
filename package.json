@@ -28,6 +28,7 @@
 		"onCommand:google.drive.uploadOpenFile",
 		"onCommand:google.drive.uploadSelectedFile",
 		"onCommand:google.drive.createFolder",
+		"onCommand:google.drive.download",
 		"onView:driveView"
 	],
 	"main": "./out/extension.js",
@@ -55,6 +56,12 @@
 				"title": "Google Drive: Create folder on Drive",
 				"icon": "$(new-folder)",
 				"enablement": "viewItem != file"
+			},
+			{
+				"command": "google.drive.download",
+				"title": "Google Drive: Download file from Drive",
+				"icon": "$(cloud-download)",
+				"enablement": "viewItem == file"
 			}
 		],
 		"viewsContainers": {
@@ -90,6 +97,11 @@
 			"view/item/context": [
 				{
 					"command": "google.drive.createFolder",
+					"when": "view == driveView",
+					"group": "inline"
+				},
+				{
+					"command": "google.drive.download",
 					"when": "view == driveView",
 					"group": "inline"
 				}

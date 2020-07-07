@@ -28,6 +28,9 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 	subscriptions.push(vscode.commands.registerCommand('google.drive.uploadSelectedFile', (selectedFileId: any) => {
 		return uploadSelectedFile(selectedFileId, controller);
 	}));
+	subscriptions.push(vscode.commands.registerCommand('google.drive.download', (selectedFileId: any) => {
+		downloadSelectedFile(selectedFileId, controller);
+	}));
 }
 
 function configureCredentials(): void {
@@ -67,6 +70,11 @@ function uploadSelectedFile(selectedFileId: any, controller: DriveController): T
 	}
 }
 
+function downloadSelectedFile(selectedFileId: any, controller: DriveController): void {
+	if (selectedFileId) {
+		controller.downloadFile(selectedFileId);
+	}
+}
 
 // this method is called when your extension is deactivated
 export function deactivate() { }
