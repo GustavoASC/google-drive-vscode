@@ -1,67 +1,32 @@
 # Google Drive for VSCode
 
-Upload, download and manage Google Drive files directly from VSCode. 
+**This extension is still being developed, so please notice that some features are not fully usable**.
+
+Manage Google Drive files and folders directly from VSCode. 
+
+This extensions uses 'drive.file' scope and then can only access files and folders created on Google Drive through this extension.
 
 ## Features
-   - **Drag-and-drop** support
+For now you can do the following operations on Google Drive:
+   
+   - **List** files
+   - **Create** remote folders
+   - **Upload** files
 
-   - **Zip** files with timestamp
-
-   - **Share** files accross multiple computers
-
-   - **Download** files to your workspace
-
+The following features will be developed on the next days:
+   - **Download** files
+   - **Rename** files/folders
+   - **Delete** files/folders
 
 ## Requirements
+In order to use this extension you need to set up Google Drive API on your Google account.
 
-The folder *Drive extension for VSCode* is created on your Google Drive and all operations are done inside it.
+   * Access [This link](https://developers.google.com/drive/api/v3/quickstart/nodejs) to turn on the Drive API
+   * Click on 'Enable the Drive API' button
+   * On the modal pop-up, make sure you have 'Desktop app' selected
+   * Click 'Create'
+   * Click 'Download client configuration'
+   
+Once you have credentials.json file, access Command Palette on VSCode and run the command: 'Google Drive: Configure credentials' and select the credentials.json file.
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
------------------------------------------------------------------------------------------------------------
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+That's all!
