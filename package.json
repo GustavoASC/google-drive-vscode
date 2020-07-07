@@ -6,11 +6,18 @@
 		"name": "Gustavo Cassel",
 		"email": "guscassel@gmail.com"
 	},
-	"publisher": "Gustavo Cassel",
+	"publisher": "GustavoASC",
 	"version": "0.0.1",
 	"icon": "img/icon.png",
 	"engines": {
 		"vscode": "^1.43.0"
+	},
+	"bugs": {
+		"url": "https://github.com/GustavoASC/google-drive-vscode/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/GustavoASC/google-drive-vscode.git"
 	},
 	"categories": [
 		"Other"
