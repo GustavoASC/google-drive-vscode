@@ -7,7 +7,7 @@
 		"email": "guscassel@gmail.com"
 	},
 	"publisher": "GustavoASC",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"icon": "img/icon.png",
 	"engines": {
 		"vscode": "^1.43.0"
@@ -126,5 +126,10 @@
 		"googleapis": "52.1.0",
 		"keytar": "6.0.1",
 		"mime-types": "2.1.27"
+	},
+	"__metadata": {
+		"id": "d4e69f94-ffae-47b6-a315-e5f90289a7c2",
+		"publisherDisplayName": "Gustavo Cassel",
+		"publisherId": "6290af19-eb5e-4f57-8ff3-c76e661f7bc2"
 	}
 }

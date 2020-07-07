@@ -19,7 +19,7 @@ export class DriveAuthenticator {
   storeApiCredentials(apiCredentialsJsonFile: string): Promise<void> {
     return new Promise((resolve, reject) => {
       fs.readFile(apiCredentialsJsonFile, (err: NodeJS.ErrnoException | null, content: Buffer) => {
-        if (err) reject(err);
+        if (err) return reject(err);
         this.credentialsManager.storePassword(content.toString(), CREDENTIALS_JSON_SERVICE)
           .then(() => {
             // Removes old token related to possible previous credential

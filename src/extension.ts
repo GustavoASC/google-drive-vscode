@@ -34,7 +34,7 @@ function configureCredentials(): void {
 	vscode.window.showInformationMessage('Please select the credentials.json file previously generated from your Google API Console.')
 	vscode.window.showOpenDialog({}).then(files => {
 		if (files && files.length > 0) {
-			const selectedCredentialsFile = files[0].path;
+			const selectedCredentialsFile = files[0].fsPath;
 			new DriveAuthenticator().storeApiCredentials(selectedCredentialsFile)
 				.then(() => vscode.window.showInformationMessage('Credentials successfully stored!'))
 				.catch(err => vscode.window.showErrorMessage(err));
