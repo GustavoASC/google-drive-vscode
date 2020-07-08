@@ -1,4 +1,5 @@
 import { DriveFile, FileType } from "./driveTypes";
+import * as mime from "mime-types";
 import * as path from "path";
 import * as fs from "fs";
 
@@ -11,22 +12,19 @@ export class DriveModel {
 
     listOnlyFolders(parentFolderId: string): Promise<DriveFile[]> {
         return new Promise((resolve, reject) => {
-            this.listFiles(parentFolderId)
-                .then(allFilesFromParent => {
-                    const onlyFolders = allFilesFromParent.filter(f => f.type == FileType.DIRECTORY);
-                    resolve(onlyFolders);
-                }).catch(err => reject(err));
+            this.listFiles(parentFolderId).then(allFilesFromParent => {
+                const onlyFolders = allFilesFromParent.filter(f => f.type == FileType.DIRECTORY);
+                resolve(onlyFolders);
+            }).catch(err => reject(err));
         });
     }
 
     listFiles(parentFolderId: string): Promise<DriveFile[]> {
         return new Promise((resolve, reject) => {
-            this.fileProvider.provideFiles(parentFolderId)
-                .then(files => {
-                    this.updateCurrentInfo(files);
-                    resolve(files);
-                })
-                .catch(err => reject(err));
+            this.fileProvider.provideFiles(parentFolderId).then(files => {
+                this.updateCurrentInfo(files);
+                resolve(files);
+            }).catch(err => reject(err));
         });
     }
 
@@ -40,11 +38,10 @@ export class DriveModel {
 
     uploadFile(parentFolderId: string, fullFileName: string): Promise<string> {
         return new Promise((resolve, reject) => {
-            this.fileProvider.uploadFile(parentFolderId, fullFileName)
-                .then(() => {
-                    const basename = path.basename(fullFileName);
-                    resolve(basename);
-                })
+            const basename = path.basename(fullFileName);
+            const mimeType = mime.lookup(fullFileName) || 'text/plain';
+            this.fileProvider.uploadFile(parentFolderId, fullFileName, basename, mimeType)
+                .then(() => resolve(basename))
                 .catch((err) => reject(err));
         });
     }
@@ -79,7 +76,7 @@ export interface IFileProvider {
 
     provideFiles(parentFolderId: string): Promise<DriveFile[]>;
     createFolder(parentFolderId: string, folderName: string): Promise<void>;
-    uploadFile(parentFolderId: string, fullFilePath: string): Promise<void>;
+    uploadFile(parentFolderId: string, fullFilePath: string, basename: string, mimeType: string): Promise<void>;
     retrieveFileContent(fileId: string, createStreamFunction: () => NodeJS.WritableStream): Promise<void>;
 
 }

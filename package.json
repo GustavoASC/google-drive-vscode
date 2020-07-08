@@ -118,8 +118,8 @@
 		"vscode:prepublish": "npm run compile",
 		"compile": "npm run tslint && tsc -p ./",
 		"watch": "tsc -watch -p ./",
-		"pretest": "npm run compile && npm run lint",
-		"test": "node ./out/test/runTest.js",
+		"pretest": "npm run compile && npm run tslint",
+		"test": "mocha -r ts-node/register ./src/test/**/*.test.ts",
 		"tslint": "tslint --project tsconfig.json --config tslint.json"
 	},
 	"devDependencies": {
@@ -127,6 +127,9 @@
 		"@types/mocha": "^7.0.1",
 		"@types/node": "^12.11.7",
 		"@types/mime-types": "^2.1.0",
+		"@types/chai": "4.1.6",
+		"ts-node": "^7.0.1",
+		"chai": "4.2.0",
 		"tslint": "^5.14.0",
 		"glob": "^7.1.6",
 		"mocha": "^7.0.1",
