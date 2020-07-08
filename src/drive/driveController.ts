@@ -44,7 +44,7 @@ export class DriveController {
 						this.view.showWarningMessage(err);
 						reject(err);
 					});
-			})
+			});
 			this.view.showProgressMessage('Uploading file to Google Drive. Please wait...', uploadPromise);
 		} else {
 			this.view.showWarningMessage(`'Upload file' process canceled by user.`);
@@ -52,9 +52,21 @@ export class DriveController {
 	}
 
 	downloadFile(fileId: string): void {
-		this.view.askForLocalDestinationFolder()
-			.then(file => this.model.downloadFile(fileId, file))
-			.catch(() => this.view.showWarningMessage(`'Download file' process canceled by user.`));
+		const driveFileName = this.model.getDriveFile(fileId)?.name;
+		this.view.askForLocalDestinationFolder(driveFileName)
+			.then(destinationFile => {
+				const downloadPromise: Promise<void> = new Promise((resolve, reject) => {
+					this.model.downloadFile(fileId, destinationFile)
+						.then(() => {
+							this.view.showInformationMessage(`File successfully downloaded from Drive.`);
+							resolve();
+						}).catch(err => {
+							this.view.showWarningMessage(err);
+							reject(err);
+						});
+				});
+				this.view.showProgressMessage('Downloading file from Google Drive. Please wait...', downloadPromise);
+			}).catch(() => this.view.showWarningMessage(`'Download file' process canceled by user.`));
 	}
 
 }

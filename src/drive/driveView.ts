@@ -1,4 +1,4 @@
-import { TreeItemCollapsibleState, TreeDataProvider, TreeItem, EventEmitter, Event, window, Uri, QuickPickItem, ProgressLocation, ProviderResult } from "vscode";
+import { TreeItemCollapsibleState, TreeDataProvider, TreeItem, EventEmitter, Event, window, Uri, QuickPickItem, ProgressLocation, ProviderResult, SaveDialogOptions } from "vscode";
 import { FileType, DriveFile } from "./driveTypes";
 import { DriveModel } from "./driveModel";
 import { FolderSelector } from "./folderSelector";
@@ -20,16 +20,13 @@ export class DriveView implements TreeDataProvider<string> {
         return this.folderSelector.askForDestinationFolder();
     }
 
-    askForLocalDestinationFolder(): Promise<string> {
+    askForLocalDestinationFolder(suggestedPath?: string): Promise<string> {
         return new Promise((resolve, reject) => {
-            window.showSaveDialog({})
-                .then(uri => {
-                    if (uri) {
-                        resolve(uri.fsPath);
-                    } else {
-                        reject('No destination selected');
-                    }
-                });
+            const defaultUri = suggestedPath ? Uri.parse(suggestedPath) : undefined;
+            const saveOptions: SaveDialogOptions = { defaultUri: defaultUri };
+            window.showSaveDialog(saveOptions).then(uri => {
+                uri ? resolve(uri.fsPath) : reject('No destination selected');
+            });
         });
     }
 
