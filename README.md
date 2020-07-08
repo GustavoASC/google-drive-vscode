@@ -10,9 +10,9 @@ For now you can do the following operations on Google Drive:
    - **List** files
    - **Create** remote folders
    - **Upload** files
+   - **Download** files
 
 The following features will be developed on the next days:
-   - **Download** files
    - **Rename** files
    - **Delete** files
    - **Select** files with Google Picker API, so one can authorize access to files created by other apps or files which have been manually uploaded to Google Drive
