@@ -1,5 +1,6 @@
 node_modules/
 out/
+.vscode-test/
 .env
 credentials.json
 token.json

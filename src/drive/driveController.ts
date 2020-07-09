@@ -23,7 +23,10 @@ export class DriveController {
 						this.view.refresh();
 						resolve();
 					})
-					.catch(err => this.view.showWarningMessage(err))
+					.catch(err => {
+						this.view.showWarningMessage(err);
+						reject(err);
+					})
 			});
 			this.view.showProgressMessage(`Creating folder '${folderName}' to Google Drive. Please wait...`, createFolderPromise);
 		} else {

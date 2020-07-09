@@ -1,7 +1,8 @@
-import { TreeItemCollapsibleState, TreeDataProvider, TreeItem, EventEmitter, Event, window, Uri, QuickPickItem, ProgressLocation, ProviderResult, SaveDialogOptions } from "vscode";
+import { TreeItemCollapsibleState, TreeDataProvider, TreeItem, EventEmitter, Event, window, Uri, ProgressLocation, ProviderResult, SaveDialogOptions } from "vscode";
 import { FileType, DriveFile } from "./driveTypes";
 import { DriveModel } from "./driveModel";
 import { FolderSelector } from "./folderSelector";
+import { VSCodePickProvider } from "./vscodePickProvider";
 
 const SIGN_IN_ID = 'Click-to-sign-in-ID';
 
@@ -10,7 +11,8 @@ export class DriveView implements TreeDataProvider<string> {
     /** Helper objects to refresh UI when a new monitor is added */
     private _onDidChangeTreeData: EventEmitter<string | undefined> = new EventEmitter<string | undefined>();
     readonly onDidChangeTreeData: Event<string | undefined> = this._onDidChangeTreeData.event;
-    private folderSelector: FolderSelector = new FolderSelector(this.model);
+    
+    private folderSelector: FolderSelector = new FolderSelector(this.model, new VSCodePickProvider());
 
     constructor(private model: DriveModel) {
         window.registerTreeDataProvider('driveView', this);

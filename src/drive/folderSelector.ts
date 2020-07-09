@@ -1,4 +1,3 @@
-import { window, QuickPickItem } from "vscode";
 import { DriveModel } from "./driveModel";
 
 const FOLDER_DESCRIPTION_TEXT = 'Folder ID: ';
@@ -7,17 +6,17 @@ const UPLOAD_TEXT = 'Upload to current folder: ';
 
 export class FolderSelector {
 
-    constructor(private model: DriveModel) {
+    constructor(private model: DriveModel, private provider: IPickProvider) {
     }
 
     async askForDestinationFolder(): Promise<string> {
 
         // Information about selected folders (to navigate between previously
         // selected folders)
-        const selectionStack: SelectionInfo[] = [];
+        const selectionStack: IPickItem[] = [];
 
         // Fetch data from root folder on Google Drive
-        let currentSelection: SelectionInfo = { folderId: 'root', folderName: 'root' };
+        let currentSelection: IPickItem = { label: 'root', description: 'root' };
         let items = await this.createPickItems(currentSelection, false);
 
         // Controls whether user has selected the folder or canceled folder selection
@@ -26,10 +25,7 @@ export class FolderSelector {
 
         // Keeps asking user to select folder
         while (!hasSelected && !hasCancelled) {
-            const selectedItem = await window.showQuickPick(items, {
-                placeHolder: 'Destination folder on Google Drive',
-                ignoreFocusOut: true
-            });
+            const selectedItem = await this.provider.showQuickPick(items);
             if (selectedItem) {
 
                 const label = selectedItem.label;
@@ -45,8 +41,8 @@ export class FolderSelector {
 
                     // Extracts information about the selected item
                     currentSelection = {
-                        folderId: description!.substring(FOLDER_DESCRIPTION_TEXT.length),
-                        folderName: label.substring(FOLDER_SYMBOL_TEXT.length)
+                        label: description!.substring(FOLDER_DESCRIPTION_TEXT.length),
+                        description: label.substring(FOLDER_SYMBOL_TEXT.length)
                     }
 
                     items = await this.createPickItems(currentSelection, true);
@@ -67,33 +63,33 @@ export class FolderSelector {
                 hasCancelled = true;
             }
         }
-        return hasCancelled ? '' : currentSelection.folderId;
+        return hasCancelled ? '' : currentSelection.label;
     }
 
-    private async createPickItems(currentSelection: SelectionInfo, allowGoBack: boolean): Promise<QuickPickItem[]> {
-        const allItems: QuickPickItem[] = [];
-        allItems.push(this.createItemToSelectCurrent(currentSelection.folderName));
+    private async createPickItems(currentSelection: IPickItem, allowGoBack: boolean): Promise<IPickItem[]> {
+        const allItems: IPickItem[] = [];
+        allItems.push(this.createItemToSelectCurrent(currentSelection.description));
         if (allowGoBack) {
             allItems.push(this.createItemToGoBack());
         }
-        const foldersItems = await this.createFoldersItems(currentSelection.folderId);
+        const foldersItems = await this.createFoldersItems(currentSelection.label);
         allItems.push(...foldersItems);
         return allItems;
     }
 
-    private createItemToSelectCurrent(name: string): QuickPickItem {
-        const selectCurrentItem: QuickPickItem = { label: `$(cloud-upload) ${UPLOAD_TEXT}'${name}'` };
+    private createItemToSelectCurrent(name: string): IPickItem {
+        const selectCurrentItem: IPickItem = { label: `$(cloud-upload) ${UPLOAD_TEXT}'${name}'`, description: '' };
         return selectCurrentItem;
     }
 
-    private createItemToGoBack(): QuickPickItem {
-        const goBackItem: QuickPickItem = { label: `$(arrow-left) Go back to previous folder` };
+    private createItemToGoBack(): IPickItem {
+        const goBackItem: IPickItem = { label: `$(arrow-left) Go back to previous folder`, description: '' };
         return goBackItem;
     }
 
-    private async createFoldersItems(parentId: string): Promise<QuickPickItem[]> {
+    private async createFoldersItems(parentId: string): Promise<IPickItem[]> {
         const folders = await this.model.listOnlyFolders(parentId);
-        const foldersItems: QuickPickItem[] = folders.map(f => {
+        const foldersItems: IPickItem[] = folders.map(f => {
             return {
                 label: `${FOLDER_SYMBOL_TEXT}${f.name}`,
                 description: `${FOLDER_DESCRIPTION_TEXT}${f.id}`
@@ -104,7 +100,12 @@ export class FolderSelector {
 
 }
 
-interface SelectionInfo {
-    folderId: string,
-    folderName: string,
+export interface IPickProvider {
+
+    showQuickPick(items: IPickItem[]): Promise<IPickItem | undefined>;
+}
+
+export interface IPickItem {
+    label: string,
+    description: string,
 }
