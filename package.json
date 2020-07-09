@@ -23,6 +23,12 @@
 	"categories": [
 		"Other"
 	],
+	"keywords": [
+		"google",
+		"drive",
+		"cloud",
+		"storage"
+	],
 	"activationEvents": [
 		"onCommand:google.drive.configureCredentials",
 		"onCommand:google.drive.fetchFiles",
