@@ -1,4 +1,4 @@
-import { TreeItemCollapsibleState, TreeDataProvider, TreeItem, EventEmitter, Event, window, Uri, ProgressLocation, ProviderResult, SaveDialogOptions } from "vscode";
+import { commands, TreeItemCollapsibleState, TreeDataProvider, TreeItem, EventEmitter, Event, window, Uri, ProgressLocation, ProviderResult, SaveDialogOptions, TextDocumentShowOptions, ViewColumn } from "vscode";
 import { FileType, DriveFile } from "./driveTypes";
 import { DriveModel } from "./driveModel";
 import { FolderSelector } from "./folderSelector";
@@ -30,6 +30,14 @@ export class DriveView implements TreeDataProvider<string> {
         });
     }
 
+    openFile(fullPath: string): void {
+        const options: TextDocumentShowOptions = {
+            viewColumn: ViewColumn.Active,
+            preview: false
+        }
+        commands.executeCommand('vscode.open', Uri.file(fullPath), options).then();
+    }
+
     refresh(): void {
         this._onDidChangeTreeData.fire();
     }
@@ -50,8 +58,8 @@ export class DriveView implements TreeDataProvider<string> {
         return window.showInputBox({ placeHolder: message });
     }
 
-    showInformationMessage(message: string): void {
-        window.showInformationMessage(message);
+    showInformationMessage(message: string, ...items: string[]): Thenable<string | undefined> {
+        return window.showInformationMessage(message, { modal: false }, ...items);
     }
 
     showWarningMessage(message: string): void {

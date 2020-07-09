@@ -6,8 +6,9 @@
 		"name": "Gustavo Cassel",
 		"email": "guscassel@gmail.com"
 	},
+	"license": "MIT",
 	"publisher": "GustavoASC",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"icon": "img/icon.png",
 	"engines": {
 		"vscode": "^1.43.0"
@@ -27,6 +28,7 @@
 		"onCommand:google.drive.fetchFiles",
 		"onCommand:google.drive.uploadOpenFile",
 		"onCommand:google.drive.uploadSelectedFile",
+		"onCommand:google.drive.uploadToFolderSelectedOnView",
 		"onCommand:google.drive.createFolder",
 		"onCommand:google.drive.download",
 		"onView:driveView"
@@ -50,6 +52,12 @@
 			{
 				"command": "google.drive.uploadSelectedFile",
 				"title": "Google Drive: Upload selected file to Drive"
+			},
+			{
+				"command": "google.drive.uploadToFolderSelectedOnView",
+				"title": "Google Drive: Upload file to selected folder on Drive",
+				"icon": "$(cloud-upload)",
+				"enablement": "viewItem != file"
 			},
 			{
 				"command": "google.drive.createFolder",
@@ -96,12 +104,17 @@
 			],
 			"view/item/context": [
 				{
-					"command": "google.drive.createFolder",
+					"command": "google.drive.download",
 					"when": "view == driveView",
 					"group": "inline"
 				},
 				{
-					"command": "google.drive.download",
+					"command": "google.drive.uploadToFolderSelectedOnView",
+					"when": "view == driveView",
+					"group": "inline"
+				},
+				{
+					"command": "google.drive.createFolder",
 					"when": "view == driveView",
 					"group": "inline"
 				}
