@@ -77,7 +77,7 @@ export class GoogleDriveFileProvider implements IFileProvider {
                     'fileId': fileId,
                     'alt': 'media'
                 };
-                const responsType = { responseType: 'stream' };
+                const responseType = { responseType: 'stream' };
                 const callbackFn = (err: any, response: any) => {
                     if (err) return reject(err);
                     response.data
@@ -85,7 +85,7 @@ export class GoogleDriveFileProvider implements IFileProvider {
                         .on('end', () => resolve())
                         .pipe(createStreamFunction());
                 };
-                drive(auth).files.get(getParams, responsType, callbackFn);
+                drive(auth).files.get(getParams, responseType, callbackFn);
             }).catch(err => reject(err));;
         });
     }
