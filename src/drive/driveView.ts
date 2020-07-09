@@ -4,14 +4,12 @@ import { DriveModel } from "./driveModel";
 import { FolderSelector } from "./folderSelector";
 import { VSCodePickProvider } from "./vscodePickProvider";
 
-const SIGN_IN_ID = 'Click-to-sign-in-ID';
-
 export class DriveView implements TreeDataProvider<string> {
 
     /** Helper objects to refresh UI when a new monitor is added */
     private _onDidChangeTreeData: EventEmitter<string | undefined> = new EventEmitter<string | undefined>();
     readonly onDidChangeTreeData: Event<string | undefined> = this._onDidChangeTreeData.event;
-    
+
     private folderSelector: FolderSelector = new FolderSelector(this.model, new VSCodePickProvider());
 
     constructor(private model: DriveModel) {
@@ -60,13 +58,6 @@ export class DriveView implements TreeDataProvider<string> {
         window.showWarningMessage(message);
     }
 
-    private buildSignInItem(): TreeItem | Thenable<TreeItem> {
-        return {
-            label: 'Sign in to Google Drive...',
-            command: { command: 'google.drive.fetchFiles', title: 'Sign in' }
-        };
-    }
-
     private buildItemFromDriveFile(currentFile: DriveFile): TreeItem | Thenable<TreeItem> {
         const iconUri = Uri.parse(currentFile.iconLink);
         const iconPath = { light: iconUri, dark: iconUri };
@@ -100,9 +91,6 @@ export class DriveView implements TreeDataProvider<string> {
     //------- Interface methods
 
     getTreeItem(id: string): TreeItem | Thenable<TreeItem> {
-        if (id === SIGN_IN_ID) {
-            return this.buildSignInItem();
-        }
         const currentFile = this.model.getDriveFile(id);
         return currentFile ? this.buildItemFromDriveFile(currentFile) : {};
     }
