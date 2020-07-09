@@ -23,6 +23,9 @@
 	"categories": [
 		"Other"
 	],
+	"galleryBanner": {
+		"color": "##1da261"
+	},
 	"keywords": [
 		"google",
 		"drive",
