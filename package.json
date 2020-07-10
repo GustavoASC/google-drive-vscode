@@ -14,7 +14,8 @@
 		"vscode": "^1.43.0"
 	},
 	"bugs": {
-		"url": "https://github.com/GustavoASC/google-drive-vscode/issues"
+		"url": "https://github.com/GustavoASC/google-drive-vscode/issues",
+		"email": "guscassel@gmail.com"
 	},
 	"repository": {
 		"type": "git",
@@ -24,7 +25,8 @@
 		"Other"
 	],
 	"galleryBanner": {
-		"color": "##1da261"
+		"color": "##1da261",
+		"theme": "dark"
 	},
 	"keywords": [
 		"google",
