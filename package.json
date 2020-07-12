@@ -8,7 +8,7 @@
 	},
 	"license": "MIT",
 	"publisher": "GustavoASC",
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"icon": "img/icon.png",
 	"engines": {
 		"vscode": "^1.43.0"
@@ -94,7 +94,7 @@
 				{
 					"id": "driveActivityBar",
 					"title": "Google Drive",
-					"icon": "img/icon.png"
+					"icon": "img/icon.svg"
 				}
 			]
 		},
