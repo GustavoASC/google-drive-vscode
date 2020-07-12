@@ -70,6 +70,14 @@ describe('Drive model operations', () => {
         });
     });
 
+    it('Rename file', async () => {
+        const model = new DriveModel(new MockFileProvider());
+        await model.listFiles('abcdefghi');
+        await model.renameFile('1C7udIKXCkxsvjO37gCBpfzrHihn9wocz', 'novoNome.png');
+        const driveFile = model.getDriveFile('1C7udIKXCkxsvjO37gCBpfzrHihn9wocz');
+        expect(driveFile?.name).to.equal('novoNome.png');
+    });
+
 });
 
 function compareFileNames(files: DriveFile[], names: string[]): void {
@@ -106,7 +114,7 @@ class MockFileProvider implements IFileProvider {
     }
 
     createFolder(parentFolderId: string, folderName: string): Promise<void> {
-        return new Promise((resolve, _reject) => {
+        return new Promise((resolve) => {
             expect(parentFolderId).to.equal('abcdefghi');
             this.dummyFiles.push({ iconLink: 'http://www.mylink.com/folder', id: 'dummyFolderId', name: folderName, type: FileType.DIRECTORY })
             resolve();
@@ -114,7 +122,7 @@ class MockFileProvider implements IFileProvider {
     }
 
     uploadFile(parentFolderId: string, fullFilePath: string, basename: string, mimeType: string): Promise<void> {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             switch (this.counter++) {
                 case 0:
                     expect(parentFolderId).to.equal('abcdefghi');
@@ -152,10 +160,18 @@ class MockFileProvider implements IFileProvider {
     }
 
     retrieveFileContent(fileId: string, createStreamFunction: () => NodeJS.WritableStream): Promise<void> {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             expect(fileId).to.equal('1C7udIKXCkxsvjO37gCBpfzrHihn9wocz');
             const stream = createStreamFunction();
             stream.end('done writing data');
+            resolve();
+        });
+    }
+
+    renameFile(fileId: string, newName: string): Promise<void> {
+        return new Promise((resolve) => {
+            expect(fileId).to.equal('1C7udIKXCkxsvjO37gCBpfzrHihn9wocz');
+            expect(newName).to.equal('novoNome.png');
             resolve();
         });
     }

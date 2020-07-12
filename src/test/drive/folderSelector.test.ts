@@ -106,4 +106,8 @@ class MockFileProvider implements IFileProvider {
         throw new Error("Method not implemented.");
     }
 
+    renameFile(_fileId: string, _newName: string): Promise<void> {
+        throw new Error("Method not implemented");
+    }
+
 }

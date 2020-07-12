@@ -1,19 +1,15 @@
-import { commands, TreeItemCollapsibleState, TreeDataProvider, TreeItem, EventEmitter, Event, window, Uri, ProgressLocation, ProviderResult, SaveDialogOptions, TextDocumentShowOptions, ViewColumn } from "vscode";
-import { FileType, DriveFile } from "./driveTypes";
+import { commands, InputBoxOptions, window, Uri, ProgressLocation, SaveDialogOptions, TextDocumentShowOptions, ViewColumn } from "vscode";
 import { DriveModel } from "./driveModel";
 import { FolderSelector } from "./folderSelector";
 import { VSCodePickProvider } from "./vscodePickProvider";
+import { DriveTreeDataProvider } from "./driveTreeDataProvider";
 
-export class DriveView implements TreeDataProvider<string> {
-
-    /** Helper objects to refresh UI when a new monitor is added */
-    private _onDidChangeTreeData: EventEmitter<string | undefined> = new EventEmitter<string | undefined>();
-    readonly onDidChangeTreeData: Event<string | undefined> = this._onDidChangeTreeData.event;
+export class DriveView {
 
     private folderSelector: FolderSelector = new FolderSelector(this.model, new VSCodePickProvider());
+    private driveTreeViewProvider: DriveTreeDataProvider = new DriveTreeDataProvider(this.model);
 
     constructor(private model: DriveModel) {
-        window.registerTreeDataProvider('driveView', this);
     }
 
     async askForRemoteDestinationFolder(): Promise<string | undefined> {
@@ -39,7 +35,7 @@ export class DriveView implements TreeDataProvider<string> {
     }
 
     refresh(): void {
-        this._onDidChangeTreeData.fire();
+        this.driveTreeViewProvider.refresh();
     }
 
     showProgressMessage(message: string, task: Thenable<any>): void {
@@ -54,8 +50,12 @@ export class DriveView implements TreeDataProvider<string> {
         });
     }
 
-    async showInputBox(message: string): Promise<string | undefined> {
-        return window.showInputBox({ placeHolder: message });
+    async showInputBox(message: string, value?: string): Promise<string | undefined> {
+        const params: InputBoxOptions = {
+            placeHolder: message,
+            value: value
+        }
+        return window.showInputBox(params);
     }
 
     showInformationMessage(message: string, ...items: string[]): Thenable<string | undefined> {
@@ -66,49 +66,4 @@ export class DriveView implements TreeDataProvider<string> {
         window.showWarningMessage(message);
     }
 
-    private buildItemFromDriveFile(currentFile: DriveFile): TreeItem | Thenable<TreeItem> {
-        const iconUri = Uri.parse(currentFile.iconLink);
-        const iconPath = { light: iconUri, dark: iconUri };
-        const collapsible = this.detectCollapsibleState(currentFile);
-        const contextValue = this.detectContextValue(currentFile);
-        return {
-            iconPath: iconPath,
-            label: currentFile.name,
-            collapsibleState: collapsible,
-            contextValue: contextValue
-        };
-    }
-
-    private detectCollapsibleState(currentFile: DriveFile): TreeItemCollapsibleState {
-        const collapsible = currentFile.type == FileType.DIRECTORY ?
-            TreeItemCollapsibleState.Collapsed :
-            TreeItemCollapsibleState.None;
-        return collapsible;
-    }
-
-    private detectContextValue(currentFile: DriveFile): string {
-        const contextValue = currentFile.type == FileType.DIRECTORY ? 'folder' : 'file';
-        return contextValue;
-    }
-
-    private extractFileIds(files: DriveFile[]): string[] {
-        const result = files.map(f => f.id);
-        return result;
-    }
-
-    //------- Interface methods
-
-    getTreeItem(id: string): TreeItem | Thenable<TreeItem> {
-        const currentFile = this.model.getDriveFile(id);
-        return currentFile ? this.buildItemFromDriveFile(currentFile) : {};
-    }
-
-    getChildren(id: string): ProviderResult<string[]> {
-        return new Promise((resolve, reject) => {
-            const currentFileId = id ? id : 'root';
-            this.model.listFiles(currentFileId)
-                .then(files => resolve(this.extractFileIds(files)))
-                .catch(err => reject(err));
-        });
-    }
 }

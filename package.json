@@ -8,7 +8,7 @@
 	},
 	"license": "MIT",
 	"publisher": "GustavoASC",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"icon": "img/icon.png",
 	"engines": {
 		"vscode": "^1.43.0"
@@ -42,6 +42,7 @@
 		"onCommand:google.drive.uploadToFolderSelectedOnView",
 		"onCommand:google.drive.createFolder",
 		"onCommand:google.drive.download",
+		"onCommand:google.drive.rename",
 		"onView:driveView"
 	],
 	"main": "./out/extension.js",
@@ -81,6 +82,11 @@
 				"title": "Google Drive: Download file from Drive",
 				"icon": "$(cloud-download)",
 				"enablement": "viewItem == file"
+			},
+			{
+				"command": "google.drive.rename",
+				"title": "Google Drive: Rename file on Drive",
+				"icon": "$(edit)"
 			}
 		],
 		"viewsContainers": {
@@ -126,6 +132,11 @@
 				},
 				{
 					"command": "google.drive.createFolder",
+					"when": "view == driveView",
+					"group": "inline"
+				},
+				{
+					"command": "google.drive.rename",
 					"when": "view == driveView",
 					"group": "inline"
 				}

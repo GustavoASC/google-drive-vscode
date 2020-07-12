@@ -86,7 +86,25 @@ export class GoogleDriveFileProvider implements IFileProvider {
                         .pipe(createStreamFunction());
                 };
                 drive(auth).files.get(getParams, responseType, callbackFn);
-            }).catch(err => reject(err));;
+            }).catch(err => reject(err));
+        });
+    }
+
+    renameFile(fileId: string, newName: string): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.authenticator.authenticate().then((auth) => {
+                const resource = {
+                    name: newName
+                }
+                const updateParams = {
+                    fileId: fileId,
+                    resource: resource
+                };
+                const callbackFn = (err: any, _response: any) => {
+                    err ? reject(err) : resolve();
+                };
+                drive(auth).files.update(updateParams, callbackFn);
+            }).catch(err => reject(err));
         });
     }
 

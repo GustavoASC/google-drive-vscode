@@ -57,6 +57,19 @@ export class DriveModel {
         })
     }
 
+    renameFile(fileId: string, newName: string): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.fileProvider.renameFile(fileId, newName)
+                .then(() => {
+                    const driveFile = this.getDriveFile(fileId);
+                    if (driveFile) {
+                        driveFile.name = newName;
+                    }
+                    resolve();
+                }).catch((err) => reject(err));
+        });
+    }
+
     private updateCurrentInfo(files: DriveFile[]) {
         files.forEach((file) => this.cachedFiles.set(file.id, file));
     }
@@ -78,5 +91,6 @@ export interface IFileProvider {
     createFolder(parentFolderId: string, folderName: string): Promise<void>;
     uploadFile(parentFolderId: string, fullFilePath: string, basename: string, mimeType: string): Promise<void>;
     retrieveFileContent(fileId: string, createStreamFunction: () => NodeJS.WritableStream): Promise<void>;
+    renameFile(fileId: string, newName: string): Promise<void>;
 
 }

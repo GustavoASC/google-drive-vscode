@@ -34,6 +34,9 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 	subscriptions.push(vscode.commands.registerCommand('google.drive.download', (selectedFileId: any) => {
 		downloadSelectedFile(selectedFileId, controller);
 	}));
+	subscriptions.push(vscode.commands.registerCommand('google.drive.rename', (selectedFileId: any) => {
+		return renameSelectedFile(selectedFileId, controller);
+	}));
 }
 
 function configureCredentials(): void {
@@ -87,6 +90,16 @@ function uploadToFolderSelectedOnView(selectedFolderId: any, controller: DriveCo
 function downloadSelectedFile(selectedFileId: any, controller: DriveController): void {
 	if (selectedFileId) {
 		controller.downloadFile(selectedFileId);
+	} else {
+		vscode.window.showWarningMessage('This command can only be directly used from Google Drive view.');
+	}
+}
+
+async function renameSelectedFile(selectedFileId: any, controller: DriveController): Promise<void> {
+	if (selectedFileId) {
+		await controller.renameFile(selectedFileId);
+	} else {
+		vscode.window.showWarningMessage('This command can only be directly used from Google Drive view.');
 	}
 }
 
