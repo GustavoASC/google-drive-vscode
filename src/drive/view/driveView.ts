@@ -1,5 +1,5 @@
 import { commands, InputBoxOptions, window, Uri, ProgressLocation, SaveDialogOptions, TextDocumentShowOptions, ViewColumn } from "vscode";
-import { DriveModel } from "./driveModel";
+import { DriveModel } from "../model/driveModel";
 import { FolderSelector } from "./folderSelector";
 import { VSCodePickProvider } from "./vscodePickProvider";
 import { DriveTreeDataProvider } from "./driveTreeDataProvider";
@@ -50,7 +50,7 @@ export class DriveView {
         });
     }
 
-    async showInputBox(message: string, value?: string): Promise<string | undefined> {
+    showInputBox(message: string, value?: string): Thenable<string | undefined> {
         const params: InputBoxOptions = {
             placeHolder: message,
             value: value

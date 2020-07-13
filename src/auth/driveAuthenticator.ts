@@ -1,8 +1,7 @@
 import { env, Uri, window } from "vscode";
 import { CredentialsManager } from "./credentialsManager";
-import * as fs from "fs";
-
 const { google } = require('googleapis');
+import * as fs from "fs";
 
 const CREDENTIALS_JSON_SERVICE = 'Google Drive for VSCode - Credentials';
 const TOKENS_JSON_SERVICE = 'Google Drive for VSCode - Token';
@@ -15,6 +14,14 @@ export class DriveAuthenticator {
   private oAuth2Client: any;
   private token: any;
   private credentialsManager = new CredentialsManager();
+
+  checkCredentialsConfigured(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.credentialsManager.retrievePassword(CREDENTIALS_JSON_SERVICE)
+        .then(() => resolve())
+        .catch(err => reject(err));
+    });
+  }
 
   storeApiCredentials(apiCredentialsJsonFile: string): Promise<void> {
     return new Promise((resolve, reject) => {

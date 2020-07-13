@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import 'mocha';
-import { IPickProvider, IPickItem, FolderSelector } from '../../drive/folderSelector';
-import { DriveModel, IFileProvider } from '../../drive/driveModel';
-import { DriveFile, FileType } from '../../drive/driveTypes';
+import { IPickProvider, IPickItem, FolderSelector } from '../../../drive/view/folderSelector';
+import { DriveModel, IFileProvider } from '../../../drive/model/driveModel';
+import { DriveFile, FileType } from '../../../drive/model/driveTypes';
 import { fail } from 'assert';
 
 describe('Folder selection operations', () => {

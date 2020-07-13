@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import 'mocha';
 import { fail } from 'assert';
-import { IFileProvider, DriveModel } from '../../drive/driveModel';
-import { DriveFile, FileType } from '../../drive/driveTypes';
+import { IFileProvider, DriveModel } from '../../../drive/model/driveModel';
+import { DriveFile, FileType } from '../../../drive/model/driveTypes';
 import * as path from "path";
 import * as fs from 'fs';
 

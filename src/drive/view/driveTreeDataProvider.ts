@@ -1,6 +1,6 @@
 import { TreeItemCollapsibleState, TreeDataProvider, TreeItem, EventEmitter, Event, window, Uri, ProviderResult } from "vscode";
-import { FileType, DriveFile, DriveFileUtils } from "./driveTypes";
-import { DriveModel } from "./driveModel";
+import { FileType, DriveFile, DriveFileUtils } from "../model/driveTypes";
+import { DriveModel } from "../model/driveModel";
 
 export class DriveTreeDataProvider implements TreeDataProvider<string> {
 

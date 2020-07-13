@@ -1,6 +1,6 @@
 import 'mocha';
 import { expect } from 'chai';
-import { DriveFileUtils, FileType } from '../../drive/driveTypes';
+import { DriveFileUtils, FileType } from '../../../drive/model/driveTypes';
 
 describe('Drive type operations', () => {
 

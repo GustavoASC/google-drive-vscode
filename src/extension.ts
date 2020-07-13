@@ -1,62 +1,56 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import { DriveController } from './drive/driveController';
-import { DriveModel } from './drive/driveModel';
-import { GoogleDriveFileProvider } from './drive/googleDriveFileProvider';
+import { DriveController } from './drive/controller/driveController';
+import { DriveModel } from './drive/model/driveModel';
+import { GoogleDriveFileProvider } from './drive/model/googleDriveFileProvider';
 import { DriveAuthenticator } from './auth/driveAuthenticator';
+import { CredentialsConfigurator } from './credentialsConfigurator';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate({ subscriptions }: vscode.ExtensionContext) {
 
-	const model = new DriveModel(new GoogleDriveFileProvider())
+	const driveAuthenticator = new DriveAuthenticator();
+	const credentialsConfigurator = new CredentialsConfigurator(driveAuthenticator);
+	const googleFileProvider = new GoogleDriveFileProvider(driveAuthenticator);
+	const model = new DriveModel(googleFileProvider);
 	const controller = new DriveController(model);
 
 	subscriptions.push(vscode.commands.registerCommand('google.drive.configureCredentials', () => {
-		configureCredentials();
+		credentialsConfigurator.configureCredentials();
 	}));
 	subscriptions.push(vscode.commands.registerCommand('google.drive.fetchFiles', () => {
-		listFiles(controller);
+		controller.listFiles('root');
 	}));
 	subscriptions.push(vscode.commands.registerCommand('google.drive.uploadOpenFile', () => {
 		uploadOpenFile(controller);
 	}));
 	subscriptions.push(vscode.commands.registerCommand('google.drive.createFolder', async (parentId: string) => {
-		return createFolder(parentId, controller);
+		createFolder(parentId, controller);
 	}));
 	subscriptions.push(vscode.commands.registerCommand('google.drive.uploadSelectedFile', (selectedFileId: any) => {
-		return uploadSelectedFile(selectedFileId, controller);
+		uploadSelectedFile(selectedFileId, controller);
 	}));
 	subscriptions.push(vscode.commands.registerCommand('google.drive.uploadToFolderSelectedOnView', (selectedFolderId: any) => {
-		return uploadToFolderSelectedOnView(selectedFolderId, controller);
+		uploadToFolderSelectedOnView(selectedFolderId, controller);
 	}));
 	subscriptions.push(vscode.commands.registerCommand('google.drive.download', (selectedFileId: any) => {
 		downloadSelectedFile(selectedFileId, controller);
 	}));
 	subscriptions.push(vscode.commands.registerCommand('google.drive.rename', (selectedFileId: any) => {
-		return renameSelectedFile(selectedFileId, controller);
+		renameSelectedFile(selectedFileId, controller);
 	}));
+
+	credentialsConfigurator.checkCredentialsConfigured();
 }
 
-function configureCredentials(): void {
-	vscode.window.showInformationMessage('Please select the credentials.json file previously generated from your Google API Console.')
-	vscode.window.showOpenDialog({}).then(files => {
-		if (files && files.length > 0) {
-			const selectedCredentialsFile = files[0].fsPath;
-			new DriveAuthenticator().storeApiCredentials(selectedCredentialsFile)
-				.then(() => vscode.window.showInformationMessage('Credentials successfully stored!'))
-				.catch(err => vscode.window.showErrorMessage(err));
-		}
-	});
-}
-
-function listFiles(controller: DriveController): void {
-	controller.listFiles('root');
-}
-
-async function createFolder(parentId: string, controller: DriveController): Promise<void> {
-	return controller.createFolder(parentId);
+function createFolder(parentId: string, controller: DriveController): void {
+	if (parentId) {
+		controller.createFolder(parentId);
+	} else {
+		vscode.window.showWarningMessage('This command can only be directly used from Google Drive view.');
+	}
 }
 
 function uploadOpenFile(controller: DriveController): Thenable<any> {
@@ -81,7 +75,7 @@ function uploadToFolderSelectedOnView(selectedFolderId: any, controller: DriveCo
 		return vscode.window.showOpenDialog({}).then(files => {
 			if (files && files.length > 0) {
 				const selectedFile = files[0].fsPath;
-				return controller.uploadFileToFolder(selectedFile, selectedFolderId);
+				controller.uploadFileToFolder(selectedFile, selectedFolderId);
 			}
 		});
 	}
@@ -95,9 +89,9 @@ function downloadSelectedFile(selectedFileId: any, controller: DriveController):
 	}
 }
 
-async function renameSelectedFile(selectedFileId: any, controller: DriveController): Promise<void> {
+function renameSelectedFile(selectedFileId: any, controller: DriveController): void {
 	if (selectedFileId) {
-		await controller.renameFile(selectedFileId);
+		controller.renameFile(selectedFileId);
 	} else {
 		vscode.window.showWarningMessage('This command can only be directly used from Google Drive view.');
 	}

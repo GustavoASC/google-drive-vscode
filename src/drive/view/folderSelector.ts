@@ -1,4 +1,4 @@
-import { DriveModel } from "./driveModel";
+import { DriveModel } from "../model/driveModel";
 
 const FOLDER_DESCRIPTION_TEXT = 'Folder ID: ';
 const FOLDER_SYMBOL_TEXT = '$(file-directory) ';

@@ -1,6 +1,6 @@
 import { DriveFile } from "./driveTypes";
 import { DriveTypeConverter } from "./driveTypeConverter";
-import { DriveAuthenticator } from '../auth/driveAuthenticator';
+import { DriveAuthenticator } from '../../auth/driveAuthenticator';
 import * as fs from "fs";
 const { google } = require('googleapis');
 import { IFileProvider } from "./driveModel";
@@ -9,7 +9,7 @@ const HTTP_RESPONSE_OK = 200;
 
 export class GoogleDriveFileProvider implements IFileProvider {
 
-    private authenticator = new DriveAuthenticator();
+    constructor(private authenticator: DriveAuthenticator) { }
 
     provideFiles(parentFolderId: string): Promise<DriveFile[]> {
         return new Promise((resolve, reject) => {

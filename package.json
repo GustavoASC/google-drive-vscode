@@ -8,7 +8,7 @@
 	},
 	"license": "MIT",
 	"publisher": "GustavoASC",
-	"version": "0.0.10",
+	"version": "0.0.11",
 	"icon": "img/icon.png",
 	"engines": {
 		"vscode": "^1.43.0"
@@ -140,6 +140,16 @@
 					"group": "drive"
 				}
 			]
+		},
+		"configuration": {
+			"title": "Google Drive",
+			"properties": {
+				"google.drive.alertMissingCredentials": {
+					"type": "boolean",
+					"description": "Controls whether Google Drive extension should alert when no credentials have been configured yet.",
+					"default": true
+				}
+			}
 		}
 	},
 	"scripts": {
@@ -147,7 +157,7 @@
 		"compile": "npm run tslint && tsc -p ./",
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile && npm run tslint",
-		"test": "mocha -r ts-node/register ./src/test/**/*.test.ts",
+		"test": "mocha --require ts-node/register ./src/test/drive/**/*.test.ts",
 		"tslint": "tslint --project tsconfig.json --config tslint.json"
 	},
 	"devDependencies": {
