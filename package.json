@@ -8,7 +8,7 @@
 	},
 	"license": "MIT",
 	"publisher": "GustavoASC",
-	"version": "0.0.8",
+	"version": "0.0.9",
 	"icon": "img/icon.png",
 	"engines": {
 		"vscode": "^1.43.0"
@@ -35,15 +35,7 @@
 		"storage"
 	],
 	"activationEvents": [
-		"onCommand:google.drive.configureCredentials",
-		"onCommand:google.drive.fetchFiles",
-		"onCommand:google.drive.uploadOpenFile",
-		"onCommand:google.drive.uploadSelectedFile",
-		"onCommand:google.drive.uploadToFolderSelectedOnView",
-		"onCommand:google.drive.createFolder",
-		"onCommand:google.drive.download",
-		"onCommand:google.drive.rename",
-		"onView:driveView"
+		"*"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
