@@ -23,8 +23,9 @@ export class DriveController {
 			.catch(err => this.view.showWarningMessage(err));
 	}
 
-	createFolder(parentFolderId: string): void {
-		this.folderSupport.createFolder(parentFolderId);
+	createFolder(parentFolderId?: string): void {
+		const finalId = parentFolderId ? parentFolderId : 'root';
+		this.folderSupport.createFolder(finalId);
 	}
 
 	async uploadFileAndAskFolder(fullFileName: string): Promise<void> {

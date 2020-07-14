@@ -1,7 +1,8 @@
-import { env, Uri, window } from "vscode";
+import { env, Uri, window, commands } from "vscode";
 import { CredentialsManager } from "./credentialsManager";
 const { google } = require('googleapis');
 import * as fs from "fs";
+import { CONFIGURE_CREDENTIALS_COMMAND } from "../extension";
 
 const CREDENTIALS_JSON_SERVICE = 'Google Drive for VSCode - Credentials';
 const TOKENS_JSON_SERVICE = 'Google Drive for VSCode - Token';
@@ -26,13 +27,30 @@ export class DriveAuthenticator {
   storeApiCredentials(apiCredentialsJsonFile: string): Promise<void> {
     return new Promise((resolve, reject) => {
       fs.readFile(apiCredentialsJsonFile, (err: NodeJS.ErrnoException | null, content: Buffer) => {
-        if (err) return reject(err);
+        if (err) {
+          return reject(err);
+        }
         this.credentialsManager.storePassword(content.toString(), CREDENTIALS_JSON_SERVICE)
           .then(() => {
-            // Removes old token related to possible previous credential
-            this.credentialsManager.removePassword(TOKENS_JSON_SERVICE)
-              .then(() => resolve())
-              .catch(err => reject());
+            // Credentials have been successfully stored.
+            // So, we need to check whether any remaining auth token exists
+            this.credentialsManager.retrievePassword(TOKENS_JSON_SERVICE)
+              .then(() => {
+
+                // A remaining auth token really exists, so remove it
+                // from operating system key vault
+                this.credentialsManager.removePassword(TOKENS_JSON_SERVICE)
+                  .then(() => resolve())
+                  .catch(err => reject(err));
+
+
+                resolve();
+              }).catch(() => {
+
+                // It's okay to be here because there was no remaining
+                // auth token
+                resolve()
+              });
           })
           .catch(err => reject(err));
       });
@@ -41,19 +59,50 @@ export class DriveAuthenticator {
 
   authenticate(): Promise<void> {
     return new Promise((resolve, reject) => {
-      if (this.isAuthenticated())
+
+      // Checks whether the authorization flow has already
+      // been done before
+      if (this.isAuthenticated()) {
         return resolve(this.oAuth2Client);
+      }
+
+      // Authentication needs to be done before any operation on 
+      // Google Drive API
       this.credentialsManager.retrievePassword(CREDENTIALS_JSON_SERVICE)
         .then(originalJson => {
-          this.authorize(JSON.parse(originalJson.toString()))
+
+          // User has already configured credentials.json so use it to
+          // proceed with the authorization flow 
+          const credentialsJson = JSON.parse(originalJson.toString());
+          this.authorize(credentialsJson)
             .then(() => resolve(this.oAuth2Client))
             .catch(err => reject(err));
-        }).catch(err => reject(err));
+
+        }).catch(err => {
+
+          // Credentials have not been configured yet, so there is no way to proceed
+          // with authorization flow
+          this.showMissingCredentialsMessage();
+
+          // Rejects current authentication
+          reject(err);
+
+        });
     });
   }
 
+  private showMissingCredentialsMessage(): void {
+    const configureButton = 'Configure credentials';
+    window.showWarningMessage(`The operation cannot proceed since Google Drive API credentials haven't been configured yet. Please configure the credentials and try again.`, configureButton)
+      .then(selectedButton => {
+        if (selectedButton === configureButton) {
+          commands.executeCommand(CONFIGURE_CREDENTIALS_COMMAND);
+        }
+      });
+  }
+
   private isAuthenticated(): boolean {
-    return this.oAuth2Client != undefined && this.token != undefined;
+    return this.oAuth2Client && this.token;
   }
 
   private authorize(credentials: any): Promise<void> {
@@ -71,7 +120,7 @@ export class DriveAuthenticator {
           resolve();
         }).catch(() => {
           // We don't have the auth token yet, so open external browser
-          // to ask user the needed access
+          // to ask user the required access
           this.getAccessToken()
             .then(() => resolve())
             .catch((err) => reject(err));
@@ -83,14 +132,21 @@ export class DriveAuthenticator {
     return new Promise(async (resolve, reject) => {
       const authUrl = this.oAuth2Client.generateAuthUrl({ access_type: 'offline', scope: SCOPES });
       window.showInformationMessage('Authorize this app by visiting the external URL and paste in the auth token');
-      await env.openExternal(Uri.parse(authUrl));
-      const code = await window.showInputBox({
+      const opened = await env.openExternal(Uri.parse(authUrl));
+      if (!opened) {
+        // User has cancelled the authorization flow
+        window.showWarningMessage('Authorization flow canceled by user.');
+        return reject();
+      }
+      const authToken = await window.showInputBox({
         ignoreFocusOut: true,
         prompt: 'Paste here the auth token'
       });
-      if (code) {
-        this.oAuth2Client.getToken(code, (err: any, token: any) => {
-          if (err) return reject(err);
+      if (authToken) {
+        this.oAuth2Client.getToken(authToken, (err: any, token: any) => {
+          if (err) {
+            return reject(err);
+          }
           this.token = token;
           const stringified = JSON.stringify(this.token);
           this.credentialsManager.storePassword(stringified, TOKENS_JSON_SERVICE)
@@ -101,6 +157,8 @@ export class DriveAuthenticator {
             }).catch(err => reject(err));
         });
       } else {
+        // User has cancelled the authorization flow
+        window.showWarningMessage('Authorization flow canceled by user.');
         reject();
       }
     });

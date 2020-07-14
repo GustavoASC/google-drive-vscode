@@ -146,7 +146,7 @@
 			"properties": {
 				"google.drive.alertMissingCredentials": {
 					"type": "boolean",
-					"description": "Controls whether Google Drive extension should alert when no credentials have been configured yet.",
+					"description": "Controls whether Google Drive extension should alert on startup when no credentials are configured.",
 					"default": true
 				}
 			}

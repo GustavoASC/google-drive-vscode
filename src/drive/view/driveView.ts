@@ -31,7 +31,7 @@ export class DriveView {
             viewColumn: ViewColumn.Active,
             preview: false
         }
-        commands.executeCommand('vscode.open', Uri.file(fullPath), options).then();
+        commands.executeCommand('vscode.open', Uri.file(fullPath), options);
     }
 
     refresh(): void {

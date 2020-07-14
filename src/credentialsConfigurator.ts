@@ -38,6 +38,8 @@ export class CredentialsConfigurator {
                 this.authenticator.storeApiCredentials(selectedCredentialsFile)
                     .then(() => window.showInformationMessage('Credentials successfully stored!'))
                     .catch(err => window.showErrorMessage(err));
+            } else {
+                window.showWarningMessage(`'Configure credentials' operation canceled by user.`);
             }
         });
     }
