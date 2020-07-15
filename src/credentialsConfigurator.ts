@@ -15,7 +15,7 @@ export class CredentialsConfigurator {
                 .catch(() => {
                     const yesButton = 'Yes';
                     const dontShowAgain = `Don't show again`;
-                    window.showInformationMessage(`It looks like you don't have Google Drive API credentials configured yet. Do you want to configure them now?`, yesButton, 'No', dontShowAgain)
+                    window.showInformationMessage(`It looks like you don't have Google Drive API credentials configured. Do you want to configure them now?`, yesButton, 'No', dontShowAgain)
                         .then((selectedButton) => {
                             switch (selectedButton) {
                                 case yesButton:

@@ -93,7 +93,7 @@ export class DriveAuthenticator {
 
   private showMissingCredentialsMessage(): void {
     const configureButton = 'Configure credentials';
-    window.showWarningMessage(`The operation cannot proceed since Google Drive API credentials haven't been configured yet. Please configure the credentials and try again.`, configureButton)
+    window.showWarningMessage(`The operation cannot proceed since Google Drive API credentials haven't been configured. Please configure the credentials and try again.`, configureButton)
       .then(selectedButton => {
         if (selectedButton === configureButton) {
           commands.executeCommand(CONFIGURE_CREDENTIALS_COMMAND);
