@@ -8,6 +8,7 @@ import { DriveAuthenticator } from './auth/driveAuthenticator';
 import { CredentialsConfigurator } from './credentialsConfigurator';
 
 export const CONFIGURE_CREDENTIALS_COMMAND = 'google.drive.configureCredentials';
+export const CREATE_FOLDER_COMMAND = 'google.drive.createFolder';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -28,7 +29,7 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 	subscriptions.push(vscode.commands.registerCommand('google.drive.uploadOpenFile', () => {
 		uploadOpenFile(controller);
 	}));
-	subscriptions.push(vscode.commands.registerCommand('google.drive.createFolder', async (parentId: string | undefined) => {
+	subscriptions.push(vscode.commands.registerCommand(CREATE_FOLDER_COMMAND, async (parentId: string | undefined) => {
 		controller.createFolder(parentId);
 	}));
 	subscriptions.push(vscode.commands.registerCommand('google.drive.uploadSelectedFile', (selectedFileId: any) => {

@@ -1,6 +1,8 @@
-import { TreeItemCollapsibleState, TreeDataProvider, TreeItem, EventEmitter, Event, window, Uri, ProviderResult } from "vscode";
+import { TreeItemCollapsibleState, TreeDataProvider, TreeItem, EventEmitter, Event, window, Uri, ProviderResult, commands } from "vscode";
 import { FileType, DriveFile, DriveFileUtils } from "../model/driveTypes";
 import { DriveModel } from "../model/driveModel";
+import { INotificator } from "./driveView";
+import { CREATE_FOLDER_COMMAND } from "../../extension";
 
 export class DriveTreeDataProvider implements TreeDataProvider<string> {
 
@@ -8,12 +10,22 @@ export class DriveTreeDataProvider implements TreeDataProvider<string> {
     private _onDidChangeTreeData: EventEmitter<string | undefined> = new EventEmitter<string | undefined>();
     readonly onDidChangeTreeData: Event<string | undefined> = this._onDidChangeTreeData.event;
 
-    constructor(private model: DriveModel) {
+    constructor(private model: DriveModel, private notificator: INotificator) {
         window.registerTreeDataProvider('driveView', this);
     }
 
     refresh(): void {
         this._onDidChangeTreeData.fire();
+    }
+
+    private askToCreateFolderOnRoot(): void {
+        const yesButton = 'Yes';
+        this.notificator.showInformationMessage(`It looks like you don't have any folder on Google Drive accessible from this extension. Do you want to create a folder on Google Drive now?`, yesButton, 'No')
+            .then(selectedButton => {
+                if (selectedButton === yesButton) {
+                    commands.executeCommand(CREATE_FOLDER_COMMAND);
+                }
+            });
     }
 
     private extractFileIds(files: DriveFile[]): string[] {
@@ -52,8 +64,12 @@ export class DriveTreeDataProvider implements TreeDataProvider<string> {
         return new Promise((resolve, reject) => {
             const currentFileId = id ? id : 'root';
             this.model.listFiles(currentFileId)
-                .then(files => resolve(this.extractFileIds(files)))
-                .catch(err => reject(err));
+                .then(files => {
+                    if (currentFileId === 'root' && files.length === 0) {
+                        this.askToCreateFolderOnRoot();
+                    }
+                    resolve(this.extractFileIds(files));
+                }).catch(err => reject(err));
         });
     }
 

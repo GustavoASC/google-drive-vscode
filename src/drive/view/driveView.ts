@@ -1,13 +1,15 @@
-import { commands, InputBoxOptions, window, Uri, ProgressLocation, SaveDialogOptions, TextDocumentShowOptions, ViewColumn } from "vscode";
+import { commands, InputBoxOptions, window, Uri, SaveDialogOptions, TextDocumentShowOptions, ViewColumn } from "vscode";
 import { DriveModel } from "../model/driveModel";
 import { FolderSelector } from "./folderSelector";
 import { VSCodePickProvider } from "./vscodePickProvider";
 import { DriveTreeDataProvider } from "./driveTreeDataProvider";
+import { VSCodeNotificator } from "./vscodeNotificator";
 
-export class DriveView {
+export class DriveView implements INotificator {
 
     private folderSelector: FolderSelector = new FolderSelector(this.model, new VSCodePickProvider());
-    private driveTreeViewProvider: DriveTreeDataProvider = new DriveTreeDataProvider(this.model);
+    private notificator: VSCodeNotificator = new VSCodeNotificator();
+    private driveTreeViewProvider: DriveTreeDataProvider = new DriveTreeDataProvider(this.model, this.notificator);
 
     constructor(private model: DriveModel) {
     }
@@ -39,15 +41,7 @@ export class DriveView {
     }
 
     showProgressMessage(message: string, task: Thenable<any>): void {
-        window.withProgress({
-            location: ProgressLocation.Notification,
-            title: message,
-        }, () => {
-            const p = new Promise(resolve => {
-                task.then(() => resolve());
-            });
-            return p;
-        });
+        this.notificator.showProgressMessage(message, task);
     }
 
     showInputBox(message: string, value?: string): Thenable<string | undefined> {
@@ -59,11 +53,18 @@ export class DriveView {
     }
 
     showInformationMessage(message: string, ...items: string[]): Thenable<string | undefined> {
-        return window.showInformationMessage(message, { modal: false }, ...items);
+        return this.notificator.showInformationMessage(message, ...items);
     }
 
     showWarningMessage(message: string): void {
-        window.showWarningMessage(message);
+        this.notificator.showWarningMessage(message);
     }
 
+}
+
+export interface INotificator {
+
+    showProgressMessage(message: string, task: Thenable<any>): void;
+    showInformationMessage(message: string, ...items: string[]): Thenable<string | undefined>;
+    showWarningMessage(message: string): void;
 }
