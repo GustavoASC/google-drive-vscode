@@ -154,9 +154,12 @@
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
+		"package": "npm run ui-test && npm run test && vsce package",
 		"compile": "npm run tslint && tsc -p ./",
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile && npm run tslint",
+		"preui-test": "npm run pretest",
+		"ui-test": "node ./out/test/integration/runTest.js",
 		"test": "mocha --require ts-node/register ./src/test/drive/**/*.test.ts",
 		"tslint": "tslint --project tsconfig.json --config tslint.json"
 	},

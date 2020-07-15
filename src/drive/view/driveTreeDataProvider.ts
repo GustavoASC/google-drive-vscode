@@ -33,13 +33,12 @@ export class DriveTreeDataProvider implements TreeDataProvider<string> {
         return result;
     }
 
-    private buildItemFromDriveFile(currentFile: DriveFile): TreeItem | Thenable<TreeItem> {
+    private buildItemFromDriveFile(currentFile: DriveFile): TreeItem {
         const iconUri = Uri.parse(currentFile.iconLink);
-        const iconPath = { light: iconUri, dark: iconUri };
         const collapsible = this.detectCollapsibleState(currentFile);
         const contextValue = DriveFileUtils.extractTextFromType(currentFile.type);
         return {
-            iconPath: iconPath,
+            iconPath: iconUri,
             label: currentFile.name,
             collapsibleState: collapsible,
             contextValue: contextValue
@@ -55,12 +54,12 @@ export class DriveTreeDataProvider implements TreeDataProvider<string> {
 
     //------- Interface methods
 
-    getTreeItem(id: string): TreeItem | Thenable<TreeItem> {
+    getTreeItem(id: string): TreeItem {
         const currentFile = this.model.getDriveFile(id);
         return currentFile ? this.buildItemFromDriveFile(currentFile) : {};
     }
 
-    getChildren(id: string): ProviderResult<string[]> {
+    getChildren(id?: string): Promise<string[]> {
         return new Promise((resolve, reject) => {
             const currentFileId = id ? id : 'root';
             this.model.listFiles(currentFileId)
