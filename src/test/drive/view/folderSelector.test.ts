@@ -4,6 +4,7 @@ import { IPickProvider, IPickItem, FolderSelector } from '../../../drive/view/fo
 import { DriveModel, IFileProvider } from '../../../drive/model/driveModel';
 import { DriveFile, FileType } from '../../../drive/model/driveTypes';
 import { fail } from 'assert';
+import { Readable } from 'stream';
 
 describe('Folder selection operations', () => {
 
@@ -102,7 +103,7 @@ class MockFileProvider implements IFileProvider {
         throw new Error("Method not implemented.");
     }
 
-    retrieveFileContent(fileId: string, createStreamFunction: () => NodeJS.WritableStream): Promise<void> {
+    retrieveFileContentStream(fileId: string): Promise<Readable> {
         throw new Error("Method not implemented.");
     }
 

@@ -2,6 +2,7 @@ import { DriveFile, FileType } from "./driveTypes";
 import * as mime from "mime-types";
 import * as path from "path";
 import * as fs from "fs";
+import { Readable } from "stream";
 
 export class DriveModel {
 
@@ -48,11 +49,25 @@ export class DriveModel {
 
     downloadFile(fileId: string, destionationPath: string): Promise<void> {
         return new Promise((resolve, reject) => {
-            const createStreamFunction = () => {
-                return fs.createWriteStream(destionationPath);
-            }
-            this.fileProvider.retrieveFileContent(fileId, createStreamFunction)
-                .then(() => resolve())
+            this.fileProvider.retrieveFileContentStream(fileId)
+                .then((contentStream) => {
+                  
+                    // Prepares the stream to write data on disk
+                    const writeStream = fs.createWriteStream(destionationPath)
+                                            .on('error', (err) => {
+                                                
+                                                const message = err?.message;
+                                                const finalMessage = message ? message : 'Unknown error';
+                                                
+                                                reject(finalMessage);
+                                            
+                                            })
+                                            .on('close', () => resolve());
+
+                    // Flushes the input data to disk
+                    contentStream.pipe(writeStream);
+                
+                })
                 .catch(err => reject(err));
         })
     }
@@ -90,7 +105,7 @@ export interface IFileProvider {
     provideFiles(parentFolderId: string): Promise<DriveFile[]>;
     createFolder(parentFolderId: string, folderName: string): Promise<void>;
     uploadFile(parentFolderId: string, fullFilePath: string, basename: string, mimeType: string): Promise<void>;
-    retrieveFileContent(fileId: string, createStreamFunction: () => NodeJS.WritableStream): Promise<void>;
+    retrieveFileContentStream(fileId: string): Promise<Readable>;
     renameFile(fileId: string, newName: string): Promise<void>;
 
 }

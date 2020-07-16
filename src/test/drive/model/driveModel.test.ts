@@ -5,6 +5,7 @@ import { IFileProvider, DriveModel } from '../../../drive/model/driveModel';
 import { DriveFile, FileType } from '../../../drive/model/driveTypes';
 import * as path from "path";
 import * as fs from 'fs';
+import { Readable } from 'stream';
 
 describe('Drive model operations', () => {
 
@@ -68,6 +69,17 @@ describe('Drive model operations', () => {
             expect(data.toString()).to.equal('done writing data');
             fs.unlinkSync(destination);
         });
+    });
+
+    it('Download file on invalid location', async () => {
+        const model = new DriveModel(new MockFileProvider());
+        const destination = '/???????///\\\\////invalid-destination/file.txt'
+        try {
+            await model.downloadFile('1C7udIKXCkxsvjO37gCBpfzrHihn9wocz', destination);
+            fail('Should have rejected');
+        } catch (error) {
+            expect(error).to.equal(`ENOENT: no such file or directory, open '/???????///\\\\////invalid-destination/file.txt'`);
+        }
     });
 
     it('Rename file', async () => {
@@ -159,12 +171,11 @@ class MockFileProvider implements IFileProvider {
         });
     }
 
-    retrieveFileContent(fileId: string, createStreamFunction: () => NodeJS.WritableStream): Promise<void> {
-        return new Promise((resolve) => {
+    retrieveFileContentStream(fileId: string): Promise<Readable> {
+        return new Promise((resolve, reject) => {
             expect(fileId).to.equal('1C7udIKXCkxsvjO37gCBpfzrHihn9wocz');
-            const stream = createStreamFunction();
-            stream.end('done writing data');
-            resolve();
+            const contentStream = Readable.from('done writing data');
+            contentStream ? resolve(contentStream) : reject();
         });
     }
 

@@ -21,7 +21,10 @@ export class DownloadControllerSupport {
                     this.showDownloadFinishedMessage(destinationFile);
                     resolve();
                 }).catch(err => {
-                    this.view.showWarningMessage(err);
+
+                    const warningMessage = `A problem happened while downloading file. Message: '${err}'`;
+
+                    this.view.showWarningMessage(warningMessage);
                     reject(err);
                 });
         });

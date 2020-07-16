@@ -4,6 +4,7 @@ import { DriveAuthenticator } from '../../auth/driveAuthenticator';
 import * as fs from "fs";
 const { google } = require('googleapis');
 import { IFileProvider } from "./driveModel";
+import { Readable } from "stream";
 
 const HTTP_RESPONSE_OK = 200;
 
@@ -70,7 +71,7 @@ export class GoogleDriveFileProvider implements IFileProvider {
         });
     }
 
-    retrieveFileContent(fileId: string, createStreamFunction: () => NodeJS.WritableStream): Promise<void> {
+    retrieveFileContentStream(fileId: string): Promise<Readable> {
         return new Promise((resolve, reject) => {
             this.authenticator.authenticate().then((auth) => {
                 const getParams = {
@@ -79,11 +80,7 @@ export class GoogleDriveFileProvider implements IFileProvider {
                 };
                 const responseType = { responseType: 'stream' };
                 const callbackFn = (err: any, response: any) => {
-                    if (err) return reject(err);
-                    response.data
-                        .on('error', (err: any) => reject(err))
-                        .on('end', () => resolve())
-                        .pipe(createStreamFunction());
+                    err ? reject(err) : resolve(response.data);
                 };
                 drive(auth).files.get(getParams, responseType, callbackFn);
             }).catch(err => reject(err));

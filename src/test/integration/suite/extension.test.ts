@@ -7,6 +7,7 @@ import * as vscode from 'vscode';
 import { DriveModel, IFileProvider } from '../../../drive/model/driveModel';
 import { DriveFile, FileType } from '../../../drive/model/driveTypes';
 import { INotificator } from '../../../drive/view/driveView';
+import { Readable } from 'stream';
 
 suite('Extension Test Suite', () => {
 
@@ -110,7 +111,7 @@ class MockFileProvider implements IFileProvider {
 		throw new Error("Method not implemented.");
 	}
 
-	retrieveFileContent(fileId: string, createStreamFunction: () => NodeJS.WritableStream): Promise<void> {
+	retrieveFileContentStream(fileId: string): Promise<Readable> {
 		throw new Error("Method not implemented.");
 	}
 
@@ -138,7 +139,7 @@ class EmptyFileProvider implements IFileProvider {
 		throw new Error("Method not implemented.");
 	}
 
-	retrieveFileContent(fileId: string, createStreamFunction: () => NodeJS.WritableStream): Promise<void> {
+	retrieveFileContentStream(fileId: string): Promise<Readable> {
 		throw new Error("Method not implemented.");
 	}
 
