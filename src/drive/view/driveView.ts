@@ -40,7 +40,7 @@ export class DriveView implements INotificator {
         this.driveTreeViewProvider.refresh();
     }
 
-    showProgressMessage(message: string, task: Thenable<any>): void {
+    showProgressMessage(message: string, task: Promise<any>): void {
         this.notificator.showProgressMessage(message, task);
     }
 

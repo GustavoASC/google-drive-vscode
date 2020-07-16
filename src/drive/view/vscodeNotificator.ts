@@ -3,13 +3,14 @@ import { ProgressLocation, window } from "vscode";
 
 export class VSCodeNotificator implements INotificator {
 
-    showProgressMessage(message: string, task: Thenable<any>): void {
+    showProgressMessage(message: string, task: Promise<any>): void {
         window.withProgress({
             location: ProgressLocation.Notification,
             title: message,
         }, () => {
-            const p = new Promise(resolve => {
-                task.then(() => resolve());
+            const p = new Promise((resolve, reject) => {
+                task.then(() => resolve())
+                    .catch(err => reject(err));
             });
             return p;
         });

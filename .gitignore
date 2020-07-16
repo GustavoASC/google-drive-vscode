@@ -5,3 +5,4 @@ out/
 credentials.json
 token.json
 package-lock.json
+*.vsix
