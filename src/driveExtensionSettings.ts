@@ -1,4 +1,4 @@
-import { workspace, WorkspaceConfiguration } from "vscode";
+import { workspace, WorkspaceConfiguration, ConfigurationTarget } from "vscode";
 
 const EXTENSION_SETTINGS_GROUP = 'google.drive';
 const MISSING_CREDENTIALS = 'alertMissingCredentials';
@@ -10,7 +10,7 @@ export class DriveExtensionSettings {
     }
 
     updateAlertMissingCredentials(value: boolean): Thenable<void> {
-        return settingsGroup().update(MISSING_CREDENTIALS, value);
+        return settingsGroup().update(MISSING_CREDENTIALS, value, ConfigurationTarget.Global);
     }
 
 }
