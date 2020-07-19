@@ -6,6 +6,8 @@ import { DriveModel } from './drive/model/driveModel';
 import { GoogleDriveFileProvider } from './drive/model/googleDriveFileProvider';
 import { DriveAuthenticator } from './auth/driveAuthenticator';
 import { CredentialsConfigurator } from './credentialsConfigurator';
+import { DriveFileSystemProvider } from './drive/fileSystem/driveFileSystemProvider';
+import { DRIVE_SCHEME } from './drive/fileSystem/fileSystemConstants';
 
 export const CONFIGURE_CREDENTIALS_COMMAND = 'google.drive.configureCredentials';
 export const CREATE_FOLDER_COMMAND = 'google.drive.createFolder';
@@ -19,6 +21,8 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 	const googleFileProvider = new GoogleDriveFileProvider(driveAuthenticator);
 	const model = new DriveModel(googleFileProvider);
 	const controller = new DriveController(model);
+
+	vscode.workspace.registerFileSystemProvider(DRIVE_SCHEME, new DriveFileSystemProvider(model), { isReadonly: true });
 
 	subscriptions.push(vscode.commands.registerCommand(CONFIGURE_CREDENTIALS_COMMAND, () => {
 		credentialsConfigurator.configureCredentials();
@@ -44,24 +48,27 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 	subscriptions.push(vscode.commands.registerCommand('google.drive.rename', (selectedFileId: any) => {
 		renameSelectedFile(selectedFileId, controller);
 	}));
+	subscriptions.push(vscode.commands.registerCommand('google.drive.openFile', (selectedFileId: any) => {
+		openRemoteFile(selectedFileId, controller);
+	}));
 
 	credentialsConfigurator.checkCredentialsConfigured();
 }
 
-function uploadOpenFile(controller: DriveController): Thenable<any> {
+function uploadOpenFile(controller: DriveController): void {
 	const fileName = vscode.window.activeTextEditor?.document.fileName;
 	if (fileName) {
-		return controller.uploadFileAndAskFolder(fileName);
+		controller.uploadFileAndAskFolder(fileName);
 	} else {
-		return vscode.window.showWarningMessage("There is no file open to upload to Drive.");
+		vscode.window.showWarningMessage("There is no file open to upload to Drive.");
 	}
 }
 
-function uploadSelectedFile(selectedFileId: any, controller: DriveController): Thenable<any> {
+function uploadSelectedFile(selectedFileId: any, controller: DriveController): void {
 	if (selectedFileId && selectedFileId.path) {
-		return controller.uploadFileAndAskFolder(selectedFileId.path);
+		controller.uploadFileAndAskFolder(selectedFileId.path);
 	} else {
-		return vscode.window.showInformationMessage('Please select a file on Explorer view, which will be uploaded to Google Drive.');
+		vscode.window.showInformationMessage('Please select a file on Explorer view, which will be uploaded to Google Drive.');
 	}
 }
 
@@ -87,6 +94,14 @@ function downloadSelectedFile(selectedFileId: any, controller: DriveController):
 function renameSelectedFile(selectedFileId: any, controller: DriveController): void {
 	if (selectedFileId) {
 		controller.renameFile(selectedFileId);
+	} else {
+		vscode.window.showWarningMessage('This command can only be directly used from Google Drive view.');
+	}
+}
+
+function openRemoteFile(selectedFileId: any, controller: DriveController): void {
+	if (selectedFileId) {
+		controller.openRemoteFile(selectedFileId);
 	} else {
 		vscode.window.showWarningMessage('This command can only be directly used from Google Drive view.');
 	}

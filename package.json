@@ -8,7 +8,7 @@
 	},
 	"license": "MIT",
 	"publisher": "GustavoASC",
-	"version": "0.0.16",
+	"version": "0.0.17",
 	"icon": "img/icon.png",
 	"engines": {
 		"vscode": "^1.43.0"
@@ -80,6 +80,12 @@
 				"command": "google.drive.rename",
 				"title": "Google Drive: Rename file on Drive",
 				"icon": "$(edit)"
+			},
+			{
+				"command": "google.drive.openFile",
+				"title": "Google Drive: Open selected file",
+				"enablement": "viewItem == file",
+				"icon": "$(open-preview)"
 			}
 		],
 		"viewsContainers": {
@@ -130,6 +136,11 @@
 				},
 				{
 					"command": "google.drive.rename",
+					"when": "view == driveView",
+					"group": "inline"
+				},
+				{
+					"command": "google.drive.openFile",
 					"when": "view == driveView",
 					"group": "inline"
 				}

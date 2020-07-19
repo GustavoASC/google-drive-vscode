@@ -29,11 +29,15 @@ export class DriveView implements INotificator {
     }
 
     openFile(fullPath: string): void {
+        this.openUri(`file://${fullPath}`);
+    }
+
+    openUri(targetUri: string): void {
         const options: TextDocumentShowOptions = {
             viewColumn: ViewColumn.Active,
             preview: false
         }
-        commands.executeCommand('vscode.open', Uri.file(fullPath), options);
+        commands.executeCommand('vscode.open', Uri.parse(targetUri), options);
     }
 
     refresh(): void {

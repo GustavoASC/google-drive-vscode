@@ -1,24 +1,25 @@
 import { DriveModel } from "../model/driveModel";
 import { DriveView } from "../view/driveView";
+import { IControllerSupport } from "./controllerSupport";
 
-export class UploadControllerSupport {
+export class UploadSupport implements IControllerSupport {
 
-    constructor(private model: DriveModel, private view: DriveView) { }
-
-    uploadFileToFolder(fullFileName: string, folderId: string): void {
-        const uploadPromise = this.createUploadPromise(folderId, fullFileName);
-        this.view.showProgressMessage('Uploading file to Google Drive. Please wait...', uploadPromise);
+    constructor(private fullFileName: string) { }
+    
+    fireCommand(model: DriveModel, view: DriveView, fileId: string): void {
+        const uploadPromise = this.createUploadPromise(model, view, fileId);
+        view.showProgressMessage('Uploading file to Google Drive. Please wait...', uploadPromise);
     }
 
-    private createUploadPromise(parentID: string, fullFileName: string): Promise<void> {
+    private createUploadPromise(model: DriveModel, view: DriveView, parentID: string): Promise<void> {
         return new Promise((resolve, reject) => {
-            this.model.uploadFile(parentID, fullFileName)
+            model.uploadFile(parentID, this.fullFileName)
                 .then((basename) => {
-                    this.view.showInformationMessage(`File '${basename}' successfully uploaded to Drive.`);
-                    this.view.refresh();
+                    view.showInformationMessage(`File '${basename}' successfully uploaded to Drive.`);
+                    view.refresh();
                     resolve();
                 }).catch(err => {
-                    this.view.showWarningMessage(err);
+                    view.showWarningMessage(err);
                     reject(err);
                 });
         });

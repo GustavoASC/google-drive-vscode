@@ -11,6 +11,7 @@ export interface DriveFile {
     type: FileType;
     name: string;
     iconLink: string;
+    parent?: DriveFile;
 }
 
 export enum FileType {

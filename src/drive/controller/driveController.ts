@@ -1,19 +1,21 @@
 import { DriveView } from "../view/driveView";
 import { DriveModel } from "../model/driveModel";
-import { DownloadControllerSupport } from "./downloadControllerSupport";
-import { RenameControllerSupport } from "./renameControllerSupport";
-import { UploadControllerSupport } from "./uploadControllerSupport";
-import { FolderControllerSupport } from "./folderControllerSupport";
+import { DownloadSupport } from "./downloadSupport";
+import { RenameSupport } from "./renameSupport";
+import { UploadSupport } from "./uploadControllerSupport";
+import { FolderSupport } from "./folderSupport";
+import { OpenRemoteFileSupport } from "./openRemoteFileSupport";
+import { IControllerSupport } from "./controllerSupport";
 
 export class DriveController {
 
 	private view: DriveView = new DriveView(this.model);
 
 	// Support controllers
-	private downloadSupport = new DownloadControllerSupport(this.model, this.view);
-	private uploadSupport = new UploadControllerSupport(this.model, this.view);
-	private renameSupport = new RenameControllerSupport(this.model, this.view);
-	private folderSupport = new FolderControllerSupport(this.model, this.view);
+	private downloadSupport = new DownloadSupport();
+	private renameSupport = new RenameSupport();
+	private folderSupport = new FolderSupport();
+	private openSupport = new OpenRemoteFileSupport();
 
 	constructor(private model: DriveModel) { }
 
@@ -25,28 +27,39 @@ export class DriveController {
 
 	createFolder(parentFolderId?: string): void {
 		const finalId = parentFolderId ? parentFolderId : 'root';
-		this.folderSupport.createFolder(finalId);
+		this.fireCommand(this.folderSupport, finalId);
 	}
 
-	async uploadFileAndAskFolder(fullFileName: string): Promise<void> {
-		const parentID = await this.view.askForRemoteDestinationFolder();
-		if (parentID) {
-			this.uploadSupport.uploadFileToFolder(fullFileName, parentID);
-		} else {
-			this.view.showWarningMessage(`'Upload file' process canceled by user.`);
-		}
+	uploadFileAndAskFolder(fullFileName: string): void {
+		this.view.askForRemoteDestinationFolder()
+			.then(parentId => {
+				if (parentId) {
+					this.uploadFileToFolder(fullFileName, parentId);
+				} else {
+					this.view.showWarningMessage(`'Upload file' process canceled by user.`);
+				}
+			}).catch(err => this.view.showWarningMessage(err));
 	}
 
 	uploadFileToFolder(fullFileName: string, folderId: string): void {
-		this.uploadSupport.uploadFileToFolder(fullFileName, folderId);
+		const uploadSupport = new UploadSupport(fullFileName);
+		this.fireCommand(uploadSupport, folderId);
 	}
 
 	downloadFile(fileId: string): void {
-		this.downloadSupport.downloadFile(fileId);
+		this.fireCommand(this.downloadSupport, fileId);
 	}
 
 	renameFile(fileId: string): void {
-		this.renameSupport.renameFile(fileId);
+		this.fireCommand(this.renameSupport, fileId);
+	}
+
+	openRemoteFile(fileId: string): void {
+		this.fireCommand(this.openSupport, fileId);
+	}
+
+	fireCommand(support: IControllerSupport, fileId: string): void {
+		support.fireCommand(this.model, this.view, fileId);
 	}
 
 }

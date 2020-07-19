@@ -14,6 +14,14 @@ describe('Drive model operations', () => {
         const files = await model.listFiles('abcdefghi');
         const names: string[] = ['VSCode', 'TCC.pdf', 'myFile.txt', 'Other folder', 'myTable.csv', 'myPicture.jpg', 'myOtherPicture.png', 'myThirdPicture.bmp'];
         compareFileNames(files, names);
+        compareParent(files, undefined);
+
+        // Lists the subfolder 'VSCode'
+        const vscodeFiles = await model.listFiles('1C7udIKXCkxsvXO37gCBpfzrHihn9wocz');
+        const vscodeNames: string[] = ['Subfolder', 'A.pdf', 'B.txt'];
+        const vscodeFolderItself = model.getDriveFile('1C7udIKXCkxsvXO37gCBpfzrHihn9wocz');
+        compareFileNames(vscodeFiles, vscodeNames);
+        compareParent(vscodeFiles, vscodeFolderItself);
     });
 
     it('List only folders from existing parent', async () => {
@@ -99,6 +107,12 @@ function compareFileNames(files: DriveFile[], names: string[]): void {
     }
 }
 
+function compareParent(files: DriveFile[], parent: DriveFile | undefined): void {
+    for (let i = 0; i < files.length; i++) {
+        expect(files[i].parent).to.equal(parent);
+    }
+}
+
 class MockFileProvider implements IFileProvider {
 
     private dummyFiles: DriveFile[] = [];
@@ -107,7 +121,7 @@ class MockFileProvider implements IFileProvider {
     constructor() {
         this.dummyFiles.push({ iconLink: 'http://www.mylink.com/folder', id: '1C7udIKXCkxsvXO37gCBpfzrHihn9wocz', name: 'VSCode', type: FileType.DIRECTORY });
         this.dummyFiles.push({ iconLink: 'http://www.mylink.com/pdf', id: '5C7udIKXCkxsvXO37gCBpfzrHihn9wocz', name: 'TCC.pdf', type: FileType.FILE });
-        this.dummyFiles.push({ iconLink: 'http://www.mylink.com/txt', id: '1C7udIKxCkxsvXO37gCBpfzrHihn9wocz', name: 'myFile.txt', type: FileType.FILE });
+        this.dummyFiles.push({ iconLink: 'http://www.mylink.com/txt', id: 'sC7udIKxCkxsvXO37gCBpfzrHihn9wocz', name: 'myFile.txt', type: FileType.FILE });
         this.dummyFiles.push({ iconLink: 'http://www.mylink.com/folder', id: '1C7udIKXCkxsvXO37gCBpfzrHihn7777z', name: 'Other folder', type: FileType.DIRECTORY });
         this.dummyFiles.push({ iconLink: 'http://www.mylink.com/csv', id: '1C7udIKXLkxsvXO37gCBpfzrHihn9wocz', name: 'myTable.csv', type: FileType.FILE });
         this.dummyFiles.push({ iconLink: 'http://www.mylink.com/jpg', id: '1C7udIKXCkxsvjO37gCBpfzrHihn9wocz', name: 'myPicture.jpg', type: FileType.FILE });
@@ -120,7 +134,15 @@ class MockFileProvider implements IFileProvider {
             if (parentFolderId === 'abcdefghi') {
                 resolve(this.dummyFiles)
             } else {
-                resolve([]);
+                if (parentFolderId === '1C7udIKXCkxsvXO37gCBpfzrHihn9wocz') {
+                    const vscodeFiles: DriveFile[] = [];
+                    vscodeFiles.push({ iconLink: 'http://www.mylink.com/folder', id: 'AC7udIKXCkxsvXO37gCBpfzrHihn9wocz', name: 'Subfolder', type: FileType.DIRECTORY });
+                    vscodeFiles.push({ iconLink: 'http://www.mylink.com/pdf', id: 'BC7udIKXCkxsvXO37gCBpfzrHihn9wocz', name: 'A.pdf', type: FileType.FILE });
+                    vscodeFiles.push({ iconLink: 'http://www.mylink.com/txt', id: 'CC7udIKxCkxsvXO37gCBpfzrHihn9wocz', name: 'B.txt', type: FileType.FILE });
+                    resolve(vscodeFiles);
+                } else {
+                    resolve([]);
+                }
             }
         });
     }
