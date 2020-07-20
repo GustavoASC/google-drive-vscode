@@ -29,4 +29,6 @@ In order to use this extension you need to set up Google Drive API on your Googl
    
 Once you have credentials.json file, access Command Palette on VSCode and run the command: 'Google Drive: Configure credentials' and select the credentials.json file.
 
-That's all!
+## Known issues
+   * On versions smaller than v1.48 (Insiders), the file preview does not properly show binary data e.g. image files. v1.48 will soon be the minimum version to run this extension. 
+
