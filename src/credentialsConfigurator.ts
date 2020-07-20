@@ -31,8 +31,12 @@ export class CredentialsConfigurator {
     }
 
     configureCredentials(): void {
-        window.showInformationMessage('Please select the credentials.json file previously generated from your Google API Console.')
-        window.showOpenDialog({}).then(files => {
+        window.showInformationMessage('Please select the credentials file previously generated from your Google API Console.')
+        window.showOpenDialog({
+            filters: {
+                'Google credentials (*.json)': ['json']
+            }
+        }).then(files => {
             if (files && files.length > 0) {
                 const selectedCredentialsFile = files[0].fsPath;
                 this.authenticator.storeApiCredentials(selectedCredentialsFile)
