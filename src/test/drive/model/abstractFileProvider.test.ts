@@ -3,7 +3,7 @@ import { DriveFile } from "../../../drive/model/driveTypes";
 import { Readable } from "stream";
 
 export abstract class AbstractMockFileProvider implements IFileProvider {
-    
+
     provideFiles(parentFolderId: string): Promise<DriveFile[]> {
         throw new Error("Method not implemented.");
     }
@@ -23,5 +23,9 @@ export abstract class AbstractMockFileProvider implements IFileProvider {
     renameFile(fileId: string, newName: string): Promise<void> {
         throw new Error("Method not implemented.");
     }
+
+}
+
+export class EmptyMockFileProvider extends AbstractMockFileProvider {
 
 }

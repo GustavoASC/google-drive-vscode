@@ -1,11 +1,11 @@
 import { DriveModel } from "../model/driveModel";
-import { DriveView } from "../view/driveView";
+import { IDriveView } from "../view/driveView";
 import { DriveFileUtils } from "../model/driveTypes";
 import { IControllerSupport } from "./controllerSupport";
 
 export class RenameSupport implements IControllerSupport {
 
-    fireCommand(model: DriveModel, view: DriveView, fileId: string): void {
+    fireCommand(model: DriveModel, view: IDriveView, fileId: string): void {
         const driveFile = model.getDriveFile(fileId);
         if (driveFile) {
             const typeText = DriveFileUtils.extractTextFromType(driveFile.type);
@@ -20,7 +20,7 @@ export class RenameSupport implements IControllerSupport {
         }
     }
 
-    private createRenamePromise(model: DriveModel, view: DriveView, fileId: string, oldName: string, newName: string): Promise<void> {
+    private createRenamePromise(model: DriveModel, view: IDriveView, fileId: string, oldName: string, newName: string): Promise<void> {
         return new Promise((resolve, reject) => {
             model.renameFile(fileId, newName)
                 .then(() => {

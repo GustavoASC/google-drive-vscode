@@ -1,10 +1,10 @@
 import { DriveModel } from "../model/driveModel";
-import { DriveView } from "../view/driveView";
+import { IDriveView } from "../view/driveView";
 import { IControllerSupport } from "./controllerSupport";
 
 export class FolderSupport implements IControllerSupport {
 
-    fireCommand(model: DriveModel, view: DriveView, fileId: string): void {
+    fireCommand(model: DriveModel, view: IDriveView, fileId: string): void {
         view.showInputBox('Please type the folder name')
             .then((folderName) => {
                 if (folderName) {
@@ -16,7 +16,7 @@ export class FolderSupport implements IControllerSupport {
             });
     }
 
-    private createFolderPromise(model: DriveModel, view: DriveView, fileId: string, folderName: string): Promise<void> {
+    private createFolderPromise(model: DriveModel, view: IDriveView, fileId: string, folderName: string): Promise<void> {
         return new Promise((resolve, reject) => {
             model.createFolder(fileId, folderName)
                 .then(_files => {

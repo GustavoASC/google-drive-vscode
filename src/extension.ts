@@ -8,6 +8,7 @@ import { DriveAuthenticator } from './auth/driveAuthenticator';
 import { CredentialsConfigurator } from './credentialsConfigurator';
 import { DriveFileSystemProvider } from './drive/fileSystem/driveFileSystemProvider';
 import { DRIVE_SCHEME } from './drive/fileSystem/fileSystemConstants';
+import { DriveView } from './drive/view/driveView';
 
 export const CONFIGURE_CREDENTIALS_COMMAND = 'google.drive.configureCredentials';
 export const CREATE_FOLDER_COMMAND = 'google.drive.createFolder';
@@ -20,7 +21,7 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 	const credentialsConfigurator = new CredentialsConfigurator(driveAuthenticator);
 	const googleFileProvider = new GoogleDriveFileProvider(driveAuthenticator);
 	const model = new DriveModel(googleFileProvider);
-	const controller = new DriveController(model);
+	const controller = new DriveController(model, new DriveView(model));
 
 	vscode.workspace.registerFileSystemProvider(DRIVE_SCHEME, new DriveFileSystemProvider(model), { isReadonly: true });
 
@@ -36,8 +37,8 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 	subscriptions.push(vscode.commands.registerCommand(CREATE_FOLDER_COMMAND, async (parentId: string | undefined) => {
 		controller.createFolder(parentId);
 	}));
-	subscriptions.push(vscode.commands.registerCommand('google.drive.uploadSelectedFile', (selectedFileId: any) => {
-		uploadSelectedFile(selectedFileId, controller);
+	subscriptions.push(vscode.commands.registerCommand('google.drive.uploadSelectedFile', (selectedFile: any) => {
+		uploadSelectedFile(selectedFile, controller);
 	}));
 	subscriptions.push(vscode.commands.registerCommand('google.drive.uploadToFolderSelectedOnView', (selectedFolderId: any) => {
 		uploadToFolderSelectedOnView(selectedFolderId, controller);
@@ -56,17 +57,17 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 }
 
 function uploadOpenFile(controller: DriveController): void {
-	const fileName = vscode.window.activeTextEditor?.document.fileName;
-	if (fileName) {
-		controller.uploadFileAndAskFolder(fileName);
+	const fileUri = vscode.window.activeTextEditor?.document.uri;
+	if (fileUri) {
+		controller.uploadFileAndAskFolder(fileUri.scheme, fileUri.fsPath);
 	} else {
-		vscode.window.showWarningMessage("There is no file open to upload to Drive.");
+		vscode.window.showWarningMessage('There is no file open to upload to Drive.');
 	}
 }
 
-function uploadSelectedFile(selectedFileId: any, controller: DriveController): void {
-	if (selectedFileId && selectedFileId.path) {
-		controller.uploadFileAndAskFolder(selectedFileId.path);
+function uploadSelectedFile(selectedFile: any, controller: DriveController): void {
+	if (selectedFile && selectedFile.scheme && selectedFile.path) {
+		controller.uploadFileAndAskFolder(selectedFile.scheme, selectedFile.path);
 	} else {
 		vscode.window.showInformationMessage('Please select a file on Explorer view, which will be uploaded to Google Drive.');
 	}

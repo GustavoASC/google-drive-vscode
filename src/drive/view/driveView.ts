@@ -5,7 +5,7 @@ import { VSCodePickProvider } from "./vscodePickProvider";
 import { DriveTreeDataProvider } from "./driveTreeDataProvider";
 import { VSCodeNotificator } from "./vscodeNotificator";
 
-export class DriveView implements INotificator {
+export class DriveView implements IDriveView {
 
     private folderSelector: FolderSelector = new FolderSelector(this.model, new VSCodePickProvider());
     private notificator: VSCodeNotificator = new VSCodeNotificator();
@@ -77,4 +77,15 @@ export interface INotificator {
     showProgressMessage(message: string, task: Thenable<any>): void;
     showInformationMessage(message: string, ...items: string[]): Thenable<string | undefined>;
     showWarningMessage(message: string): void;
+}
+
+export interface IDriveView extends INotificator {
+
+    askForRemoteDestinationFolder(): Promise<string | undefined>;
+    askForLocalDestinationFolder(suggestedPath?: string): Promise<string>;
+    openFile(fullPath: string): void;
+    openUri(targetUri: string): void;
+    refresh(): void;
+    showInputBox(message: string, value?: string): Thenable<string | undefined>;
+
 }

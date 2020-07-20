@@ -1,10 +1,10 @@
 import { DriveModel } from "../model/driveModel";
-import { DriveView } from "../view/driveView";
+import { IDriveView } from "../view/driveView";
 import { IControllerSupport } from "./controllerSupport";
 
 export class DownloadSupport implements IControllerSupport {
 
-    fireCommand(model: DriveModel, view: DriveView, fileId: string): void {
+    fireCommand(model: DriveModel, view: IDriveView, fileId: string): void {
         const driveFileName = model.getDriveFile(fileId)?.name;
         view.askForLocalDestinationFolder(driveFileName)
             .then(destinationFile => {
@@ -13,7 +13,7 @@ export class DownloadSupport implements IControllerSupport {
             }).catch(() => view.showWarningMessage(`'Download file' process canceled by user.`));
     }
 
-    private createDownloadPromise(model: DriveModel, view: DriveView, fileId: string, destinationFile: string): Promise<void> {
+    private createDownloadPromise(model: DriveModel, view: IDriveView, fileId: string, destinationFile: string): Promise<void> {
         return new Promise((resolve, reject) => {
             model.downloadFile(fileId, destinationFile)
                 .then(() => {
@@ -27,7 +27,7 @@ export class DownloadSupport implements IControllerSupport {
         });
     }
 
-    private showDownloadFinishedMessage(view: DriveView, destinationFile: string): void {
+    private showDownloadFinishedMessage(view: IDriveView, destinationFile: string): void {
         const openFileButton = 'Open file';
         view.showInformationMessage(`File successfully downloaded from Drive.`, openFileButton)
             .then((selectedButton) => {

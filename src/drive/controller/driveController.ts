@@ -1,4 +1,4 @@
-import { DriveView } from "../view/driveView";
+import { IDriveView } from "../view/driveView";
 import { DriveModel } from "../model/driveModel";
 import { DownloadSupport } from "./downloadSupport";
 import { RenameSupport } from "./renameSupport";
@@ -6,10 +6,9 @@ import { UploadSupport } from "./uploadControllerSupport";
 import { FolderSupport } from "./folderSupport";
 import { OpenRemoteFileSupport } from "./openRemoteFileSupport";
 import { IControllerSupport } from "./controllerSupport";
+import { DRIVE_SCHEME } from "../fileSystem/fileSystemConstants";
 
 export class DriveController {
-
-	private view: DriveView = new DriveView(this.model);
 
 	// Support controllers
 	private downloadSupport = new DownloadSupport();
@@ -17,7 +16,7 @@ export class DriveController {
 	private folderSupport = new FolderSupport();
 	private openSupport = new OpenRemoteFileSupport();
 
-	constructor(private model: DriveModel) { }
+	constructor(private model: DriveModel, private view: IDriveView) { }
 
 	listFiles(parentFolderId: string): void {
 		this.model.listFiles(parentFolderId)
@@ -30,15 +29,19 @@ export class DriveController {
 		this.fireCommand(this.folderSupport, finalId);
 	}
 
-	uploadFileAndAskFolder(fullFileName: string): void {
-		this.view.askForRemoteDestinationFolder()
-			.then(parentId => {
-				if (parentId) {
-					this.uploadFileToFolder(fullFileName, parentId);
-				} else {
-					this.view.showWarningMessage(`'Upload file' process canceled by user.`);
-				}
-			}).catch(err => this.view.showWarningMessage(err));
+	uploadFileAndAskFolder(scheme: string, fullFileName: string): void {
+		if (scheme === DRIVE_SCHEME) {
+			this.view.showWarningMessage(`It's not possible to proceed with upload operation since file is already on Google Drive.`);
+		} else {
+			this.view.askForRemoteDestinationFolder()
+				.then(parentId => {
+					if (parentId) {
+						this.uploadFileToFolder(fullFileName, parentId);
+					} else {
+						this.view.showWarningMessage(`'Upload file' process canceled by user.`);
+					}
+				}).catch(err => this.view.showWarningMessage(err));
+		}
 	}
 
 	uploadFileToFolder(fullFileName: string, folderId: string): void {

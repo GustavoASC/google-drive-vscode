@@ -8,7 +8,7 @@
 	},
 	"license": "MIT",
 	"publisher": "GustavoASC",
-	"version": "0.0.18",
+	"version": "0.0.19",
 	"icon": "img/icon.png",
 	"engines": {
 		"vscode": "^1.43.0"
@@ -52,7 +52,7 @@
 			},
 			{
 				"command": "google.drive.uploadOpenFile",
-				"title": "Google Drive: Upload currently open file to Drive"
+				"title": "Google Drive: Upload current file to Drive"
 			},
 			{
 				"command": "google.drive.uploadSelectedFile",

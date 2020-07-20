@@ -1,8 +1,8 @@
 import { DriveModel } from "../model/driveModel";
-import { DriveView } from "../view/driveView";
+import { IDriveView } from "../view/driveView";
 
 export interface IControllerSupport {
 
-    fireCommand(model: DriveModel, view: DriveView, fileId: string): void;
+    fireCommand(model: DriveModel, view: IDriveView, fileId: string): void;
 
 }
