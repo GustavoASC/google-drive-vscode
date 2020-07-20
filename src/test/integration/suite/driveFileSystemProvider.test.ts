@@ -1,22 +1,27 @@
-import { expect } from 'chai';
-import 'mocha';
+import * as assert from 'assert';
+
+// You can import and use all API from the 'vscode' module
+// as well as import your extension to test it
+import * as vscode from 'vscode';
 import { DriveModel } from '../../../drive/model/driveModel';
 import { DriveFile, FileType } from '../../../drive/model/driveTypes';
+import { AbstractMockFileProvider } from '../../drive/model/abstractFileProvider.test';
+import { DriveFileSystemProvider } from '../../../drive/fileSystem/driveFileSystemProvider';
 import { Readable } from 'stream';
-import { RemotePathBuilder } from '../../../drive/fileSystem/remotePathBuilder';
-import { AbstractMockFileProvider } from '../model/abstractFileProvider.test';
+import * as fs from 'fs';
 
-describe('Remote path manipulation', () => {
+suite('Drive file system manipulation', () => {
 
-    it('Checks remote path building', async () => {
+	test('Checks retrieving file content from file system', async () => {
         const model = new DriveModel(new MockFileProvider());
         await model.listFiles('root');
-        const pathBuilder = new RemotePathBuilder();
-        expect('googledrive:///VSCode/subFolder/thirdFolder/myFile.txt#1Cdffsdfsdfsdfdfocz').to.equal(pathBuilder.buildRemotePathFromId(model, '1Cdffsdfsdfsdfdfocz'));
-        expect(undefined).to.equal(pathBuilder.buildRemotePathFromId(model, 'xxxxxx'));
-    });
+        const driveFs = new DriveFileSystemProvider(model);
+        const content = await driveFs.readFile(vscode.Uri.parse('googledrive:///VSCode/subFolder/thirdFolder/myFile.txt#1Cdffsdfsdfsdfdfocz'));
+        assert.equal('this is my content', content.toString());
+	});
 
 });
+
 
 class MockFileProvider extends AbstractMockFileProvider {
 
@@ -27,6 +32,14 @@ class MockFileProvider extends AbstractMockFileProvider {
             const thirdFolder: DriveFile = { iconLink: 'http://www.mylink.com/folder', id: '1C7udIKXCkxsvXO37gCBpfaasqn9wocz', name: 'thirdFolder', type: FileType.DIRECTORY, parent: secondFolder };
             const finalFile: DriveFile = { iconLink: 'http://www.mylink.com/file', id: '1Cdffsdfsdfsdfdfocz', name: 'myFile.txt', type: FileType.FILE, parent: thirdFolder };
             resolve([finalFile]);
+        });
+    }
+
+    retrieveFileContentStream(fileId: string): Promise<Readable> {
+        return new Promise((resolve, reject) => {
+            assert.equal('1Cdffsdfsdfsdfdfocz', fileId);
+            const contentStream = fs.createReadStream(__dirname + '/../../../../src/test/integration/suite/dummyText.txt');
+            contentStream ? resolve(contentStream) : reject();
         });
     }
 

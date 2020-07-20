@@ -29,14 +29,14 @@ export class DriveFileSystemProvider implements FileSystemProvider {
         throw new Error("Method not implemented.");
     }
 
-    readFile(uri: Uri): Uint8Array | Thenable<Uint8Array> {
+    readFile(uri: Uri): Thenable<Uint8Array> {
         return new Promise((resolve, reject) => {
             const fileId = uri.fragment;
             this.model.retrieveFileContentStream(fileId)
                 .then(contentStream => {
 
 
-                    const byteArray: Buffer[] = [];
+                    const byteArray: any[] = [];
                     contentStream.on('data', d => byteArray.push(d));
                     contentStream.on('end', () => {
                         const result = Buffer.concat(byteArray);

@@ -83,11 +83,17 @@ function uploadToFolderSelectedOnView(selectedFolderId: any, controller: DriveCo
 	}
 }
 
-function downloadSelectedFile(selectedFileId: any, controller: DriveController): void {
-	if (selectedFileId) {
-		controller.downloadFile(selectedFileId);
+function downloadSelectedFile(selectedFile: any, controller: DriveController): void {
+	// Checks whether the command was fired from editor/title bar, once file preview is open
+	if (selectedFile instanceof vscode.Uri) {
+		controller.downloadFile(selectedFile.fragment);
 	} else {
-		vscode.window.showWarningMessage('This command can only be directly used from Google Drive view.');
+		// Checks whether the command was fired with the file ID, from tree view
+		if (selectedFile) {
+			controller.downloadFile(selectedFile);
+		} else {
+			vscode.window.showWarningMessage('This command can only be directly used from Google Drive view.');
+		}
 	}
 }
 

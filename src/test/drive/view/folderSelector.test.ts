@@ -1,10 +1,10 @@
 import { expect } from 'chai';
 import 'mocha';
 import { IPickProvider, IPickItem, FolderSelector } from '../../../drive/view/folderSelector';
-import { DriveModel, IFileProvider } from '../../../drive/model/driveModel';
+import { DriveModel } from '../../../drive/model/driveModel';
 import { DriveFile, FileType } from '../../../drive/model/driveTypes';
 import { fail } from 'assert';
-import { Readable } from 'stream';
+import { AbstractMockFileProvider } from '../model/abstractFileProvider.test';
 
 describe('Folder selection operations', () => {
 
@@ -72,7 +72,7 @@ class CancelFirstFolderProvider implements IPickProvider {
 
 }
 
-class MockFileProvider implements IFileProvider {
+class MockFileProvider extends AbstractMockFileProvider {
 
     provideFiles(parentFolderId: string): Promise<DriveFile[]> {
         return new Promise((resolve) => {
@@ -93,22 +93,6 @@ class MockFileProvider implements IFileProvider {
             }
             resolve(files);
         });
-    }
-
-    createFolder(parentFolderId: string, folderName: string): Promise<void> {
-        throw new Error("Method not implemented.");
-    }
-
-    uploadFile(parentFolderId: string, fullFilePath: string, basename: string, mimeType: string): Promise<void> {
-        throw new Error("Method not implemented.");
-    }
-
-    retrieveFileContentStream(fileId: string): Promise<Readable> {
-        throw new Error("Method not implemented.");
-    }
-
-    renameFile(_fileId: string, _newName: string): Promise<void> {
-        throw new Error("Method not implemented");
     }
 
 }

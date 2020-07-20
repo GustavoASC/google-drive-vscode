@@ -7,6 +7,7 @@ Manage Google Drive files and folders directly from VSCode. This extension uses 
 ## Features
 For now you can do the following operations on Google Drive:
    
+   - **Preview** file content
    - **List** files and folders
    - **Create** folders
    - **Upload** files

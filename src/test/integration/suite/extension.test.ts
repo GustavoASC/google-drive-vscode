@@ -4,14 +4,12 @@ import { DriveTreeDataProvider } from "../../../drive/view/driveTreeDataProvider
 // You can import and use all API from the 'vscode' module
 // as well as import your extension to test it
 import * as vscode from 'vscode';
-import { DriveModel, IFileProvider } from '../../../drive/model/driveModel';
+import { DriveModel } from '../../../drive/model/driveModel';
 import { DriveFile, FileType } from '../../../drive/model/driveTypes';
 import { INotificator } from '../../../drive/view/driveView';
-import { Readable } from 'stream';
+import { AbstractMockFileProvider } from '../../drive/model/abstractFileProvider.test';
 
 suite('Extension Test Suite', () => {
-
-	vscode.window.showInformationMessage('Start all tests.');
 
 	test('Drive Tree Data Provider without notification', async () => {
 
@@ -78,11 +76,12 @@ suite('Extension Test Suite', () => {
 });
 
 
-class MockFileProvider implements IFileProvider {
+class MockFileProvider extends AbstractMockFileProvider {
 
 	private dummyFiles: DriveFile[] = [];
 
 	constructor() {
+		super();
 		this.dummyFiles.push({ iconLink: 'http://www.mylink.com/folder', id: '1C7udIKXCkxsvXO37gCBpfzrHihn9wocz', name: 'VSCode', type: FileType.DIRECTORY });
 		this.dummyFiles.push({ iconLink: 'http://www.mylink.com/pdf', id: '5C7udIKXCkxsvXO37gCBpfzrHihn9wocz', name: 'TCC.pdf', type: FileType.FILE });
 		this.dummyFiles.push({ iconLink: 'http://www.mylink.com/txt', id: '1C7udIKxCkxsvXO37gCBpfzrHihdnwocz', name: 'myFile.txt', type: FileType.FILE });
@@ -103,76 +102,43 @@ class MockFileProvider implements IFileProvider {
 		});
 	}
 
-	createFolder(parentFolderId: string, folderName: string): Promise<void> {
-		throw new Error("Method not implemented.");
-	}
-
-	uploadFile(parentFolderId: string, fullFilePath: string, basename: string, mimeType: string): Promise<void> {
-		throw new Error("Method not implemented.");
-	}
-
-	retrieveFileContentStream(fileId: string): Promise<Readable> {
-		throw new Error("Method not implemented.");
-	}
-
-	renameFile(fileId: string, newName: string): Promise<void> {
-		throw new Error("Method not implemented.");
-	}
-
 }
 
 
 
-class EmptyFileProvider implements IFileProvider {
+class EmptyFileProvider extends AbstractMockFileProvider {
 
-	private dummyFiles: DriveFile[] = []; provideFiles(parentFolderId: string): Promise<DriveFile[]> {
+	provideFiles(parentFolderId: string): Promise<DriveFile[]> {
 		return new Promise((resolve, _reject) => {
 			resolve([]);
 		});
 	}
 
-	createFolder(parentFolderId: string, folderName: string): Promise<void> {
-		throw new Error("Method not implemented.");
-	}
-
-	uploadFile(parentFolderId: string, fullFilePath: string, basename: string, mimeType: string): Promise<void> {
-		throw new Error("Method not implemented.");
-	}
-
-	retrieveFileContentStream(fileId: string): Promise<Readable> {
-		throw new Error("Method not implemented.");
-	}
-
-	renameFile(fileId: string, newName: string): Promise<void> {
-		throw new Error("Method not implemented.");
-	}
-
 }
 
-
-class CannotNotificate implements INotificator {
-
+abstract class AbstractMockNotificator implements INotificator {
+	
 	showProgressMessage(message: string, task: Thenable<any>): void {
 		throw new Error("Method not implemented.");
 	}
-
+	
 	showInformationMessage(message: string, ...items: string[]): Thenable<string | undefined> {
-		throw new Error("Should not show message.");
+		throw new Error("Method not implemented.");
 	}
-
+	
 	showWarningMessage(message: string): void {
 		throw new Error("Method not implemented.");
 	}
 
 }
 
-class ShouldNotificate implements INotificator {
+class CannotNotificate extends AbstractMockNotificator {
+
+}
+
+class ShouldNotificate extends AbstractMockNotificator {
 
 	public notificated = false;
-
-	showProgressMessage(message: string, task: Thenable<any>): void {
-		throw new Error("Method not implemented.");
-	}
 
 	showInformationMessage(message: string, ...items: string[]): Thenable<string | undefined> {
 		assert.equal(`It looks like you don't have any folder on Google Drive accessible from this extension. Do you want to create a folder on Google Drive now?`, message);
@@ -181,10 +147,6 @@ class ShouldNotificate implements INotificator {
 		assert.equal(2, items.length);
 		this.notificated = true;
 		return new Promise((resolve) => { resolve() });
-	}
-
-	showWarningMessage(message: string): void {
-		throw new Error("Method not implemented.");
 	}
 
 }

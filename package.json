@@ -74,7 +74,7 @@
 				"command": "google.drive.download",
 				"title": "Google Drive: Download file from Drive",
 				"icon": "$(cloud-download)",
-				"enablement": "viewItem == file"
+				"enablement": "viewItem != folder"
 			},
 			{
 				"command": "google.drive.rename",
@@ -83,7 +83,7 @@
 			},
 			{
 				"command": "google.drive.openFile",
-				"title": "Google Drive: Open selected file",
+				"title": "Google Drive: Preview selected file",
 				"enablement": "viewItem == file",
 				"icon": "$(open-preview)"
 			}
@@ -106,11 +106,17 @@
 			]
 		},
 		"menus": {
+			"editor/title": [
+				{
+					"command": "google.drive.download",
+					"group": "navigation",
+					"when": "resourceScheme == googledrive"
+				}
+			],
 			"view/title": [
 				{
 					"command": "google.drive.createFolder",
-					"when": "view == driveView",
-					"group": "navigation"
+					"when": "view == driveView"
 				},
 				{
 					"command": "google.drive.fetchFiles",
@@ -121,23 +127,19 @@
 			"view/item/context": [
 				{
 					"command": "google.drive.download",
-					"when": "view == driveView",
-					"group": "inline"
+					"when": "view == driveView"
 				},
 				{
 					"command": "google.drive.uploadToFolderSelectedOnView",
-					"when": "view == driveView",
-					"group": "inline"
+					"when": "view == driveView"
 				},
 				{
 					"command": "google.drive.createFolder",
-					"when": "view == driveView",
-					"group": "inline"
+					"when": "view == driveView"
 				},
 				{
 					"command": "google.drive.rename",
-					"when": "view == driveView",
-					"group": "inline"
+					"when": "view == driveView"
 				},
 				{
 					"command": "google.drive.openFile",
@@ -165,13 +167,12 @@
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
-		"package": "npm run ui-test && npm run test && vsce package",
+		"package": "npm run test && vsce package",
 		"compile": "npm run tslint && tsc -p ./",
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile && npm run tslint",
-		"preui-test": "npm run pretest",
 		"ui-test": "node ./out/test/integration/runTest.js",
-		"test": "mocha --require ts-node/register ./src/test/drive/**/*.test.ts",
+		"test": "mocha --require ts-node/register ./src/test/drive/**/*.test.ts && npm run ui-test",
 		"tslint": "tslint --project tsconfig.json --config tslint.json"
 	},
 	"devDependencies": {
