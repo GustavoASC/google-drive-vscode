@@ -6,18 +6,16 @@ Manage Google Drive files and folders directly from VSCode. This extension uses 
 
 ## Features
    
-### Preview
+### Preview file content
 You can preview file content directly from drive with your current VSCode theme.
 
 !['File preview' File preview](img/gif/preview.gif)
 
 ### List
-List files and folders created with this extension.
 
 !['List files' List files](img/gif/list.gif)
 
 ### Create folders
-Create remote folders on Drive.
 
 !['Create folders' Create folders](img/gif/create-folder.gif)
 
@@ -38,12 +36,10 @@ You can upload files on three different ways.
 !['Upload tree view' Upload tree view](img/gif/upload-tree-view.gif)
 
 ### Download
-Download your files from Drive tree view.
 
 !['Download tree view' Download tree view](img/gif/download-tree-view.gif)
 
 ### Rename
-You can also rename remote files and folders directly from tree view.
 
 !['Rename tree view' Rename tree view](img/gif/rename-tree-view.gif)
 
