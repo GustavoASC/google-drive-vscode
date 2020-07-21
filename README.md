@@ -5,18 +5,47 @@
 Manage Google Drive files and folders directly from VSCode. This extension uses 'drive.file' scope and then can only access files and folders created on Google Drive through this extension, or have gained access with Google Picker API (to be implemented).
 
 ## Features
-For now you can do the following operations on Google Drive:
    
-   - **Preview** file content
-   - **List** files and folders
-   - **Create** folders
-   - **Upload** files
-   - **Download** files
-   - **Rename** files and folders
+### Preview
+You can preview file content directly from drive with your current VSCode theme.
 
-The following features will be developed on the next days:
-   - **Delete** files
-   - **Select** files with Google Picker API, so one can authorize access to files created by other apps or files which have been manually uploaded to Google Drive
+!['File preview' File preview](img/gif/preview.gif)
+
+### List
+List files and folders created with this extension.
+
+!['List files' List files](img/gif/list.gif)
+
+### Create folders
+Create remote folders on Drive.
+
+!['Create folders' Create folders](img/gif/create-folder.gif)
+
+### Upload files
+
+You can upload files on three different ways.
+
+1. Selecting specific file on workspace:
+
+!['Upload from workspace' Upload from workspace](img/gif/upload-workspace.gif)
+
+2. Upload file which is currently open in editor.
+
+!['Upload current' Upload current](img/gif/upload-current.gif)
+
+3. You can also upload files directory from context menu on Drive tree view.
+
+!['Upload tree view' Upload tree view](img/gif/upload-tree-view.gif)
+
+### Download
+Download your files from Drive tree view.
+
+!['Download tree view' Download tree view](img/gif/download-tree-view.gif)
+
+### Rename
+You can also rename remote files and folders directly from tree view.
+
+!['Rename tree view' Rename tree view](img/gif/rename-tree-view.gif)
 
 ## Requirements
 In order to use this extension you need to set up Google Drive API on your Google account.
@@ -28,6 +57,11 @@ In order to use this extension you need to set up Google Drive API on your Googl
    * Click 'Download client configuration'
    
 Once you have credentials.json file, access Command Palette on VSCode and run the command: 'Google Drive: Configure credentials' and select the credentials.json file.
+
+## Next features
+The next features will be developed soon:
+   - **Delete** files
+   - **Select** files with Google Picker API, so one can authorize access to files created by other apps or files which have been manually uploaded to Google Drive
 
 ## Known issues
    * On versions smaller than v1.48 (Insiders), the file preview does not properly show binary data e.g. image files. v1.48 will soon be the minimum version to run this extension. 

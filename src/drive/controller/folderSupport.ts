@@ -9,7 +9,7 @@ export class FolderSupport implements IControllerSupport {
             .then((folderName) => {
                 if (folderName) {
                     const createFolderPromise = this.createFolderPromise(model, view, fileId, folderName);
-                    view.showProgressMessage(`Creating folder '${folderName}' to Google Drive. Please wait...`, createFolderPromise);
+                    view.showProgressMessage(`Creating folder '${folderName}' on Google Drive. Please wait...`, createFolderPromise);
                 } else {
                     view.showWarningMessage(`'Create folder' process canceled by user.`);
                 }
