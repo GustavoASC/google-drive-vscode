@@ -31,7 +31,7 @@ You can upload files on three different ways.
 
 !['Upload current' Upload current](img/gif/upload-current.gif)
 
-3. You can also upload files directory from context menu on Drive tree view.
+3. You can also upload files from context menu, on Drive tree view.
 
 !['Upload tree view' Upload tree view](img/gif/upload-tree-view.gif)
 
