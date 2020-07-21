@@ -56,8 +56,8 @@ Once you have credentials.json file, access Command Palette on VSCode and run th
 
 ## Next features
 The next features will be developed soon:
-   - **Delete** files
    - **Select** files with Google Picker API, so one can authorize access to files created by other apps or files which have been manually uploaded to Google Drive
+   - **Delete** files
 
 ## Known issues
    * On versions smaller than v1.48 (Insiders), the file preview does not properly show binary data e.g. image files. v1.48 will soon be the minimum version to run this extension. 
