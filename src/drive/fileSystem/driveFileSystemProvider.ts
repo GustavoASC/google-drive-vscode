@@ -1,5 +1,6 @@
-import { FileSystemProvider, Event, Uri, Disposable, FileStat, FileType, FileChangeEvent, EventEmitter } from "vscode";
+import { FileSystemProvider, Event, Uri, Disposable, FileStat, FileType as vsFileType, FileChangeEvent, EventEmitter } from "vscode";
 import { DriveModel } from "../model/driveModel";
+import { FileType, DriveFile } from "../model/driveTypes";
 
 export class DriveFileSystemProvider implements FileSystemProvider {
 
@@ -13,15 +14,36 @@ export class DriveFileSystemProvider implements FileSystemProvider {
     }
 
     stat(uri: Uri): FileStat | Thenable<FileStat> {
-        return {
-            type: FileType.File,
-            ctime: 100000000,
-            mtime: 100000000,
-            size: 444444,
-        };
+        return new Promise((resolve, reject) => {
+            const fileId = uri.fragment;
+            const driveFile = this.model.getDriveFile(fileId);
+            if (driveFile) {
+                const fileStat = this.buildFileStat(driveFile);
+                resolve(fileStat);
+            } else {
+                reject('File not found');
+            }
+        });
     }
 
-    readDirectory(uri: Uri): [string, FileType][] | Thenable<[string, FileType][]> {
+    private buildFileStat(driveFile: DriveFile): FileStat {
+        const vscodeType = this.detectFileType(driveFile);
+        const fileStat = {
+            type: vscodeType,
+            ctime: driveFile.createdTime,
+            mtime: driveFile.modifiedTime,
+            size: driveFile.size,
+        };
+        return fileStat;
+    }
+
+    private detectFileType(driveFile: DriveFile): vsFileType {
+        const driveType = driveFile.type;
+        const vsType = driveType == FileType.DIRECTORY ? vsFileType.Directory : vsFileType.File;
+        return vsType
+    }
+
+    readDirectory(uri: Uri): [string, vsFileType][] | Thenable<[string, vsFileType][]> {
         throw new Error("Method not implemented.");
     }
 

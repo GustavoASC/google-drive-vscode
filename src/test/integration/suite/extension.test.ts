@@ -82,14 +82,14 @@ class MockFileProvider extends AbstractMockFileProvider {
 
 	constructor() {
 		super();
-		this.dummyFiles.push({ iconLink: 'http://www.mylink.com/folder', id: '1C7udIKXCkxsvXO37gCBpfzrHihn9wocz', name: 'VSCode', type: FileType.DIRECTORY });
-		this.dummyFiles.push({ iconLink: 'http://www.mylink.com/pdf', id: '5C7udIKXCkxsvXO37gCBpfzrHihn9wocz', name: 'TCC.pdf', type: FileType.FILE });
-		this.dummyFiles.push({ iconLink: 'http://www.mylink.com/txt', id: '1C7udIKxCkxsvXO37gCBpfzrHihdnwocz', name: 'myFile.txt', type: FileType.FILE });
-		this.dummyFiles.push({ iconLink: 'http://www.mylink.com/folder', id: '1C7udIKXCkxsvXO37gCBpfzrHihn7777z', name: 'Other folder', type: FileType.DIRECTORY });
-		this.dummyFiles.push({ iconLink: 'http://www.mylink.com/csv', id: '1C7udIKXLkxsvXO37gCBpfzrHihn9wocz', name: 'myTable.csv', type: FileType.FILE });
-		this.dummyFiles.push({ iconLink: 'http://www.mylink.com/jpg', id: '1C7udIKXCkxsvjO37gCBpfzrHihn9wocz', name: 'myPicture.jpg', type: FileType.FILE });
-		this.dummyFiles.push({ iconLink: 'http://www.mylink.com/png', id: '1C7udIKXCkxsvXO47gCBpfzrHihn9wocz', name: 'myOtherPicture.png', type: FileType.FILE });
-		this.dummyFiles.push({ iconLink: 'http://www.mylink.com/bmp', id: '1C7udIKXCkxsvXO37gCBpfzDHihn9wocz', name: 'myThirdPicture.bmp', type: FileType.FILE });
+		this.dummyFiles.push({ iconLink: 'http://www.mylink.com/folder', id: '1C7udIKXCkxsvXO37gCBpfzrHihn9wocz', name: 'VSCode', type: FileType.DIRECTORY, size: 0, createdTime: 1341393000000, modifiedTime: 1341393000000 });
+		this.dummyFiles.push({ iconLink: 'http://www.mylink.com/pdf', id: '5C7udIKXCkxsvXO37gCBpfzrHihn9wocz', name: 'TCC.pdf', type: FileType.FILE, size: 12235, createdTime: 1341393000000, modifiedTime: 1341393000000 });
+		this.dummyFiles.push({ iconLink: 'http://www.mylink.com/txt', id: '1C7udIKxCkxsvXO37gCBpfzrHihdnwocz', name: 'myFile.txt', type: FileType.FILE, size: 222, createdTime: 1341393000000, modifiedTime: 1341393000000 });
+		this.dummyFiles.push({ iconLink: 'http://www.mylink.com/folder', id: '1C7udIKXCkxsvXO37gCBpfzrHihn7777z', name: 'Other folder', type: FileType.DIRECTORY, size: 126, createdTime: 1341393000000, modifiedTime: 1341393000000 });
+		this.dummyFiles.push({ iconLink: 'http://www.mylink.com/csv', id: '1C7udIKXLkxsvXO37gCBpfzrHihn9wocz', name: 'myTable.csv', type: FileType.FILE, size: 636, createdTime: 1341393000000, modifiedTime: 1341393000000 });
+		this.dummyFiles.push({ iconLink: 'http://www.mylink.com/jpg', id: '1C7udIKXCkxsvjO37gCBpfzrHihn9wocz', name: 'myPicture.jpg', type: FileType.FILE, size: 883235, createdTime: 1341393000000, modifiedTime: 1341393000000 });
+		this.dummyFiles.push({ iconLink: 'http://www.mylink.com/png', id: '1C7udIKXCkxsvXO47gCBpfzrHihn9wocz', name: 'myOtherPicture.png', type: FileType.FILE, size: 2135, createdTime: 1341393000000, modifiedTime: 1341393000000 });
+		this.dummyFiles.push({ iconLink: 'http://www.mylink.com/bmp', id: '1C7udIKXCkxsvXO37gCBpfzDHihn9wocz', name: 'myThirdPicture.bmp', type: FileType.FILE, size: 125, createdTime: 1341393000000, modifiedTime: 1341393000000 });
 	}
 
 	provideFiles(parentFolderId: string): Promise<DriveFile[]> {

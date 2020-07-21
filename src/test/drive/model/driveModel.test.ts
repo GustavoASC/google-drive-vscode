@@ -119,14 +119,14 @@ class MockFileProvider implements IFileProvider {
     private counter: number = 0;
 
     constructor() {
-        this.dummyFiles.push({ iconLink: 'http://www.mylink.com/folder', id: '1C7udIKXCkxsvXO37gCBpfzrHihn9wocz', name: 'VSCode', type: FileType.DIRECTORY });
-        this.dummyFiles.push({ iconLink: 'http://www.mylink.com/pdf', id: '5C7udIKXCkxsvXO37gCBpfzrHihn9wocz', name: 'TCC.pdf', type: FileType.FILE });
-        this.dummyFiles.push({ iconLink: 'http://www.mylink.com/txt', id: 'sC7udIKxCkxsvXO37gCBpfzrHihn9wocz', name: 'myFile.txt', type: FileType.FILE });
-        this.dummyFiles.push({ iconLink: 'http://www.mylink.com/folder', id: '1C7udIKXCkxsvXO37gCBpfzrHihn7777z', name: 'Other folder', type: FileType.DIRECTORY });
-        this.dummyFiles.push({ iconLink: 'http://www.mylink.com/csv', id: '1C7udIKXLkxsvXO37gCBpfzrHihn9wocz', name: 'myTable.csv', type: FileType.FILE });
-        this.dummyFiles.push({ iconLink: 'http://www.mylink.com/jpg', id: '1C7udIKXCkxsvjO37gCBpfzrHihn9wocz', name: 'myPicture.jpg', type: FileType.FILE });
-        this.dummyFiles.push({ iconLink: 'http://www.mylink.com/png', id: '1C7udIKXCkxsvXO47gCBpfzrHihn9wocz', name: 'myOtherPicture.png', type: FileType.FILE });
-        this.dummyFiles.push({ iconLink: 'http://www.mylink.com/bmp', id: '1C7udIKXCkxsvXO37gCBpfzDHihn9wocz', name: 'myThirdPicture.bmp', type: FileType.FILE });
+        this.dummyFiles.push({ iconLink: 'http://www.mylink.com/folder', id: '1C7udIKXCkxsvXO37gCBpfzrHihn9wocz', name: 'VSCode', type: FileType.DIRECTORY, size: 0, createdTime: 1341393000000, modifiedTime: 1341393000000 });
+        this.dummyFiles.push({ iconLink: 'http://www.mylink.com/pdf', id: '5C7udIKXCkxsvXO37gCBpfzrHihn9wocz', name: 'TCC.pdf', type: FileType.FILE, size: 162, createdTime: 1341393000000, modifiedTime: 1341393000000 });
+        this.dummyFiles.push({ iconLink: 'http://www.mylink.com/txt', id: 'sC7udIKxCkxsvXO37gCBpfzrHihn9wocz', name: 'myFile.txt', type: FileType.FILE, size: 274, createdTime: 1341393000000, modifiedTime: 1341393000000 });
+        this.dummyFiles.push({ iconLink: 'http://www.mylink.com/folder', id: '1C7udIKXCkxsvXO37gCBpfzrHihn7777z', name: 'Other folder', type: FileType.DIRECTORY, size: 0, createdTime: 1341393000000, modifiedTime: 1341393000000 });
+        this.dummyFiles.push({ iconLink: 'http://www.mylink.com/csv', id: '1C7udIKXLkxsvXO37gCBpfzrHihn9wocz', name: 'myTable.csv', type: FileType.FILE, size: 184, createdTime: 1341393000000, modifiedTime: 1341393000000 });
+        this.dummyFiles.push({ iconLink: 'http://www.mylink.com/jpg', id: '1C7udIKXCkxsvjO37gCBpfzrHihn9wocz', name: 'myPicture.jpg', type: FileType.FILE, size: 155, createdTime: 1341393000000, modifiedTime: 1341393000000 });
+        this.dummyFiles.push({ iconLink: 'http://www.mylink.com/png', id: '1C7udIKXCkxsvXO47gCBpfzrHihn9wocz', name: 'myOtherPicture.png', type: FileType.FILE, size: 10, createdTime: 1341393000000, modifiedTime: 1341393000000 });
+        this.dummyFiles.push({ iconLink: 'http://www.mylink.com/bmp', id: '1C7udIKXCkxsvXO37gCBpfzDHihn9wocz', name: 'myThirdPicture.bmp', type: FileType.FILE, size: 27654, createdTime: 1341393000000, modifiedTime: 1341393000000 });
     }
 
     provideFiles(parentFolderId: string): Promise<DriveFile[]> {
@@ -136,9 +136,9 @@ class MockFileProvider implements IFileProvider {
             } else {
                 if (parentFolderId === '1C7udIKXCkxsvXO37gCBpfzrHihn9wocz') {
                     const vscodeFiles: DriveFile[] = [];
-                    vscodeFiles.push({ iconLink: 'http://www.mylink.com/folder', id: 'AC7udIKXCkxsvXO37gCBpfzrHihn9wocz', name: 'Subfolder', type: FileType.DIRECTORY });
-                    vscodeFiles.push({ iconLink: 'http://www.mylink.com/pdf', id: 'BC7udIKXCkxsvXO37gCBpfzrHihn9wocz', name: 'A.pdf', type: FileType.FILE });
-                    vscodeFiles.push({ iconLink: 'http://www.mylink.com/txt', id: 'CC7udIKxCkxsvXO37gCBpfzrHihn9wocz', name: 'B.txt', type: FileType.FILE });
+                    vscodeFiles.push({ iconLink: 'http://www.mylink.com/folder', id: 'AC7udIKXCkxsvXO37gCBpfzrHihn9wocz', name: 'Subfolder', type: FileType.DIRECTORY, size: 0, createdTime: 1341393000000, modifiedTime: 1341393000000 });
+                    vscodeFiles.push({ iconLink: 'http://www.mylink.com/pdf', id: 'BC7udIKXCkxsvXO37gCBpfzrHihn9wocz', name: 'A.pdf', type: FileType.FILE, size: 124, createdTime: 1341393000000, modifiedTime: 1341393000000 });
+                    vscodeFiles.push({ iconLink: 'http://www.mylink.com/txt', id: 'CC7udIKxCkxsvXO37gCBpfzrHihn9wocz', name: 'B.txt', type: FileType.FILE, size: 55, createdTime: 1341393000000, modifiedTime: 1341393000000 });
                     resolve(vscodeFiles);
                 } else {
                     resolve([]);
@@ -150,7 +150,7 @@ class MockFileProvider implements IFileProvider {
     createFolder(parentFolderId: string, folderName: string): Promise<void> {
         return new Promise((resolve) => {
             expect(parentFolderId).to.equal('abcdefghi');
-            this.dummyFiles.push({ iconLink: 'http://www.mylink.com/folder', id: 'dummyFolderId', name: folderName, type: FileType.DIRECTORY })
+            this.dummyFiles.push({ iconLink: 'http://www.mylink.com/folder', id: 'dummyFolderId', name: folderName, type: FileType.DIRECTORY, size: 0, createdTime: 1341393000000, modifiedTime: 1341393000000 });
             resolve();
         });
     }

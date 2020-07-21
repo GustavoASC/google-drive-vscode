@@ -11,6 +11,9 @@ export interface DriveFile {
     type: FileType;
     name: string;
     iconLink: string;
+    createdTime: number;
+    modifiedTime: number;
+    size: number;
     parent?: DriveFile;
 }
 

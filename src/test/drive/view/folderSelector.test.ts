@@ -79,14 +79,14 @@ class MockFileProvider extends AbstractMockFileProvider {
             const files: DriveFile[] = [];
             switch (parentFolderId) {
                 case 'root':
-                    files.push({ iconLink: 'http://www.mylink.com/folder', id: 'sub-folder-id', name: 'My Nice subfolder', type: FileType.DIRECTORY });
-                    files.push({ iconLink: 'http://www.mylink.com/folder', id: '1C7udIKXCkxsvXO37gCBpfzrHihn7777z', name: 'Other folder', type: FileType.DIRECTORY });
-                    files.push({ iconLink: 'http://www.mylink.com/csv', id: '1C7udIKXLkxsvXO37gCBpfzrHihn9wocz', name: 'myTable.csv', type: FileType.FILE });
+                    files.push({ iconLink: 'http://www.mylink.com/folder', id: 'sub-folder-id', name: 'My Nice subfolder', type: FileType.DIRECTORY, size: 0, createdTime: 1341393000000, modifiedTime: 1341393000000 });
+                    files.push({ iconLink: 'http://www.mylink.com/folder', id: '1C7udIKXCkxsvXO37gCBpfzrHihn7777z', name: 'Other folder', type: FileType.DIRECTORY, size: 0, createdTime: 1341393000000, modifiedTime: 1341393000000 });
+                    files.push({ iconLink: 'http://www.mylink.com/csv', id: '1C7udIKXLkxsvXO37gCBpfzrHihn9wocz', name: 'myTable.csv', type: FileType.FILE, size: 1226, createdTime: 1341393000000, modifiedTime: 1341393000000 });
                     break;
                 case 'sub-folder-id':
-                    files.push({ iconLink: 'http://www.mylink.com/jpg', id: '1C7udIKXCkxsvjO37gCBpfzrHihn9wocz', name: 'myPicture.jpg', type: FileType.FILE });
-                    files.push({ iconLink: 'http://www.mylink.com/png', id: '1C7udIKXCkxsvXO47gCBpfzrHihn9wocz', name: 'myOtherPicture.png', type: FileType.FILE });
-                    files.push({ iconLink: 'http://www.mylink.com/bmp', id: '1C7udIKXCkxsvXO37gCBpfzDHihn9wocz', name: 'myThirdPicture.bmp', type: FileType.FILE });
+                    files.push({ iconLink: 'http://www.mylink.com/jpg', id: '1C7udIKXCkxsvjO37gCBpfzrHihn9wocz', name: 'myPicture.jpg', type: FileType.FILE, size: 17864, createdTime: 1341393000000, modifiedTime: 1341393000000 });
+                    files.push({ iconLink: 'http://www.mylink.com/png', id: '1C7udIKXCkxsvXO47gCBpfzrHihn9wocz', name: 'myOtherPicture.png', type: FileType.FILE, size: 2145, createdTime: 1341393000000, modifiedTime: 1341393000000 });
+                    files.push({ iconLink: 'http://www.mylink.com/bmp', id: '1C7udIKXCkxsvXO37gCBpfzDHihn9wocz', name: 'myThirdPicture.bmp', type: FileType.FILE, size: 8912674, createdTime: 1341393000000, modifiedTime: 1341393000000 });
                     break;
                 default:
                     fail('Invalid parent folder');

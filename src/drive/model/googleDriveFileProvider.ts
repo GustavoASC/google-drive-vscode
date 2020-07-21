@@ -10,6 +10,8 @@ const HTTP_RESPONSE_OK = 200;
 
 export class GoogleDriveFileProvider implements IFileProvider {
 
+    private typeConverter = new DriveTypeConverter();
+
     constructor(private authenticator: DriveAuthenticator) { }
 
     provideFiles(parentFolderId: string): Promise<DriveFile[]> {
@@ -18,14 +20,14 @@ export class GoogleDriveFileProvider implements IFileProvider {
                 const listParams = {
                     q: `'${parentFolderId}' in parents and trashed = false`,
                     orderBy: 'folder,name',
-                    fields: 'nextPageToken, files(id, name, iconLink, mimeType)'
+                    fields: 'nextPageToken, files(id, name, iconLink, mimeType, size, modifiedTime, createdTime)'
                 };
                 const callbackFn = (err: any, res: any) => {
                     if (err) {
                         return reject(err);
                     }
                     const apiFiles = res.data.files;
-                    const convertedFiles = DriveTypeConverter.fromApiToTypescript(apiFiles);
+                    const convertedFiles = this.typeConverter.fromApiToTypescript(apiFiles);
                     resolve(convertedFiles);
                 };
                 drive(auth).files.list(listParams, callbackFn);

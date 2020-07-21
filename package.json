@@ -8,7 +8,7 @@
 	},
 	"license": "MIT",
 	"publisher": "GustavoASC",
-	"version": "0.0.20",
+	"version": "0.0.21",
 	"icon": "img/icon.png",
 	"engines": {
 		"vscode": "^1.43.0"
@@ -170,7 +170,7 @@
 		"package": "npm run test && vsce package",
 		"compile": "npm run tslint && tsc -p ./",
 		"watch": "tsc -watch -p ./",
-		"pretest": "npm run compile && npm run tslint",
+		"pretest": "tsc -p ./",
 		"ui-test": "node ./out/test/integration/runTest.js",
 		"test": "mocha --require ts-node/register ./src/test/drive/**/*.test.ts && npm run ui-test",
 		"tslint": "tslint --project tsconfig.json --config tslint.json"
