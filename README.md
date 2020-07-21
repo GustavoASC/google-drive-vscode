@@ -7,7 +7,7 @@ Manage Google Drive files and folders directly from VSCode. This extension uses 
 ## Features
    
 ### Preview file content
-You can preview file content directly from drive with your current VSCode theme.
+You can preview file content directly from VSCode with your favorite theme. This way tou don't need to download file to disk.
 
 !['File preview' File preview](img/gif/preview.gif)
 
