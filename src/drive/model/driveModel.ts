@@ -105,12 +105,6 @@ export class DriveModel {
         });
     }
 
-    getAllDriveFiles(): DriveFile[] {
-        const filesArray: DriveFile[] = [];
-        this.cachedFiles.forEach((file, _id) => filesArray.push(file));
-        return filesArray;
-    }
-
     getDriveFile(id: string): DriveFile | undefined {
         return this.cachedFiles.get(id);
     }

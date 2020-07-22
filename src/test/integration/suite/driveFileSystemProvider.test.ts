@@ -15,9 +15,22 @@ suite('Drive file system manipulation', () => {
 	test('Checks retrieving file content from file system', async () => {
         const model = new DriveModel(new MockFileProvider());
         await model.listFiles('root');
+        const uri = vscode.Uri.parse('googledrive:///VSCode/subFolder/thirdFolder/myFile.txt#1Cdffsdfsdfsdfdfocz');
         const driveFs = new DriveFileSystemProvider(model);
-        const content = await driveFs.readFile(vscode.Uri.parse('googledrive:///VSCode/subFolder/thirdFolder/myFile.txt#1Cdffsdfsdfsdfdfocz'));
+        const content = await driveFs.readFile(uri);
         assert.equal('this is my content', content.toString());
+	});
+
+	test('Checks file status from file system', async () => {
+        const model = new DriveModel(new MockFileProvider());
+        await model.listFiles('root');
+        const uri = vscode.Uri.parse('googledrive:///VSCode/subFolder/thirdFolder/myFile.txt#1Cdffsdfsdfsdfdfocz');
+        const driveFs = new DriveFileSystemProvider(model);
+        const fsStat = await driveFs.stat(uri);
+        assert.equal(vscode.FileType.File, fsStat.type);
+        assert.equal(1361393000000, fsStat.ctime);
+        assert.equal(7341393000000, fsStat.mtime);
+        assert.equal(274, fsStat.size);
 	});
 
 });
@@ -30,7 +43,7 @@ class MockFileProvider extends AbstractMockFileProvider {
             const firstFolder: DriveFile = { iconLink: 'http://www.mylink.com/folder', id: '1C7udIKXadsdssdsadsadsddsocz', name: 'VSCode', type: FileType.DIRECTORY, size: 0, createdTime: 1341393000000, modifiedTime: 1341393000000 };
             const secondFolder: DriveFile = { iconLink: 'http://www.mylink.com/folder', id: '1C7udIKXCkxsvXO37gvfbfbdfbHihn9wocz', name: 'subFolder', type: FileType.DIRECTORY, parent: firstFolder, size: 0, createdTime: 1341393000000, modifiedTime: 1341393000000 };
             const thirdFolder: DriveFile = { iconLink: 'http://www.mylink.com/folder', id: '1C7udIKXCkxsvXO37gCBpfaasqn9wocz', name: 'thirdFolder', type: FileType.DIRECTORY, parent: secondFolder, size: 0, createdTime: 1341393000000, modifiedTime: 1341393000000 };
-            const finalFile: DriveFile = { iconLink: 'http://www.mylink.com/file', id: '1Cdffsdfsdfsdfdfocz', name: 'myFile.txt', type: FileType.FILE, parent: thirdFolder, size: 274, createdTime: 1341393000000, modifiedTime: 1341393000000 };
+            const finalFile: DriveFile = { iconLink: 'http://www.mylink.com/file', id: '1Cdffsdfsdfsdfdfocz', name: 'myFile.txt', type: FileType.FILE, parent: thirdFolder, size: 274, createdTime: 1361393000000, modifiedTime: 7341393000000 };
             resolve([finalFile]);
         });
     }

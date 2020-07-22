@@ -13,15 +13,17 @@ import { DriveView } from './drive/view/driveView';
 export const CONFIGURE_CREDENTIALS_COMMAND = 'google.drive.configureCredentials';
 export const CREATE_FOLDER_COMMAND = 'google.drive.createFolder';
 
+const driveAuthenticator = new DriveAuthenticator();
+const credentialsConfigurator = new CredentialsConfigurator(driveAuthenticator);
+const googleFileProvider = new GoogleDriveFileProvider(driveAuthenticator);
+const model = new DriveModel(googleFileProvider);
+
+// Exports controller to use it on integration tests
+export const controller = new DriveController(model, new DriveView(model));
+
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate({ subscriptions }: vscode.ExtensionContext) {
-
-	const driveAuthenticator = new DriveAuthenticator();
-	const credentialsConfigurator = new CredentialsConfigurator(driveAuthenticator);
-	const googleFileProvider = new GoogleDriveFileProvider(driveAuthenticator);
-	const model = new DriveModel(googleFileProvider);
-	const controller = new DriveController(model, new DriveView(model));
 
 	vscode.workspace.registerFileSystemProvider(DRIVE_SCHEME, new DriveFileSystemProvider(model), { isReadonly: true });
 

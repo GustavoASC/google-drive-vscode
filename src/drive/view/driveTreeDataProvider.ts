@@ -1,4 +1,4 @@
-import { TreeItemCollapsibleState, TreeDataProvider, TreeItem, EventEmitter, Event, window, Uri, ProviderResult, commands } from "vscode";
+import { TreeItemCollapsibleState, TreeDataProvider, TreeItem, EventEmitter, Event, window, Uri, commands } from "vscode";
 import { FileType, DriveFile, DriveFileUtils } from "../model/driveTypes";
 import { DriveModel } from "../model/driveModel";
 import { INotificator } from "./driveView";

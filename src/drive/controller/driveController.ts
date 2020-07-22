@@ -18,6 +18,10 @@ export class DriveController {
 
 	constructor(private model: DriveModel, private view: IDriveView) { }
 
+	changeViewImpl(view: IDriveView): void {
+		this.view = view;
+	}
+
 	listFiles(parentFolderId: string): void {
 		this.model.listFiles(parentFolderId)
 			.then(_files => this.view.refresh())
