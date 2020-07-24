@@ -1,5 +1,4 @@
 import * as os from "os";
-import { EnvCredentialsProvider } from './envCredentialsProvider';
 import { KeytarCredentialsProvider } from './keytarCredentialsProvider';
 
 export const CREDENTIALS_JSON_SERVICE = 'Google Drive for VSCode - Credentials';
@@ -7,7 +6,11 @@ export const TOKENS_JSON_SERVICE = 'Google Drive for VSCode - Token';
 
 export class CredentialsManager {
 
-    private credentialsProvider = new CredentialsFactory().createProvider();
+    private credentialsProvider = new KeytarCredentialsProvider();
+
+    changeProvider(provider: ICredentialsProvider): void {
+        this.credentialsProvider = provider;
+    }
 
     storePassword(passContent: string, serviceName: string): Promise<void> {
         return new Promise((resolve, reject) => {
@@ -48,17 +51,6 @@ export class CredentialsManager {
         });
     }
 
-}
-
-export class CredentialsFactory {
-
-    createProvider(): ICredentialsProvider {
-        if (process.env['DRIVE_CREDENTIALS'] && process.env['DRIVE_TOKEN']) {
-            return new EnvCredentialsProvider();
-        } else {
-            return new KeytarCredentialsProvider();
-        }
-    }
 }
 
 

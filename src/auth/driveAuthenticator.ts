@@ -11,7 +11,8 @@ export class DriveAuthenticator {
 
   private oAuth2Client: any;
   private token: any;
-  private credentialsManager = new CredentialsManager();
+
+  constructor(private credentialsManager: CredentialsManager) {}
 
   checkCredentialsConfigured(): Promise<void> {
     return new Promise((resolve, reject) => {
