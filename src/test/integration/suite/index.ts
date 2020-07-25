@@ -2,13 +2,15 @@ import * as path from 'path';
 import * as Mocha from 'mocha';
 import * as glob from 'glob';
 
+const MAX_TIMEOUT = 70000;
+
 export function run(): Promise<void> {
 	// Create the mocha test
 	const mocha = new Mocha({
 		ui: 'tdd',
 	});
 	mocha.useColors(true);
-	mocha.timeout(50000);
+	mocha.timeout(MAX_TIMEOUT);
 
 	const testsRoot = path.resolve(__dirname, '..');
 

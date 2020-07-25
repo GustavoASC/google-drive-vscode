@@ -13,11 +13,13 @@ import { DriveModel } from '../../../drive/model/driveModel';
 import { DriveController } from '../../../drive/controller/driveController';
 import { uploadSelectedFile } from '../../../extension';
 
+const TIMEOUT_BETWEEN_STEPS = 10000;
 
 // Create a folder on drive root, with current timestamp
 // The timestamp will be folder name
 const rootTestFolderName = new Date().getMilliseconds().toString();
 
+let openedUri: string | undefined;
 suite('Operations on real Google Drive API', () => {
 
     test('General operations on extension', async () => {
@@ -30,75 +32,61 @@ suite('Operations on real Google Drive API', () => {
             credentialsManager.changeProvider(new EnvCredentialsProvider());
 
 
-            // Prepares the file provider to fetch and manipulate information from Google Drive cloud
+            // Prepares the file provider to fetch and manipulate information from Google Drive
             const driveAuthenticator = new DriveAuthenticator(credentialsManager);
             const googleFileProvider = new GoogleDriveFileProvider(driveAuthenticator);
             const model = new DriveModel(googleFileProvider);
             let controller: undefined | DriveController;
 
 
-            //
-            // Creates folder on drive root
-            //
+            console.log(`Creating folder ${rootTestFolderName} on root...`);
             controller = new DriveController(model, new CreateRootFolderView());
             controller.createFolder('root');
-            await sleep(5000);
+            await sleep(TIMEOUT_BETWEEN_STEPS);
 
             
-            //
-            // Fetch/list files from root folder on cloud
-            //
+            console.log(`Fetching/listing files from root folder on drive...`);
             controller.listFiles('root');
-            await sleep(5000);
+            await sleep(TIMEOUT_BETWEEN_STEPS);
 
 
-            //
-            // From fetched files, discover the ID of the folder created moments ago
-            //
+            console.log(`From fetched files, discovering the ID of the folder created moments ago...`);
             const folderId = model.getDriveFileFromName(rootTestFolderName)!.id;
             console.log(`Created folder ${rootTestFolderName} with ID ${folderId} on root`);
 
 
-            //
-            // Since we have the folder available, we need to fill it with some files
-            //
             controller = new DriveController(model, new UploadFileView(folderId));
             ['dummyText.txt', 'dog.jpg', 'helloworld.cpp'].forEach(async res => {
                 const uri = vscode.Uri.file(__dirname + '/../../../../src/test/integration/suite/res/' + res);
+                console.log(`Uploading ${res} to folder created moments ago...`);
                 uploadSelectedFile(uri, controller!);
             });
-            await sleep(5000);
+            await sleep(TIMEOUT_BETWEEN_STEPS);
 
 
-            //
-            // Force list/fetch files from drive
-            //
+            console.log(`Fetching/listing files from folder with ID ${folderId} on drive...`);
             controller.listFiles(folderId);
-            await sleep(5000);
+            await sleep(TIMEOUT_BETWEEN_STEPS);
 
 
-            //
-            // Gets the ID of one of the uploaded files
-            //
-            const dummyTextId = model.getDriveFileFromName('dummyText.txt')!.id;
+            const testFileName = 'dummyText.txt';
+            console.log(`Discovering the ID of ${testFileName} on drive...`);
+            const dummyTextId = model.getDriveFileFromName(testFileName)!.id;
+            console.log(`ID: ${dummyTextId}`);
 
 
-            //
-            // Renames file on Google Drive
-            //
+            console.log(`Renaming ${testFileName} on drive...`);
             controller = new DriveController(model, new RenameFileView());
             controller.renameFile(dummyTextId);
-            await sleep(5000);
+            await sleep(TIMEOUT_BETWEEN_STEPS);
 
 
-            // Opens the remote file on VSCode tab
+            console.log(`Opening the remote file with ID ${dummyTextId} on VSCode tab...`);
             controller.openRemoteFile(dummyTextId);
-            await sleep(5000);
+            await sleep(TIMEOUT_BETWEEN_STEPS);
 
-            //
-            // Checks whether opened the right file
-            //
-            assert.equal(`/${rootTestFolderName}/renamed-file.txt`, vscode.window.activeTextEditor?.document.fileName);
+            console.log(`Checking whether opened the right file...`);
+            assert.equal(`googledrive:///${rootTestFolderName}/renamed-file.txt#${dummyTextId}`, openedUri);
         } else {
             // When it's CI execution this should never happen!
             // On CI we have credentials configured on env variables
@@ -220,16 +208,7 @@ class RenameFileView extends AbstractDriveView {
     }
 
     openUri(targetUri: string): void {
-        const options = this.defaultOpenOptions();
-        vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(targetUri), options);
-    }
-
-    private defaultOpenOptions(): vscode.TextDocumentShowOptions {
-        const options: vscode.TextDocumentShowOptions = {
-            viewColumn: vscode.ViewColumn.Active,
-            preview: false
-        }
-        return options;
+        openedUri = targetUri;
     }
 
 }

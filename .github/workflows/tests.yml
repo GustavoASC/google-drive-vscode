@@ -6,7 +6,7 @@ name: CI
 # events but only for the master branch
 on:
   push:
-    branches: [ master ]
+    branches: [ master, integrationTests ]
   pull_request:
     branches: [ master ]
 
@@ -15,7 +15,7 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -23,7 +23,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Change to root
-      run: sudo
+      run: sudo su
 
     - name: Installs node dependencies
       run: npm i
@@ -34,6 +34,5 @@ jobs:
     - name: Run tests
       run: npm run test
       env: # Setup credentials for integration tests
-        CI: S
         DRIVE_CREDENTIALS: ${{ secrets.DRIVE_CREDENTIALS }}
         DRIVE_TOKEN: ${{ secrets.DRIVE_TOKEN }}
