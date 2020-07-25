@@ -6,7 +6,7 @@ name: CI
 # events but only for the master branch
 on:
   push:
-    branches: [ master, integrationTests ]
+    branches: [ master ]
   pull_request:
     branches: [ master ]
 
@@ -34,5 +34,6 @@ jobs:
     - name: Run tests
       run: npm run test
       env: # Setup credentials for integration tests
+        CI_EXECUTION: S
         DRIVE_CREDENTIALS: ${{ secrets.DRIVE_CREDENTIALS }}
         DRIVE_TOKEN: ${{ secrets.DRIVE_TOKEN }}
