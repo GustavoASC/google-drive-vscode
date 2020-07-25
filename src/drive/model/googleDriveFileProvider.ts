@@ -20,6 +20,7 @@ export class GoogleDriveFileProvider implements IFileProvider {
                 const listParams = {
                     q: `'${parentFolderId}' in parents and trashed = false`,
                     orderBy: 'folder,name',
+                    pageSize: 1000,
                     fields: 'nextPageToken, files(id, name, iconLink, mimeType, size, modifiedTime, createdTime)'
                 };
                 const callbackFn = (err: any, res: any) => {
