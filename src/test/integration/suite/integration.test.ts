@@ -23,7 +23,7 @@ suite('Operations on real Google Drive API', () => {
     test('General operations on extension', async () => {
         // Only run tests when specific credentials account are configured on env variables
         // to prevent trash files on Drive
-        const envProvider = process.env['DRIVE_CREDENTIALS'] && process.env['DRIVE_TOKEN']
+        const envProvider = process.env.DRIVE_CREDENTIALS && process.env.DRIVE_TOKEN
         if (envProvider) {
             
             const credentialsManager = new CredentialsManager();
@@ -78,17 +78,27 @@ suite('Operations on real Google Drive API', () => {
 
 
             //
-            // Opens the text file on VSCode
+            // Gets the ID of one of the uploaded files
             //
             const dummyTextId = model.getDriveFileFromName('dummyText.txt')!.id;
-            controller.openRemoteFile(dummyTextId);
+
+
+            //
+            // Renames file on Google Drive
+            //
+            controller = new DriveController(model, new RenameFileView());
+            controller.renameFile(dummyTextId);
             await sleep(5000);
 
+
+            // Opens the remote file on VSCode tab
+            controller.openRemoteFile(dummyTextId);
+            await sleep(5000);
 
             //
             // Checks whether opened the right file
             //
-            assert.equal(`/${rootTestFolderName}/dummyText.txt`, vscode.window.activeTextEditor?.document.fileName);
+            assert.equal(`/${rootTestFolderName}/renamed-file.txt`, vscode.window.activeTextEditor?.document.fileName);
         } else {
             // When it's CI execution this should never happen!
             // On CI we have credentials configured on env variables
@@ -184,5 +194,45 @@ class UploadFileView extends AbstractDriveView {
     }
 
 }
+
+class RenameFileView extends AbstractDriveView {
+
+    refresh(): void {
+
+    }
+
+    showInputBox(message: string, value?: string | undefined): Thenable<string | undefined> {
+        return new Promise(resolve => {
+            return resolve('renamed-file.txt');
+        });
+    }
+
+    showInformationMessage(message: string, ...items: string[]): Thenable<string | undefined> {
+        return new Promise(resolve => resolve(undefined));
+    }
+
+    showWarningMessage(message: string): void {
+
+    }
+
+    showProgressMessage(message: string, task: Thenable<any>): void {
+
+    }
+
+    openUri(targetUri: string): void {
+        const options = this.defaultOpenOptions();
+        vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(targetUri), options);
+    }
+
+    private defaultOpenOptions(): vscode.TextDocumentShowOptions {
+        const options: vscode.TextDocumentShowOptions = {
+            viewColumn: vscode.ViewColumn.Active,
+            preview: false
+        }
+        return options;
+    }
+
+}
+
 
 
