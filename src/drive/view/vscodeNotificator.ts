@@ -1,5 +1,5 @@
-import { INotificator } from "./driveView";
 import { ProgressLocation, window } from "vscode";
+import { INotificator } from "./notificator";
 
 export class VSCodeNotificator implements INotificator {
 

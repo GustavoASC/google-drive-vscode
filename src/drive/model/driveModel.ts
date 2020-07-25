@@ -105,15 +105,20 @@ export class DriveModel {
         });
     }
 
-    getAllDriveFiles(): DriveFile[] {
-        const filesArray: DriveFile[] = [];
-        this.cachedFiles.forEach((file, _id) => filesArray.push(file));
-        return filesArray;
-    }
-
     getDriveFile(id: string): DriveFile | undefined {
         return this.cachedFiles.get(id);
     }
+    
+    getDriveFileFromName(name: string): DriveFile | undefined {
+        let driveFile: DriveFile | undefined;
+        this.cachedFiles.forEach((value: DriveFile, key: string) => {
+            if (!driveFile && value.name === name) {
+                driveFile = value;
+            }
+        });
+        return driveFile;
+    }
+
 }
 
 export interface IFileProvider {

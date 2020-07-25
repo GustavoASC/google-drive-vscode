@@ -4,6 +4,7 @@ import { FolderSelector } from "./folderSelector";
 import { VSCodePickProvider } from "./vscodePickProvider";
 import { DriveTreeDataProvider } from "./driveTreeDataProvider";
 import { VSCodeNotificator } from "./vscodeNotificator";
+import { INotificator } from "./notificator";
 
 export class DriveView implements IDriveView {
 
@@ -70,13 +71,6 @@ export class DriveView implements IDriveView {
         this.notificator.showWarningMessage(message);
     }
 
-}
-
-export interface INotificator {
-
-    showProgressMessage(message: string, task: Thenable<any>): void;
-    showInformationMessage(message: string, ...items: string[]): Thenable<string | undefined>;
-    showWarningMessage(message: string): void;
 }
 
 export interface IDriveView extends INotificator {

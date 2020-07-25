@@ -6,8 +6,8 @@ import { DriveTreeDataProvider } from "../../../drive/view/driveTreeDataProvider
 import * as vscode from 'vscode';
 import { DriveModel } from '../../../drive/model/driveModel';
 import { DriveFile, FileType } from '../../../drive/model/driveTypes';
-import { INotificator } from '../../../drive/view/driveView';
 import { AbstractMockFileProvider } from '../../drive/model/abstractFileProvider.test';
+import { INotificator } from '../../../drive/view/notificator';
 
 suite('Extension Test Suite', () => {
 

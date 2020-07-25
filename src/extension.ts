@@ -9,19 +9,25 @@ import { CredentialsConfigurator } from './credentialsConfigurator';
 import { DriveFileSystemProvider } from './drive/fileSystem/driveFileSystemProvider';
 import { DRIVE_SCHEME } from './drive/fileSystem/fileSystemConstants';
 import { DriveView } from './drive/view/driveView';
+import { CredentialsManager } from './drive/credentials/credentialsManager';
 
 export const CONFIGURE_CREDENTIALS_COMMAND = 'google.drive.configureCredentials';
 export const CREATE_FOLDER_COMMAND = 'google.drive.createFolder';
+
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate({ subscriptions }: vscode.ExtensionContext) {
 
-	const driveAuthenticator = new DriveAuthenticator();
+	const credentialsManager = new CredentialsManager();
+
+	const driveAuthenticator = new DriveAuthenticator(credentialsManager);
 	const credentialsConfigurator = new CredentialsConfigurator(driveAuthenticator);
 	const googleFileProvider = new GoogleDriveFileProvider(driveAuthenticator);
 	const model = new DriveModel(googleFileProvider);
-	const controller = new DriveController(model, new DriveView(model));
+	const driveView = new DriveView(model);
+
+	const controller = new DriveController(model, driveView);
 
 	vscode.workspace.registerFileSystemProvider(DRIVE_SCHEME, new DriveFileSystemProvider(model), { isReadonly: true });
 
@@ -65,7 +71,7 @@ function uploadOpenFile(controller: DriveController): void {
 	}
 }
 
-function uploadSelectedFile(selectedFile: any, controller: DriveController): void {
+export function uploadSelectedFile(selectedFile: any, controller: DriveController): void {
 	if (selectedFile && selectedFile.scheme && selectedFile.path) {
 		controller.uploadFileAndAskFolder(selectedFile.scheme, selectedFile.path);
 	} else {

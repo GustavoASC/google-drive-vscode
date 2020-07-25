@@ -1,6 +1,6 @@
 {
 	"name": "google-drive-vscode",
-	"displayName": "Google Drive",
+	"displayName": "Google Drive for VSCode",
 	"description": "Google Drive support for VSCode",
 	"author": {
 		"name": "Gustavo Cassel",
