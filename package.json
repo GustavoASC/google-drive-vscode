@@ -1,7 +1,7 @@
 {
 	"name": "google-drive-vscode",
 	"displayName": "Google Drive for VSCode",
-	"description": "Google Drive support for VSCode",
+	"description": "Manage Google Drive files and folders directly from VSCode",
 	"author": {
 		"name": "Gustavo Cassel",
 		"email": "guscassel@gmail.com"
