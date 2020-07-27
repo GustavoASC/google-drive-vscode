@@ -1,6 +1,6 @@
 # Google Drive™ for VSCode
 
-Manage Google Drive™ files and folders directly from VSCode. This extension uses *drive.file* scope and then can only access files and folders created on Google Drive through this extension. It will soon allow you to provide access to other files on Google Drive using Google Picker API (to be implemented).
+Manage Google Drive™ files and folders directly from VSCode. This extension uses *drive.file* scope and then can only access files and folders created on Google Drive™ through this extension. It will soon allow you to provide access to other files on Google Drive™ using Google Picker API (to be implemented).
 
 ## Features
    
@@ -11,13 +11,13 @@ and you are able to take a look at the file in a fast way.
 !['File preview' File preview](img/gif/preview.gif)
 
 ### Navigation
-Feel free to navigate through your remote files and folders in a tree structure, which is available on the *Google Drive* View located on the Side Bar.
+Feel free to navigate through your remote files and folders in a tree structure, which is available on the *Google Drive™* View located on the Side Bar.
 
 !['List files' List files](img/gif/list.gif)
 
 ### Create folders
 
-You can create folders on Google Drive from the same Tree View used to navigate through remote files and folders. Just right-click a folder on Drive Tree View and select *Google Drive: Create folder on Drive*, and specify the folder name. This will create a subfolder for the one which has been selected on Tree View.
+You can create folders on Google Drive™ from the same Tree View used to navigate through remote files and folders. Just right-click a folder on Drive Tree View and select *Google Drive: Create folder on Drive*, and specify the folder name. This will create a subfolder for the one which has been selected on Tree View.
 
 !['Create folders' Create folders](img/gif/create-folder.gif)
 
@@ -48,7 +48,7 @@ Rename selected files and folders from the Tree View. Just right-click the file 
 !['Rename tree view' Rename tree view](img/gif/rename-tree-view.gif)
 
 ## Requirements
-In order to use this extension you need to set up Google Drive API on your Google account.
+In order to use this extension you need to set up Google Drive™ API on your Google account.
 
    * Access [this link](https://developers.google.com/drive/api/v3/quickstart/nodejs) to turn on the Drive API
    * Click on *Enable the Drive API* button
@@ -60,9 +60,11 @@ Once you have *credentials.json* file, access Command Palette on VSCode and run 
 
 ## Next features
 The next features will be developed soon:
-   - **Select** files with Google Picker API, so one can authorize access to files created by other apps or files which have been manually uploaded to Google Drive
+   - **Select** files with Google Picker API, so one can authorize access to files created by other apps or files which have been manually uploaded to Google Drive™
    - **Delete** files
 
 ## Known issues
    * On versions smaller than v1.48 (Insiders), the file preview does not properly preview binary data e.g. image files. v1.48 will soon be the minimum version to run this extension. 
 
+## Trademark
+Google Drive is a trademark of Google Inc. Use of this trademark is subject to Google Permissions.
