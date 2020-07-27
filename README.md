@@ -1,6 +1,6 @@
-# Google Drive for VSCode
+# Google Drive™ for VSCode
 
-Manage Google Drive files and folders directly from VSCode. This extension uses *drive.file* scope and then can only access files and folders created on Google Drive through this extension. It will soon allow you to provide access to other files on Google Drive using Google Picker API (to be implemented).
+Manage Google Drive™ files and folders directly from VSCode. This extension uses *drive.file* scope and then can only access files and folders created on Google Drive through this extension. It will soon allow you to provide access to other files on Google Drive using Google Picker API (to be implemented).
 
 ## Features
    
