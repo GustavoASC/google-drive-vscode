@@ -53,6 +53,15 @@ export class DriveModel {
         return new Promise((resolve, reject) => {
             const basename = path.basename(fullFileName);
             const mimeType = mime.lookup(fullFileName) || 'text/plain';
+
+            if (!fs.existsSync(fullFileName)) {
+                return reject(`File '${basename}' does not exist. Impossible to proceed with upload operation.`);
+            }
+
+            if (fs.statSync(fullFileName).isDirectory()) {
+                return reject(`'${basename}' is a directory. This extension currently does not support uploading directories to Google Drive.`);
+            }
+
             this.fileProvider.uploadFile(parentFolderId, fullFileName, basename, mimeType)
                 .then(() => resolve(basename))
                 .catch((err) => reject(err));
@@ -108,7 +117,7 @@ export class DriveModel {
     getDriveFile(id: string): DriveFile | undefined {
         return this.cachedFiles.get(id);
     }
-    
+
     getDriveFileFromName(name: string): DriveFile | undefined {
         let driveFile: DriveFile | undefined;
         this.cachedFiles.forEach((value: DriveFile, key: string) => {
