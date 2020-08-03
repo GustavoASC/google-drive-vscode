@@ -45,7 +45,7 @@ export class GoogleDriveFileProvider implements IFileProvider {
                 };
                 const media = {
                     mimeType: mimeType,
-                    body: fs.createReadStream(fullFileName)
+                    body: fs.createReadStream(fullFileName).on('error', err => reject(err.message))
                 };
                 const callbackFn = ((err: any, _file: any) => {
                     err ? reject(err) : resolve();
