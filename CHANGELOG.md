@@ -16,4 +16,4 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [1.0.0] - 2020-07-26
 ### Added
 
-- Initial release but a lot work still in progress.
+- Initial release but a lot of work still in progress.
