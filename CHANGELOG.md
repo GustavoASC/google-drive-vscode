@@ -1,6 +1,8 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
+
 ## [1.0.2] - 2020-08-03
 ### Fixed
 
@@ -14,4 +16,4 @@ All notable changes to this project will be documented in this file.
 ## [1.0.0] - 2020-07-26
 ### Added
 
-- Initial release but still work in progress.
+- Initial release but a lot work still in progress.
