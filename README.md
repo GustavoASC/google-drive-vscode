@@ -21,13 +21,19 @@ You can create folders on Google Drive™ from the same Tree View used to naviga
 
 !['Create folders' Create folders](img/gif/create-folder.gif)
 
+### Upload zipped Workspace
+
+This extension provides the command: *Google Drive: Upload Workspace to Drive*, which zips the entire Workspace into a single .zip file with date and time as part of the name. If you have a multi-root Workspace, only the first root will be zipped and uploaded.
+
+!['Upload zipped workspace' Upload zipped workspace](img/gif/upload-zipped-workspace.gif)
+
 ### Upload files
 
 You can upload files in three different ways.
 
 1. **Selecting specific file on workspace:** right-click a file on your workspace and select the option *Google Drive: Upload selected file to Drive*. You will be asked for the destination folder where you wish to upload/place your file on Drive.
 
-!['Upload from workspace' Upload from workspace](img/gif/upload-workspace.gif)
+!['Upload single file from workspace' Upload single file from workspace](img/gif/upload-single-file-from-workspace.gif)
 
 2. **Upload file currently open in the editor:** open the Command Palette and select *Google Drive: Upload current file to Drive*. You will also be asked for the destination folder where you wish to upload the current file.
 
