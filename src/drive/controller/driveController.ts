@@ -2,11 +2,12 @@ import { IDriveView } from "../view/driveView";
 import { DriveModel } from "../model/driveModel";
 import { DownloadSupport } from "./downloadSupport";
 import { RenameSupport } from "./renameSupport";
-import { UploadSupport } from "./uploadControllerSupport";
+import { UploadSupport } from "./uploadSupport";
 import { FolderSupport } from "./folderSupport";
 import { OpenRemoteFileSupport } from "./openRemoteFileSupport";
 import { IControllerSupport } from "./controllerSupport";
 import { DRIVE_SCHEME } from "../fileSystem/fileSystemConstants";
+import { UploadFolderSupport } from "./uploadFolderSupport";
 
 export class DriveController {
 
@@ -47,6 +48,18 @@ export class DriveController {
 	uploadFileToFolder(fullFileName: string, folderId: string): void {
 		const uploadSupport = new UploadSupport(fullFileName);
 		this.fireCommand(uploadSupport, folderId);
+	}
+
+	uploadFolder(folderPath: string): void {
+		this.view.askForRemoteDestinationFolder()
+			.then(parentId => {
+				if (parentId) {
+					const uploadSupport = new UploadFolderSupport(folderPath);
+					this.fireCommand(uploadSupport, parentId);
+				} else {
+					this.view.showWarningMessage(`'Upload folder' process canceled by user.`);
+				}
+			}).catch(err => this.view.showWarningMessage(err));
 	}
 
 	downloadFile(fileId: string): void {

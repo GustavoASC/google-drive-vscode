@@ -58,6 +58,9 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 	subscriptions.push(vscode.commands.registerCommand('google.drive.openFile', (selectedFileId: any) => {
 		openRemoteFile(selectedFileId, controller);
 	}));
+	subscriptions.push(vscode.commands.registerCommand('google.drive.uploadWorkspace', () => {
+		uploadWorkspace(controller);
+	}));
 
 	credentialsConfigurator.checkCredentialsConfigured();
 }
@@ -117,6 +120,16 @@ function openRemoteFile(selectedFileId: any, controller: DriveController): void 
 		controller.openRemoteFile(selectedFileId);
 	} else {
 		vscode.window.showWarningMessage('This command can only be directly used from Google Drive view.');
+	}
+}
+
+function uploadWorkspace(controller: DriveController): void {
+	const workspaceFolders = vscode.workspace.workspaceFolders;
+	if (workspaceFolders && workspaceFolders[0]) {
+		const workspace = workspaceFolders[0];
+		controller.uploadFolder(workspace.uri.fsPath);
+	} else {
+		vscode.window.showWarningMessage('Please open a Workspace before using this command.');
 	}
 }
 

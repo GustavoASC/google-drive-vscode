@@ -3,6 +3,7 @@ import * as mime from "mime-types";
 import * as path from "path";
 import * as fs from "fs";
 import { Readable } from "stream";
+import { FolderZipper } from "./folderZipper";
 
 export class DriveModel {
 
@@ -49,6 +50,29 @@ export class DriveModel {
         });
     }
 
+    uploadFolder(parentFolderId: string, folderPath: string): Promise<string> {
+        return new Promise((resolve, reject) => {
+            const basename = path.basename(folderPath);
+
+            if (!fs.existsSync(folderPath)) {
+                return reject(`Folder '${basename}' does not exist. Impossible to proceed with upload operation.`);
+            }
+
+            new FolderZipper().zipToTemp(folderPath)
+                .then(zipFullName => {
+                    // Uploads the temp zip file and deletes it at the end
+                    this.uploadFile(parentFolderId, zipFullName)
+                        .then(() => {
+                            fs.unlinkSync(zipFullName);
+                            resolve(basename);
+                        }).catch(err => {
+                            fs.unlinkSync(zipFullName);
+                            reject(err)
+                        });
+                }).catch(err => reject(err));
+        });
+    }
+
     uploadFile(parentFolderId: string, fullFileName: string): Promise<string> {
         return new Promise((resolve, reject) => {
             const basename = path.basename(fullFileName);
@@ -64,7 +88,7 @@ export class DriveModel {
 
             this.fileProvider.uploadFile(parentFolderId, fullFileName, basename, mimeType)
                 .then(() => resolve(basename))
-                .catch((err) => reject(err));
+                .catch(err => reject(err));
         });
     }
 
@@ -110,7 +134,7 @@ export class DriveModel {
                         driveFile.name = newName;
                     }
                     resolve();
-                }).catch((err) => reject(err));
+                }).catch(err => reject(err));
         });
     }
 

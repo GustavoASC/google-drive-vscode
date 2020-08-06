@@ -8,7 +8,7 @@
 	},
 	"license": "MIT",
 	"publisher": "GustavoASC",
-	"version": "1.0.2",
+	"version": "1.1.0",
 	"icon": "img/icon.png",
 	"engines": {
 		"vscode": "^1.43.0"
@@ -86,6 +86,10 @@
 				"title": "Google Drive: Preview selected file",
 				"enablement": "viewItem == file",
 				"icon": "$(open-preview)"
+			},
+			{
+				"command": "google.drive.uploadWorkspace",
+				"title": "Google Drive: Upload Workspace to Drive"
 			}
 		],
 		"viewsContainers": {
@@ -181,6 +185,7 @@
 		"@types/node": "^12.11.7",
 		"@types/mime-types": "^2.1.0",
 		"@types/chai": "4.1.6",
+		"@types/archiver": "3.1.0",
 		"ts-node": "^7.0.1",
 		"chai": "4.2.0",
 		"tslint": "^5.14.0",
@@ -193,7 +198,8 @@
 	"dependencies": {
 		"googleapis": "52.1.0",
 		"keytar": "6.0.1",
-		"mime-types": "2.1.27"
+		"mime-types": "2.1.27",
+		"archiver": "4.0.2"
 	},
 	"__metadata": {
 		"id": "d4e69f94-ffae-47b6-a315-e5f90289a7c2",
