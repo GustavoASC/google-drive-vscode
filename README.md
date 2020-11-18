@@ -1,6 +1,6 @@
 # Google Drive™ for VSCode
 
-Manage Google Drive™ files and folders directly from VSCode. This extension uses *drive.file* scope and then can only access files and folders created on Google Drive™ through this extension. It will soon allow you to provide access to other files on Google Drive™ using Google Picker API (to be implemented).
+Manage Google Drive™ files and folders directly from VSCode. This extension uses *drive.file* scope and then can **only access files and folders created on Google Drive™ through this extension**.
 
 ## Features
    
@@ -63,11 +63,6 @@ In order to use this extension you need to set up Google Drive™ API on your Go
    * Click *Download client configuration*
    
 Once you have *credentials.json* file, access Command Palette on VSCode and run the command: *Google Drive: Configure credentials*, and select the *credentials.json* file.
-
-## Next features
-The next features will be developed soon:
-   - **Select** files with Google Picker API, so one can authorize access to files created by other apps or files which have been manually uploaded to Google Drive™
-   - **Delete** files
 
 ## Known issues
    * On versions smaller than v1.48 (Insiders), the file preview does not properly preview binary data e.g. image files. v1.48 will soon be the minimum version to run this extension. 

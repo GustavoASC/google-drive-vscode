@@ -75,8 +75,8 @@ function uploadOpenFile(controller: DriveController): void {
 }
 
 export function uploadSelectedFile(selectedFile: any, controller: DriveController): void {
-	if (selectedFile && selectedFile.scheme && selectedFile.path) {
-		controller.uploadFileAndAskFolder(selectedFile.scheme, selectedFile.path);
+	if (selectedFile && selectedFile.scheme && selectedFile._fsPath) {
+		controller.uploadFileAndAskFolder(selectedFile.scheme, selectedFile._fsPath);
 	} else {
 		vscode.window.showInformationMessage('Please select a file on Explorer view, which will be uploaded to Google Drive.');
 	}
