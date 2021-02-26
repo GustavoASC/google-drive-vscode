@@ -10,7 +10,7 @@ and you are able to take a look at the file in a fast way.
 
 !['File preview' File preview](img/gif/preview.gif)
    
-### Copy URL to the clipboard
+### Copy URL to clipboard
 In case you prefer to view the file or folder content in the web browser itself, you can copy the URL to the clipboard through the context menu.
 
 !['Copying URL' Copying URL](img/gif/copy-url.gif)
