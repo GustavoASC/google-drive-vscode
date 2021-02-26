@@ -3,7 +3,7 @@ import { DriveFile, FileType } from "./driveTypes";
 
 const DRIVE_WEBSITE = 'https://drive.google.com';
 
-export class RemoteUrlBuilder {
+export class DriveUrlBuilder {
 
     buildUrlFromId(model: DriveModel, fileId: string): string | undefined {
         const file = model.getDriveFile(fileId);
@@ -14,12 +14,12 @@ export class RemoteUrlBuilder {
     }
 
     private buildUrlFromFile(file: DriveFile): string {
-         const urlPath = DRIVE_WEBSITE + this.getLocation(file.type);
-         const finalUrl = urlPath + file.id;
-         return finalUrl;
+        const location = this.getFileTypeLocation(file.type);
+        const finalUrl = DRIVE_WEBSITE + location + file.id;
+        return finalUrl;
     }
 
-    private getLocation(type: FileType): string {
+    private getFileTypeLocation(type: FileType): string {
         return type == FileType.DIRECTORY
                                ? '/drive/folders/'
                                : '/file/d/';

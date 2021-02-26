@@ -82,7 +82,7 @@
 				"icon": "$(edit)"
 			},
 			{
-				"command": "google.drive.copyurl.clipboard",
+				"command": "google.drive.copyurl",
 				"title": "Google Drive: Copy URL to clipboard"
 			},
 			{
@@ -150,7 +150,7 @@
 					"when": "view == driveView"
 				},
 				{
-					"command": "google.drive.copyurl.clipboard",
+					"command": "google.drive.copyurl",
 					"when": "view == driveView"
 				},
 				{

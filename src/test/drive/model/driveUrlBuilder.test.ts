@@ -3,14 +3,14 @@ import 'mocha';
 import { DriveModel } from '../../../drive/model/driveModel';
 import { DriveFile, FileType } from '../../../drive/model/driveTypes';
 import { AbstractMockFileProvider } from './abstractFileProvider.test';
-import { RemoteUrlBuilder } from '../../../drive/model/driveUrlBuilder';
+import { DriveUrlBuilder } from '../../../drive/model/driveUrlBuilder';
 
 describe('Remote URL manipulation', () => {
 
     it('Checks remote URL building', async () => {
         const model = new DriveModel(new MockFileProvider());
         await model.listFiles('root');
-        const urlBuilder = new RemoteUrlBuilder();
+        const urlBuilder = new DriveUrlBuilder();
         expect('https://drive.google.com/file/d/1Cdffsdfsdfsdfdfocz').to.equal(urlBuilder.buildUrlFromId(model, '1Cdffsdfsdfsdfdfocz'));
         expect('https://drive.google.com/drive/folders/1C7udIKXCkxsvXO37gCBpfaasqn9wocz').to.equal(urlBuilder.buildUrlFromId(model, '1C7udIKXCkxsvXO37gCBpfaasqn9wocz'));
         expect(undefined).to.equal(urlBuilder.buildUrlFromId(model, 'xxxxxx'));

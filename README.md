@@ -9,6 +9,11 @@ You can preview file content directly from VSCode using your favorite theme. Thi
 and you are able to take a look at the file in a fast way.
 
 !['File preview' File preview](img/gif/preview.gif)
+   
+### Copy URL to the clipboard
+In case you prefer to view the file or folder content in the web browser itself, you can copy the URL to the clipboard through the context menu.
+
+!['Copying URL' Copying URL](img/gif/copy-url.gif)
 
 ### Navigation
 Feel free to navigate through your remote files and folders in a tree structure, which is available on the *Google Drive™* View located on the Side Bar.

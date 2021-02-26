@@ -10,7 +10,7 @@ import { DriveFileSystemProvider } from './drive/fileSystem/driveFileSystemProvi
 import { DRIVE_SCHEME } from './drive/fileSystem/fileSystemConstants';
 import { DriveView } from './drive/view/driveView';
 import { CredentialsManager } from './drive/credentials/credentialsManager';
-import { IClipboardProvider } from './drive/controller/clipboardProvider';
+import { VscodeClipboardProvider } from './vscodeClipboardProvider';
 
 export const CONFIGURE_CREDENTIALS_COMMAND = 'google.drive.configureCredentials';
 export const CREATE_FOLDER_COMMAND = 'google.drive.createFolder';
@@ -56,7 +56,7 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 	subscriptions.push(vscode.commands.registerCommand('google.drive.rename', (selectedFileId: any) => {
 		renameSelectedFile(selectedFileId, controller);
 	}));
-	subscriptions.push(vscode.commands.registerCommand('google.drive.copyurl.clipboard', (selectedFileId: any) => {
+	subscriptions.push(vscode.commands.registerCommand('google.drive.copyurl', (selectedFileId: any) => {
 		copyUrlToClipboard(selectedFileId, controller);
 	}));
 	subscriptions.push(vscode.commands.registerCommand('google.drive.openFile', (selectedFileId: any) => {
@@ -147,11 +147,3 @@ function uploadWorkspace(controller: DriveController): void {
 
 // this method is called when your extension is deactivated
 export function deactivate() { }
-
-class VscodeClipboardProvider implements IClipboardProvider {
-	
-	writeToClipboard(text: string): void {
-		vscode.env.clipboard.writeText(text)
-	}
-
-}

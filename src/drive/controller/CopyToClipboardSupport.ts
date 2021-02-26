@@ -1,12 +1,12 @@
 import { DriveModel } from "../model/driveModel";
 import { IDriveView } from "../view/driveView";
 import { IControllerSupport } from "./controllerSupport";
-import { RemoteUrlBuilder } from "../model/driveUrlBuilder";
+import { DriveUrlBuilder } from "../model/driveUrlBuilder";
 import { IClipboardProvider } from "./clipboardProvider";
 
 export class CopyToClipboardSupport implements IControllerSupport {
 
-    private builder = new RemoteUrlBuilder();
+    private builder = new DriveUrlBuilder();
 
     constructor(private provider: IClipboardProvider) {};
 
