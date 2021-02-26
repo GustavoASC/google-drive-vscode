@@ -8,6 +8,8 @@ import { OpenRemoteFileSupport } from "./openRemoteFileSupport";
 import { IControllerSupport } from "./controllerSupport";
 import { DRIVE_SCHEME } from "../fileSystem/fileSystemConstants";
 import { UploadFolderSupport } from "./uploadFolderSupport";
+import { CopyToClipboardSupport } from "./CopyToClipboardSupport";
+import { IClipboardProvider } from "./clipboardProvider";
 
 export class DriveController {
 
@@ -68,6 +70,11 @@ export class DriveController {
 
 	renameFile(fileId: string): void {
 		this.fireCommand(this.renameSupport, fileId);
+	}
+
+	copyUrlToClipboard(clipboardProvider: IClipboardProvider, fileId: string): void {
+		const copyToClipboardSupport = new CopyToClipboardSupport(clipboardProvider);
+		this.fireCommand(copyToClipboardSupport, fileId);
 	}
 
 	openRemoteFile(fileId: string): void {

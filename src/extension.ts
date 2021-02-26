@@ -10,6 +10,7 @@ import { DriveFileSystemProvider } from './drive/fileSystem/driveFileSystemProvi
 import { DRIVE_SCHEME } from './drive/fileSystem/fileSystemConstants';
 import { DriveView } from './drive/view/driveView';
 import { CredentialsManager } from './drive/credentials/credentialsManager';
+import { IClipboardProvider } from './drive/controller/clipboardProvider';
 
 export const CONFIGURE_CREDENTIALS_COMMAND = 'google.drive.configureCredentials';
 export const CREATE_FOLDER_COMMAND = 'google.drive.createFolder';
@@ -54,6 +55,9 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 	}));
 	subscriptions.push(vscode.commands.registerCommand('google.drive.rename', (selectedFileId: any) => {
 		renameSelectedFile(selectedFileId, controller);
+	}));
+	subscriptions.push(vscode.commands.registerCommand('google.drive.copyurl.clipboard', (selectedFileId: any) => {
+		copyUrlToClipboard(selectedFileId, controller);
 	}));
 	subscriptions.push(vscode.commands.registerCommand('google.drive.openFile', (selectedFileId: any) => {
 		openRemoteFile(selectedFileId, controller);
@@ -115,6 +119,14 @@ function renameSelectedFile(selectedFileId: any, controller: DriveController): v
 	}
 }
 
+function copyUrlToClipboard(selectedFileId: any, controller: DriveController): void {
+	if (selectedFileId) {
+		controller.copyUrlToClipboard(new VscodeClipboardProvider(), selectedFileId);
+	} else {
+		vscode.window.showWarningMessage('This command can only be directly used from Google Drive view.');
+	}
+}
+
 function openRemoteFile(selectedFileId: any, controller: DriveController): void {
 	if (selectedFileId) {
 		controller.openRemoteFile(selectedFileId);
@@ -135,3 +147,11 @@ function uploadWorkspace(controller: DriveController): void {
 
 // this method is called when your extension is deactivated
 export function deactivate() { }
+
+class VscodeClipboardProvider implements IClipboardProvider {
+	
+	writeToClipboard(text: string): void {
+		vscode.env.clipboard.writeText(text)
+	}
+
+}
