@@ -8,7 +8,7 @@
 	},
 	"license": "MIT",
 	"publisher": "GustavoASC",
-	"version": "1.1.1",
+	"version": "1.2.0",
 	"icon": "img/icon.png",
 	"engines": {
 		"vscode": "^1.43.0"
@@ -82,6 +82,10 @@
 				"icon": "$(edit)"
 			},
 			{
+				"command": "google.drive.copyurl",
+				"title": "Google Drive: Copy URL to clipboard"
+			},
+			{
 				"command": "google.drive.openFile",
 				"title": "Google Drive: Preview selected file",
 				"enablement": "viewItem == file",
@@ -143,6 +147,10 @@
 				},
 				{
 					"command": "google.drive.rename",
+					"when": "view == driveView"
+				},
+				{
+					"command": "google.drive.copyurl",
 					"when": "view == driveView"
 				},
 				{

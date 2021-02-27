@@ -9,6 +9,11 @@ You can preview file content directly from VSCode using your favorite theme. Thi
 and you are able to take a look at the file in a fast way.
 
 !['File preview' File preview](img/gif/preview.gif)
+   
+### Copy URL to clipboard
+In case you prefer to view the file or folder content in the web browser itself, you can copy the URL to the clipboard through the context menu.
+
+!['Copying URL' Copying URL](img/gif/copy-url.gif)
 
 ### Navigation
 Feel free to navigate through your remote files and folders in a tree structure, which is available on the *Google Drive™* View located on the Side Bar.
@@ -65,7 +70,7 @@ In order to use this extension you need to set up Google Drive™ API on your Go
 Once you have *credentials.json* file, access Command Palette on VSCode and run the command: *Google Drive: Configure credentials*, and select the *credentials.json* file.
 
 ## Known issues
-   * On versions smaller than v1.48 (Insiders), the file preview does not properly preview binary data e.g. image files. v1.48 will soon be the minimum version to run this extension. 
+   * On versions smaller than v1.48, the file preview does not properly preview binary data e.g. image files. v1.48 will soon be the minimum version to run this extension. 
 
 ## Trademark
 Google Drive is a trademark of Google Inc. Use of this trademark is subject to Google Permissions.

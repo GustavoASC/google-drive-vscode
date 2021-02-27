@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.2.0] - 2021-02-25
+### Added
+
+- Developed command to copy file or folder URL to clipboard.
+
 ## [1.1.1] - 2020-11-18
 ### Fixed
 
