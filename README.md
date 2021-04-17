@@ -4,6 +4,14 @@
 
 Manage Google Drive™ files and folders directly from VSCode. This extension uses *drive.file* scope and then can **only access files and folders created on Google Drive™ through this extension**.
 
+```diff
+- The extension currently DOES NOT SUPPORT managing files and folders previously uploaded to Drive through other applications, or through Google Drive website itself.
+
+- At the moment, it is ONLY POSSIBLE to manage files uploaded to Google Drive through the EXTENSION itself.
+
+- Please DON'T EXPECT to access all of your existing files on Google Drive through the extension, as it uses the drive.file scope and hence is unable to access all of your files.
+```
+
 ## Features
    
 ### File content preview
