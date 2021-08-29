@@ -65,15 +65,16 @@ Rename selected files and folders from the Tree View. Just right-click the file 
 !['Rename tree view' Rename tree view](img/gif/rename-tree-view.gif)
 
 ## Requirements
-In order to use this extension you need to set up Google Drive™ API on your Google account.
+In order to use this extension you need to set up the Drive™ API on your Google account.
 
-   * Access [this link](https://developers.google.com/drive/api/v3/quickstart/nodejs) to turn on the Drive API
-   * Click on *Enable the Drive API* button
-   * On the modal pop-up, make sure you have *Desktop app* selected
-   * Click *Create*
-   * Click *Download client configuration*
+   * Access [this link](https://developers.google.com/workspace/guides/create-credentials) and follow the instructions to create a new project on Google Console;
+   * Create credentials for this new project as a *Desktop application* (still following instructions pointed by the link);
+   * Enable the Drive API on your new project;
+   * Still on Google Console, now you can download a .json file that represents your credentials.
    
-Once you have *credentials.json* file, access Command Palette on VSCode and run the command: *Google Drive: Configure credentials*, and select the *credentials.json* file.
+Once you have this file, access Command Palette on VSCode and run the command: *Google Drive: Configure credentials*, and select the .json file.
+
+In case you have any problem with these steps, feel free to open an issue and ask for help. This way we can improve it and make it easier for other users. In addition, feel free to create a PR in case you wish to help improve this README.
 
 ## Known issues
    * On versions smaller than v1.48, the file preview does not properly preview binary data e.g. image files. v1.48 will soon be the minimum version to run this extension. 
