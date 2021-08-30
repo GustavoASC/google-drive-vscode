@@ -1,12 +1,24 @@
 **This is NOT an official extension. This extension is NOT developed by Google.**
 
+**THE EXTENSION AUTHORS ARE NOT RESPONSIBLE FOR ANY DAMAGE, PROBLEM, DATA LOSS OR ANY OTHER KIND OF PROBLEM THAT CAN BE CAUSED TO YOU AND TO YOUR DATA. USE THIS EXTENSION BY YOUR OWN RISK.**
 # Google Drive™ for VSCode
 
-Manage Google Drive™ files and folders directly from VSCode. This extension uses *drive.file* scope and then can **only access files and folders created on Google Drive™ through this extension**.
+Manage Google Drive™ files and folders directly from VSCode.
 
-<span style="color:red">**THIS EXTENSION CURRENTLY DOES NOT SUPPORT MANAGING FILES AND FOLDERS PREVIOUSLY UPLOADED TO DRIVE THROUGH OTHER APPLICATIONS, OR THROUGH GOOGLE DRIVE WEBSITE ITSELF. AT THE MOMENT, IT IS ONLY POSSIBLE TO MANAGE FILES UPLOADED TO GOOGLE DRIVE THROUGH THE EXTENSION ITSELF.**
+This extension can work with the following scopes (access levels to Drive API files and folders). These scopes tell what resources the extension can access from your Google account:
+   - **drive** - grants access to all files and folders on Drive. There are some limitations regarding folder shortcuts and specific Google formats (check known issues at the end of this README);
+   - **drive.readonly** - grants read-only access to all files and folders on Drive. While using this scope, you cannot upload, rename, among other operations rather than listing and reading files. There are some limitations regarding folder shortcuts and specific Google formats (check known issues at the end of this README);
+   - **drive.file** - only accesses files and folders created on Drive through this extension. With this scope, you WILL NOT be able to access all existing files that you have on Drive and that were uploaded through other tools, such as the Google Drive website itself. This scope only allows you to access files uploaded to Drive through this VSCode extension.
 
-<span style="color:red"> **PLEASE DON'T EXPECT TO ACCESS ALL OF YOUR EXISTING FILES ON GOOGLE DRIVE THROUGH THE EXTENSION, AS IT USES THE DRIVE.FILE SCOPE AND HENCE IS UNABLE TO ACCESS ALL OF YOUR FILES.**</span>
+Please refer to [this documentation](https://developers.google.com/drive/api/v3/about-auth) to get more information about scopes. 
+
+We recommend that you only select the access level/scope that you really need, instead of simply choosing the *drive* scope to grant full read and write access to all of your files, in case you do not need this huge access level.
+
+You can also select more than a single scope in order to merge access levels. For example, you can select *drive.readonly* to list and read all data, and *drive.file* to upload files. It is interesting because it will not allow to modify existing data that has been previously uploaded to Drive through other tools, such as the Drive website.
+
+The scope is chosen when granting access to your Google account, as follows:
+
+<div style="text-align:center"><img src="img/access.png"/></div>
 
 ## Features
    
@@ -78,6 +90,11 @@ In case you have any problem with these steps, feel free to open an issue and as
 
 ## Known issues
    * On versions smaller than v1.48, the file preview does not properly preview binary data e.g. image files. v1.48 will soon be the minimum version to run this extension. 
+   * When using *drive* or *drive.readonly* scope (that allows access to all files on Drive) you still cannot:
+      - Open folders that in fact are shortcuts to other folders;
+      - Download files with specific Google formats, such as those files related to Google Docs, Sheets, Slides, among others.
+
+If you find any security problem, please send an email to guscassel@gmail.com instead of opening a public issue on GitHub.
 
 ## Trademark
 Google Drive is a trademark of Google Inc. Use of this trademark is subject to Google Permissions.

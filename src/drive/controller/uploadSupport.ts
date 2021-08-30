@@ -5,7 +5,7 @@ import { IControllerSupport } from "./controllerSupport";
 export class UploadSupport implements IControllerSupport {
 
     constructor(private fullFileName: string) { }
-    
+
     fireCommand(model: DriveModel, view: IDriveView, fileId: string): void {
         const uploadPromise = this.createUploadPromise(model, view, fileId);
         view.showProgressMessage('Uploading file to Google Drive. Please wait...', uploadPromise);
@@ -19,7 +19,7 @@ export class UploadSupport implements IControllerSupport {
                     view.refresh();
                     resolve();
                 }).catch(err => {
-                    view.showWarningMessage(err);
+                    view.showWarningMessage(err?.message);
                     reject(err);
                 });
         });

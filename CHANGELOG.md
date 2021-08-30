@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.3.0] - 2021-08-29
+### Added
+
+- Now users can select different scopes in order to grant different access levels to files and folders on Drive.
+
 ## [1.2.2] - 2021-08-29
 ### Changed
 

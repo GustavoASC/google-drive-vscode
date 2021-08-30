@@ -5,14 +5,14 @@ import * as fs from "fs";
 import { CONFIGURE_CREDENTIALS_COMMAND } from "../extension";
 
 // If modifying these scopes, delete token.json.
-const SCOPES = ['https://www.googleapis.com/auth/drive.file'];
+const SCOPES = ['https://www.googleapis.com/auth/drive.file', 'https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/drive.readonly'];
 
 export class DriveAuthenticator {
 
   private oAuth2Client: any;
   private token: any;
 
-  constructor(private credentialsManager: CredentialsManager) {}
+  constructor(private credentialsManager: CredentialsManager) { }
 
   checkCredentialsConfigured(): Promise<void> {
     return new Promise((resolve, reject) => {
