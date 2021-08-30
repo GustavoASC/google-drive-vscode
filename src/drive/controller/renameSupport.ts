@@ -28,7 +28,7 @@ export class RenameSupport implements IControllerSupport {
                     view.refresh();
                     resolve();
                 }).catch((err) => {
-                    view.showWarningMessage(err);
+                    view.showWarningMessage(err?.message);
                     reject();
                 });
         });
