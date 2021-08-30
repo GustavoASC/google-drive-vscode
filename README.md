@@ -12,7 +12,11 @@ This extension can work with the following scopes (access levels to Drive API fi
 
 Please refer to [this documentation](https://developers.google.com/drive/api/v3/about-auth) to get more information about scopes. 
 
-We recommend that you select the most appropriate access level/scope according to your needs. You can also select more than a single scope, in order to merge access levels. This is done when granting access to your Google account, as follows:
+We recommend that you only select the access level/scope that you really need, instead of simply choosing the *drive* scope to grant full read and write access to all of your files, in case you do not need this huge access level.
+
+You can also select more than a single scope in order to merge access levels. For example, you can select *drive.readonly* to list and read all data, and *drive.file* to upload files. It is interesting because it will not allow to modify existing data that has been previously uploaded to Drive through other tools, such as the Drive website.
+
+The scope is chosen when granting access to your Google account, as follows:
 
 <div style="text-align:center"><img src="img/access.png"/></div>
 
