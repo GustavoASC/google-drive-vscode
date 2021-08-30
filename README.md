@@ -6,9 +6,9 @@
 Manage Google Drive™ files and folders directly from VSCode.
 
 This extension can work with the following scopes (access levels to Drive API files and folders). These scopes tell what resources the extension can access from your Google account:
-   - *drive* - **grants access to all files and folders on Drive. There are some limitations regarding folder shortcuts and specific Google formats (check known issues at the end of this README);**
-   - *drive.readonly* - **grants read-only access to all files and folders on Drive. While using this scope, you cannot upload, rename, among other operations rather than listing and reading files. There are some limitations regarding folder shortcuts and specific Google formats (check known issues at the end of this README);**
-   - *drive.file* - **only accesses files and folders created on Drive through this extension. With this scope, you WILL NOT be able to access all existing files that you have on Drive and that were uploaded through other tools, such as the Google Drive website itself. This scope only allows you to access files uploaded to Drive through this VSCode extension.**
+   - **drive** - grants access to all files and folders on Drive. There are some limitations regarding folder shortcuts and specific Google formats (check known issues at the end of this README);
+   - **drive.readonly** - grants read-only access to all files and folders on Drive. While using this scope, you cannot upload, rename, among other operations rather than listing and reading files. There are some limitations regarding folder shortcuts and specific Google formats (check known issues at the end of this README);
+   - **drive.file** - only accesses files and folders created on Drive through this extension. With this scope, you WILL NOT be able to access all existing files that you have on Drive and that were uploaded through other tools, such as the Google Drive website itself. This scope only allows you to access files uploaded to Drive through this VSCode extension.
 
 Please refer to [this documentation](https://developers.google.com/drive/api/v3/about-auth) to get more information about scopes. 
 
