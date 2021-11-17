@@ -2,7 +2,7 @@ import * as path from 'path';
 import * as Mocha from 'mocha';
 import * as glob from 'glob';
 
-const MAX_TIMEOUT = 70000;
+const MAX_TIMEOUT = 120000;
 
 export function run(): Promise<void> {
 	// Create the mocha test

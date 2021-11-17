@@ -39,22 +39,32 @@ export class GoogleDriveFileProvider implements IFileProvider {
     uploadFile(parentFolderId: string, fullFileName: string, basename: string, mimeType: string): Promise<void> {
         return new Promise((resolve, reject) => {
             this.authenticator.authenticate().then((auth) => {
-                const fileMetadata = {
-                    'name': basename,
-                    'parents': [parentFolderId]
-                };
+                const callbackFn = ((err: any, _file: any) => {
+                    err ? reject(err) : resolve();
+                });
                 const media = {
                     mimeType: mimeType,
                     body: fs.createReadStream(fullFileName).on('error', err => reject(err.message))
                 };
-                const callbackFn = ((err: any, _file: any) => {
-                    err ? reject(err) : resolve();
-                });
-                drive(auth).files.create({
-                    resource: fileMetadata,
-                    media: media,
-                    fields: 'id'
-                }, callbackFn);
+                this.getFileId(parentFolderId, basename).then((originalFileId) => {
+                    if (originalFileId === '') {
+                        drive(auth).files.create({
+                            resource: {
+                                'name': basename,
+                                'parents': [parentFolderId]
+                            },
+                            media: media,
+                            fields: 'id'
+                        }, callbackFn);
+                    } else {
+                        drive(auth).files.update({
+                            fileId: originalFileId,
+                            media: media,
+                        }, callbackFn);
+                    }
+                }).catch((err) => {
+                    reject(err);
+                })
             }).catch(err => reject(err));
         });
     }
@@ -108,6 +118,29 @@ export class GoogleDriveFileProvider implements IFileProvider {
         });
     }
 
+    getFileId(parentId: string, fileName: string): Promise<string> {
+        return new Promise((resolve, reject) => {
+            this.authenticator.authenticate().then((auth) => {
+                const listParams = {
+                    q: `name = '${fileName}' and parents = '${parentId}' and trashed = false`,
+                    fields: 'nextPageToken, files(id)',
+                    orderBy: 'folder,name',
+                    pageSize: 10,
+                };
+                const callbackFn = (err: any, res: any) => {
+                    if (err) {
+                        return reject(err);
+                    }
+                    if (res.data.files.length == 0) {
+                        return resolve('');
+                    }
+                    resolve(res.data.files[0].id);
+                };
+                drive(auth).files.list(listParams, callbackFn);
+            }).catch(err => reject(err));
+
+        })
+    }
 }
 
 function drive(auth: any): any {
