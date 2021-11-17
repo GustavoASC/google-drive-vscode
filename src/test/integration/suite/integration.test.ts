@@ -12,6 +12,7 @@ import { GoogleDriveFileProvider } from '../../../drive/model/googleDriveFilePro
 import { DriveModel } from '../../../drive/model/driveModel';
 import { DriveController } from '../../../drive/controller/driveController';
 import { uploadSelectedFile } from '../../../extension';
+import * as fs from 'fs';
 
 const TIMEOUT_BETWEEN_STEPS = 10000;
 
@@ -63,17 +64,41 @@ suite('Operations on real Google Drive API', () => {
             });
             await sleep(TIMEOUT_BETWEEN_STEPS);
 
-
             console.log(`Fetching/listing files from folder with ID ${folderId} on drive...`);
             controller.listFiles(folderId);
             await sleep(TIMEOUT_BETWEEN_STEPS);
-
 
             const testFileName = 'dummyText.txt';
             console.log(`Discovering the ID of ${testFileName} on drive...`);
             const dummyTextId = model.getDriveFileFromName(testFileName)!.id;
             console.log(`ID: ${dummyTextId}`);
 
+            console.log('Downloading dummyText.txt on drive...');
+            controller = new DriveController(model, new DownloadFileView());
+            controller.downloadFile(dummyTextId);
+            await sleep(TIMEOUT_BETWEEN_STEPS);
+            const destination = vscode.Uri.file(__dirname + '/../../../../src/test/integration/suite/downloaded-dummyText.txt').path
+            fs.readFile(destination, (err, data) => {
+                assert.equal(data.length, 3750);
+                fs.unlinkSync(destination);
+            });
+            await sleep(TIMEOUT_BETWEEN_STEPS);
+
+            const uri = vscode.Uri.file(__dirname + '/../../../../src/test/integration/suite/res/updatedRes/dummyText.txt');
+            console.log('Replacing dummyText.txt ...');
+            controller = new DriveController(model, new UploadFileView(folderId));
+            uploadSelectedFile(uri, controller!);
+            await sleep(TIMEOUT_BETWEEN_STEPS);
+
+            console.log('Downloading replaced dummyText.txt on drive...');
+            controller = new DriveController(model, new DownloadFileView());
+            controller.downloadFile(dummyTextId);
+            await sleep(TIMEOUT_BETWEEN_STEPS);
+            fs.readFile(destination, (err, data) => {
+                assert.equal(data.length, 400);
+                fs.unlinkSync(destination);
+            });
+            await sleep(TIMEOUT_BETWEEN_STEPS);
 
             console.log(`Renaming ${testFileName} on drive...`);
             controller = new DriveController(model, new RenameFileView());
@@ -179,6 +204,41 @@ class UploadFileView extends AbstractDriveView {
             preview: false
         }
         return options;
+    }
+
+}
+
+class DownloadFileView extends AbstractDriveView {
+
+    refresh(): void {
+
+    }
+
+    showInputBox(message: string, value?: string | undefined): Thenable<string | undefined> {
+        return new Promise(resolve => {
+            return resolve('dummyText.txt');
+        });
+    }
+
+    showInformationMessage(message: string, ...items: string[]): Thenable<string | undefined> {
+        return new Promise(resolve => resolve(undefined));
+    }
+
+    showWarningMessage(message: string): void {
+
+    }
+
+    showProgressMessage(message: string, task: Thenable<any>): void {
+
+    }
+
+    openUri(targetUri: string): void {
+        openedUri = targetUri;
+    }
+
+    askForLocalDestinationFolder(suggestedPath?: string | undefined): Promise<string> {
+        const path = vscode.Uri.file(__dirname + '/../../../../src/test/integration/suite/downloaded-dummyText.txt').path; 
+        return new Promise(resolve => resolve(path));
     }
 
 }
