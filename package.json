@@ -205,6 +205,8 @@
 	},
 	"dependencies": {
 		"googleapis": "52.1.0",
+		"google-auth-library": "7.14.0",
+		"server-destroy": "1.0.1",
 		"keytar": "6.0.1",
 		"mime-types": "2.1.27",
 		"archiver": "4.0.2"
