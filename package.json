@@ -8,7 +8,7 @@
 	},
 	"license": "MIT",
 	"publisher": "GustavoASC",
-	"version": "1.3.2",
+	"version": "1.3.3",
 	"icon": "img/icon.png",
 	"engines": {
 		"vscode": "^1.43.0"
