@@ -1,7 +1,22 @@
 **This is NOT an official extension. This extension is NOT developed by Google.**
 
 **THE EXTENSION AUTHORS ARE NOT RESPONSIBLE FOR ANY DAMAGE, PROBLEM, DATA LOSS OR ANY OTHER KIND OF PROBLEM THAT CAN BE CAUSED BY USING THIS EXTENSION. USE THIS EXTENSION BY YOUR OWN RISK.**
+
 # Google Drive™ for VSCode
+
+1. [Overview](#google-drive-for-vscode)
+2. [Features](#features)
+    1. [File content preview](#file-content-preview)
+    2. [Copy URL to clipboard](#copy-url-to-clipboard)
+    3. [Navigation](#navigation)
+    4. [Create folders](#create-folders)
+    5. [Upload zipped Workspace](#upload-zipped-workspace)
+    6. [Upload files](#upload-files)
+    7. [Download](#download)
+    8. [Rename](#rename)
+3. [Setup](#setup)
+4. [Known issues](#known-issues)
+5. [Trademark](#trademark)
 
 Manage Google Drive™ files and folders directly from VSCode.
 
@@ -76,15 +91,9 @@ Rename selected files and folders from the Tree View. Just right-click the file 
 
 !['Rename tree view' Rename tree view](img/gif/rename-tree-view.gif)
 
-## Requirements
-In order to use this extension you need to set up the Drive™ API on your Google account.
-
-   * Access [this link](https://developers.google.com/workspace/guides/create-credentials) and follow the instructions to create a new project on Google Console;
-   * Create credentials for this new project as a *Desktop application* (still following instructions pointed by the link);
-   * Enable the Drive API on your new project;
-   * Still on Google Console, now you can download a .json file that represents your credentials.
-   
-Once you have this file, access Command Palette on VSCode and run the command: *Google Drive: Configure credentials*, and select the .json file.
+## Setup
+In order to use this extension you need to set up the Drive™ API on your Google account.  
+Checkout the detailed [step-by-step guide](./setup-guide/setup-guide.md)
 
 In case you have any problem with these steps, feel free to open an issue and ask for help. This way we can improve it and make it easier for other users. In addition, feel free to create a PR in case you wish to help improve this README.
 
