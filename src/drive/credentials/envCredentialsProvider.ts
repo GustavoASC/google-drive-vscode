@@ -5,7 +5,7 @@ export class EnvCredentialsProvider implements ICredentialsProvider {
     getPassword(service: string, _account: string): Promise<string | null> {
         return new Promise((resolve) => {
             const envName = this.resolveEnvName(service);
-            const envValue = process.env[envName];
+            const envValue: any = process.env[envName];
             resolve(envValue);
         });
     }

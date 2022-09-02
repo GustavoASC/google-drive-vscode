@@ -1,18 +1,18 @@
 import { env, Uri, window, commands } from "vscode";
 import { CredentialsManager, CREDENTIALS_JSON_SERVICE, TOKENS_JSON_SERVICE } from "../drive/credentials/credentialsManager";
 const { OAuth2Client } = require('google-auth-library');
-const { google } = require('googleapis');
 const http = require('http');
 const url = require('url');
 const destroyer = require('server-destroy');
 import * as fs from "fs";
 import { CONFIGURE_CREDENTIALS_COMMAND } from "../extension";
+import { DriveExtensionSettings } from "../driveExtensionSettings";
 
 // If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/drive.file', 'https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/drive.readonly'];
 
 // Port and endpoint where this extension will listen for the OAuth2 token
-const OAUTH_PORT = 3000;
+const OAUTH_PORT = new DriveExtensionSettings().getAuthPort();
 const OAUTH_ENDPOINT = "http://127.0.0.1:" + OAUTH_PORT + "/";
 
 export class DriveAuthenticator {

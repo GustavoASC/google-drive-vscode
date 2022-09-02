@@ -9,7 +9,7 @@ export class VSCodeNotificator implements INotificator {
             title: message,
         }, () => {
             const p = new Promise((resolve, reject) => {
-                task.then(() => resolve())
+                task.then(x => resolve(x))
                     .catch(err => reject(err));
             });
             return p;
