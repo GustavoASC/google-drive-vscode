@@ -176,7 +176,7 @@
 				},
 				"google.drive.authPort": {
 					"type": "number",
-					"description": "Controls the port to OAuth server.",
+					"description": "Controls the port number on which a server will be started on the local machine to proceed with the OAuth2 authorization flow.",
 					"default": 3000
 				}
 			}

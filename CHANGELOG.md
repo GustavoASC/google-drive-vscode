@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [1.3.4] - 2022-09-01
 ### Changed
 
-- Created configuration to OAuth server port.
+- Created setting to control the port number on which a server will be started on the local machine to proceed with the OAuth2 authorization flow.
 
 ## [1.3.3] - 2022-03-19
 ### Changed
