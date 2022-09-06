@@ -141,12 +141,12 @@ class ShouldNotificate extends AbstractMockNotificator {
 	public notificated = false;
 
 	showInformationMessage(message: string, ...items: string[]): Thenable<string | undefined> {
-		assert.equal(`It looks like you don't have any folder on Google Drive accessible from this extension. Do you want to create a folder on Google Drive now?`, message);
-		assert.equal(`Yes`, items[0]);
-		assert.equal(`No`, items[1]);
-		assert.equal(2, items.length);
+		assert.strictEqual(`It looks like you don't have any folder on Google Drive accessible from this extension. Do you want to create a folder on Google Drive now?`, message);
+		assert.strictEqual(`Yes`, items[0]);
+		assert.strictEqual(`No`, items[1]);
+		assert.strictEqual(2, items.length);
 		this.notificated = true;
-		return new Promise((resolve) => { resolve() });
+		return new Promise((resolve: any) => { resolve() });
 	}
 
 }

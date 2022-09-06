@@ -2,7 +2,7 @@ import { DriveFile } from "./driveTypes";
 import { DriveTypeConverter } from "./driveTypeConverter";
 import { DriveAuthenticator } from '../../auth/driveAuthenticator';
 import * as fs from "fs";
-const { google } = require('googleapis');
+import { google } from 'googleapis';
 import { IFileProvider } from "./driveModel";
 import { Readable } from "stream";
 

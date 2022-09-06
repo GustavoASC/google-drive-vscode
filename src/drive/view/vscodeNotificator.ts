@@ -8,7 +8,7 @@ export class VSCodeNotificator implements INotificator {
             location: ProgressLocation.Notification,
             title: message,
         }, () => {
-            const p = new Promise((resolve, reject) => {
+            const p = new Promise<void>((resolve, reject) => {
                 task.then(() => resolve())
                     .catch(err => reject(err));
             });

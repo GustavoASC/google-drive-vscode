@@ -15,7 +15,7 @@ export class DriveTreeDataProvider implements TreeDataProvider<string> {
     }
 
     refresh(): void {
-        this._onDidChangeTreeData.fire();
+        this._onDidChangeTreeData.fire('');
     }
 
     private askToCreateFolderOnRoot(): void {

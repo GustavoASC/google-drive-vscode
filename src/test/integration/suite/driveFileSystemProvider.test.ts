@@ -18,7 +18,7 @@ suite('Drive file system manipulation', () => {
         const uri = vscode.Uri.parse('googledrive:///VSCode/subFolder/thirdFolder/myFile.txt#1Cdffsdfsdfsdfdfocz');
         const driveFs = new DriveFileSystemProvider(model);
         const content = await driveFs.readFile(uri);
-        assert.equal('this is my content', content.toString());
+        assert.strictEqual('this is my content', content.toString());
 	});
 
 	test('Checks file status from file system', async () => {
@@ -27,10 +27,10 @@ suite('Drive file system manipulation', () => {
         const uri = vscode.Uri.parse('googledrive:///VSCode/subFolder/thirdFolder/myFile.txt#1Cdffsdfsdfsdfdfocz');
         const driveFs = new DriveFileSystemProvider(model);
         const fsStat = await driveFs.stat(uri);
-        assert.equal(vscode.FileType.File, fsStat.type);
-        assert.equal(1361393000000, fsStat.ctime);
-        assert.equal(7341393000000, fsStat.mtime);
-        assert.equal(274, fsStat.size);
+        assert.strictEqual(vscode.FileType.File, fsStat.type);
+        assert.strictEqual(1361393000000, fsStat.ctime);
+        assert.strictEqual(7341393000000, fsStat.mtime);
+        assert.strictEqual(274, fsStat.size);
 	});
 
 });
