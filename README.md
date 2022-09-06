@@ -98,7 +98,6 @@ Checkout the detailed [step-by-step guide](./setup-guide/setup-guide.md)
 In case you have any problem with these steps, feel free to open an issue and ask for help. This way we can improve it and make it easier for other users. In addition, feel free to create a PR in case you wish to help improve this README.
 
 ## Known issues
-   * On versions smaller than v1.48, the file preview does not properly preview binary data e.g. image files. v1.48 will soon be the minimum version to run this extension. 
    * When using *drive* or *drive.readonly* scope (that allows access to all files on Drive) you still cannot:
       - Open folders that in fact are shortcuts to other folders;
       - Download files with specific Google formats, such as those files related to Google Docs, Sheets, Slides, among others.
