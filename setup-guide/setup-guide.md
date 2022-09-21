@@ -3,7 +3,7 @@
 ## Overview
 The whole process consists of 5 high-level steps:  
 On Google Cloud Console:  
-1. Create a project on Google Could Platform  
+1. Create a project on Google Cloud Platform  
 2. Enable Google Drive API  
 3. Setup OAuth consent screen so you can grant permissions required by this extensions  
 4. Create and download OAuth credentials-json  

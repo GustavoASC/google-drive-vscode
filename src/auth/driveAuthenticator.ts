@@ -15,6 +15,9 @@ const SCOPES = ['https://www.googleapis.com/auth/drive.file', 'https://www.googl
 const OAUTH_PORT = new DriveExtensionSettings().getAuthPort();
 const OAUTH_ENDPOINT = "http://127.0.0.1:" + OAUTH_PORT + "/";
 
+// String to identify if the port is in use
+const PORT_IN_USE_MESSAGE = 'EADDRINUSE';
+
 export class DriveAuthenticator {
 
   private oAuth2Client: any;
@@ -103,6 +106,16 @@ export class DriveAuthenticator {
       .then(selectedButton => {
         if (selectedButton === configureButton) {
           commands.executeCommand(CONFIGURE_CREDENTIALS_COMMAND);
+        }
+      });
+  }
+
+  private showAddressAlreadyInUse(): void {
+    const configurePortButton = 'Configure port';
+    window.showWarningMessage('Oops! It appears that the address ' + OAUTH_ENDPOINT + ' is already in use! You can set a different port with google.drive.authPort.', configurePortButton)
+      .then(selectedButton => {
+        if (selectedButton === configurePortButton) {
+          commands.executeCommand('workbench.action.openSettings', 'google.drive.authPort');
         }
       });
   }
@@ -205,8 +218,12 @@ export class DriveAuthenticator {
         }
       });
 
-      server.on('error', function (err: any) {
-        window.showErrorMessage('Unexpected problem while starting HTTP server ' + OAUTH_ENDPOINT + ': ' + err);
+      server.on('error', (err: any) => {
+        if (err.toString().includes(PORT_IN_USE_MESSAGE)) {
+          this.showAddressAlreadyInUse();
+        } else {
+          window.showErrorMessage('Unexpected problem while starting HTTP server ' + OAUTH_ENDPOINT + ': ' + err);
+        }
         server.destroy();
         reject(err);
       });      

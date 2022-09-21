@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.3.5] - 2022-09-20
+### Changed
+
+- Created a new friendly message that is shown when the extension identifies that the defined port is being used by another process.
+
 ## [1.3.4] - 2022-09-01
 ### Changed
 
