@@ -29,9 +29,7 @@ suite('Operations on real Google Drive API', () => {
         const envProvider = process.env.DRIVE_CREDENTIALS && process.env.DRIVE_TOKEN
         if (envProvider) {
             
-            const credentialsManager = new CredentialsManager();
-            credentialsManager.changeProvider(new EnvCredentialsProvider());
-
+            const credentialsManager = new CredentialsManager(new EnvCredentialsProvider());
 
             // Prepares the file provider to fetch and manipulate information from Google Drive
             const driveAuthenticator = new DriveAuthenticator(credentialsManager);

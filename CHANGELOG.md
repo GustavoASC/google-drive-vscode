@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.3.9] - 2023-10-18
+### Changed
+
+- Now uses SecretStorageApi as KeyTar has been deprecated
+
 ## [1.3.5] - 2022-09-20
 ### Changed
 

@@ -9,8 +9,7 @@ describe('Credentials manager', () => {
         // Prepares manager and env variables to return proper credentials
         process.env['DRIVE_CREDENTIALS'] = 'bXkgZHVtbXkgY3JlZGVudGlhbHM=';
         process.env['DRIVE_TOKEN'] = 'dGhlIGR1bW15IHRva2Vu=';
-        const manager = new CredentialsManager();
-        manager.changeProvider(new EnvCredentialsProvider());
+        const manager = new CredentialsManager(new EnvCredentialsProvider());
 
         // Checks pass credentials
         const credentials = await manager.retrievePassword(CREDENTIALS_JSON_SERVICE);

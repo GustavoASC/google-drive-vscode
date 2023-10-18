@@ -1,16 +1,13 @@
 import * as os from "os";
-import { KeytarCredentialsProvider } from './keytarCredentialsProvider';
+import { SecretStorageCredentialsProvider } from './secretStorageCredentialsProvider';
+import { SecretStorage } from "vscode";
 
 export const CREDENTIALS_JSON_SERVICE = 'Google Drive for VSCode - Credentials';
 export const TOKENS_JSON_SERVICE = 'Google Drive for VSCode - Token';
 
 export class CredentialsManager {
 
-    private credentialsProvider = new KeytarCredentialsProvider();
-
-    changeProvider(provider: ICredentialsProvider): void {
-        this.credentialsProvider = provider;
-    }
+    constructor(private credentialsProvider: ICredentialsProvider) {}
 
     storePassword(passContent: string, serviceName: string): Promise<void> {
         return new Promise((resolve, reject) => {
@@ -56,7 +53,7 @@ export class CredentialsManager {
 
 export interface ICredentialsProvider {
 
-    getPassword(service: string, account: string): Promise<string | null>;
+    getPassword(service: string, account: string): Promise<string | undefined>;
     setPassword(service: string, account: string, password: string): Promise<void>;
     deletePassword(service: string, account: string): Promise<boolean>;
 

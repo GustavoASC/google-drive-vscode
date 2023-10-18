@@ -11,6 +11,7 @@ import { DRIVE_SCHEME } from './drive/fileSystem/fileSystemConstants';
 import { DriveView } from './drive/view/driveView';
 import { CredentialsManager } from './drive/credentials/credentialsManager';
 import { VscodeClipboardProvider } from './vscodeClipboardProvider';
+import { SecretStorageCredentialsProvider } from './drive/credentials/secretStorageCredentialsProvider';
 
 export const CONFIGURE_CREDENTIALS_COMMAND = 'google.drive.configureCredentials';
 export const CREATE_FOLDER_COMMAND = 'google.drive.createFolder';
@@ -18,9 +19,10 @@ export const CREATE_FOLDER_COMMAND = 'google.drive.createFolder';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
-export function activate({ subscriptions }: vscode.ExtensionContext) {
+export function activate({ subscriptions, secrets }: vscode.ExtensionContext) {
 
-	const credentialsManager = new CredentialsManager();
+	
+	const credentialsManager = new CredentialsManager(new SecretStorageCredentialsProvider(secrets));
 
 	const driveAuthenticator = new DriveAuthenticator(credentialsManager);
 	const credentialsConfigurator = new CredentialsConfigurator(driveAuthenticator);
