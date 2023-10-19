@@ -2,7 +2,7 @@ import { ICredentialsProvider, CREDENTIALS_JSON_SERVICE, TOKENS_JSON_SERVICE } f
 
 export class EnvCredentialsProvider implements ICredentialsProvider {
 
-    getPassword(service: string, _account: string): Promise<string | null> {
+    getPassword(service: string, _account: string): Promise<string | undefined> {
         return new Promise((resolve) => {
             const envName = this.resolveEnvName(service);
             const envValue: any = process.env[envName];
